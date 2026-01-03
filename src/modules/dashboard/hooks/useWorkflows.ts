@@ -23,6 +23,22 @@ export function useWorkflows() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      input,
+    }: {
+      id: string;
+      input: { name: string; description?: string };
+    }) => {
+      const res = await workflowService.update(id, input);
+      return res.data.workflow as Workflow;
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ["workflows"] });
+    },
+  });
+
   return {
     workflows: workflowsQuery.data ?? [],
     isLoading: workflowsQuery.isLoading,
@@ -30,6 +46,8 @@ export function useWorkflows() {
     refetch: workflowsQuery.refetch,
     createWorkflow: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
+    updateWorkflow: (id: string, input: { name: string; description?: string }) =>
+      updateMutation.mutateAsync({ id, input }),
+    isUpdating: updateMutation.isPending,
   };
 }
-

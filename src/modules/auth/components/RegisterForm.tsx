@@ -27,7 +27,7 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
     setLoading(true);
     try {
       await register(parsed.data);
-      router.push("/dashboard");
+      router.push("/canvas");
     } catch (err: any) {
       setError(typeof err?.response?.data?.error === "string" ? err.response.data.error : "Registration failed");
     } finally {
@@ -96,4 +96,3 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
     </form>
   );
 }
-

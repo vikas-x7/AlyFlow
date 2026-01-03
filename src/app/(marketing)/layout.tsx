@@ -14,10 +14,10 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
               Login
             </Link>
             <Link
-              href="/dashboard"
+              href="/canvas"
               className="rounded bg-black text-white px-3 py-1.5 text-sm font-medium"
             >
-              Dashboard
+              Open Canvas
             </Link>
           </nav>
         </div>
@@ -31,4 +31,3 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
-

@@ -26,7 +26,7 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
     setLoading(true);
     try {
       await login(parsed.data);
-      router.push("/dashboard");
+      router.push("/canvas");
     } catch (err: any) {
       setError(typeof err?.response?.data?.error === "string" ? err.response.data.error : "Login failed");
     } finally {
@@ -86,4 +86,3 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
     </form>
   );
 }
-
