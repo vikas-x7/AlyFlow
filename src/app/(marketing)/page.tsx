@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <main className="mx-auto bg-black">
+    <main className="mx-auto bg-[#010102] flex">
       <header className="border-b  bg-white w-6xl absolute left-50 top-5 rounded-sm z-90">
         <div className="mx-auto  px-6 py-3 flex items-center justify-between">
           <Link href="/" className="font-semibold">

@@ -25,7 +25,7 @@ export const Hero = () => {
   ];
 
   return (
-    <section className="relative flex flex-col md:flex-row items-center max-w-6xl  px-5 mx-auto py-16 font-[Gabarito] gap-8 h-screen ">
+    <section className="relative flex flex-col md:flex-row items-center   px-5 mx-auto py-16 font-[Gabarito] gap-8 h-screen ">
       <div className="flex-1 relative z-10 ">
         <div className="mb-12">
           <p className="text-sm text-[#666666] mb-8 mt-[40px]">
@@ -68,10 +68,10 @@ export const Hero = () => {
           ))}
         </div>
       </div>
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 z-1 top-14 left-100">
         <img
-          className="h- object-cover translate-x-[390px]"
-          src="https://cdn.prod.website-files.com/6812d02840d393aa2c663370/6847f9fe57cfb544f7d5818a_hero-home.svg"
+          className=" w-90 object-cover translate-x-[390px] opacity-30"
+          src="https://i.pinimg.com/1200x/94/8a/3b/948a3bcb02f73a7a91afbb9a53a6c4b7.jpg"
           alt="Hero Background"
         />
       </div>
