@@ -41,7 +41,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
   return (
     <div className="h-[calc(100vh-0px)] flex flex-col">
-      <div className="border-b p-2 bg-white absolute bottom-0 z-90 right-130">
+      <div className="absolute bottom-4 z-90 right-130">
         <NodeTypeSwitcher onAdd={addNodeOfType} />
       </div>
 
