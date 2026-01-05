@@ -13,67 +13,50 @@ export const Hero = () => {
       img: "https://cdn-icons-png.flaticon.com/128/9386/9386860.png",
     },
     {
-      title: "Road map ",
+      title: "Road map",
       desc: "Create personalized learning roadmaps to master skills faster.",
       img: "https://cdn-icons-png.flaticon.com/128/17145/17145905.png",
-    },
-    {
-      title: "Apply job",
-      desc: "Find the right job and apply instantly with just one click",
-      img: "https://cdn-icons-png.flaticon.com/128/10490/10490250.png",
     },
   ];
 
   return (
-    <section className="relative flex flex-col md:flex-row items-center   px-5 mx-auto py-16 font-[Gabarito] gap-8 h-screen ">
-      <div className="flex-1 relative z-10 ">
-        <div className="mb-12">
-          <p className="text-sm text-[#666666] mb-8 mt-[40px]">
-            {" "}
-            <i className="ri-instance-fill"></i> Easiest way to build your
-            portfolio, resume, and apply to jobs
-          </p>
-          <h1 className="text-4xl md:text-6xl text-gray-900 mb-6 -tracking-[2px]">
-            <span className="text-[#666666] ">The simple way to</span> <br />
-            portfolio resume apply
-          </h1>
+    <section className="min-h-screen flex items-center justify-center px-6">
+      <div className="max-w-6xl w-full text-center">
+        <h1 className="text-4xl md:text-6xl text-white/60 mb-6 tracking-tight">
+          <span>The simple way to</span> <br />
+          portfolio resume apply
+        </h1>
 
-          <div className="flex gap-4 mt-[20px]">
-            <Link
-              href="/canvas"
-              className="rounded bg-black text-white px-3 py-1.5 text-sm font-medium"
-            >
-              Open Canvas
-            </Link>
-          </div>
-        </div>
+        <p className="text-sm text-[#666666] mb-8">
+          <i className="ri-instance-fill"></i> Easiest way to build your
+          portfolio, resume, and apply to jobs
+        </p>
 
-        <div className="flex flex-col md:flex-row gap-[40px] mt-[100px]">
+        <Link
+          href="/canvas"
+          className="inline-block rounded bg-red-700 text-white px-4 py-2 text-sm font-medium"
+        >
+          Open Canvas
+        </Link>
+
+        <div className="flex flex-col md:flex-row justify-center gap-10 mt-20">
           {features.map((feature, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-start text-start rounded-lg w-[230px] py-2"
+              className="flex flex-col items-start text-left rounded-lg w-[230px]"
             >
               <h3 className="text-[18px] mb-2 flex items-center">
                 <img
                   src={feature.img}
                   alt={feature.title}
-                  className="w-5 h-5 mr-2 "
+                  className="w-5 h-5 mr-2"
                 />
-                {feature.title}{" "}
-                <i className="ri-arrow-right-line ml-[75px]"></i>
+                {feature.title}
               </h3>
-              <p className="text-gray-500">{feature.desc}</p>
+              <p className="text-gray-500 text-sm">{feature.desc}</p>
             </div>
           ))}
         </div>
-      </div>
-      <div className="absolute inset-0 z-1 top-14 left-100">
-        <img
-          className=" w-90 object-cover translate-x-[390px] opacity-30"
-          src="https://i.pinimg.com/1200x/94/8a/3b/948a3bcb02f73a7a91afbb9a53a6c4b7.jpg"
-          alt="Hero Background"
-        />
       </div>
     </section>
   );

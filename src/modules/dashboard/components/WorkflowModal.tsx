@@ -18,7 +18,8 @@ interface WorkflowModalProps {
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
-  if (typeof maybeError?.response?.data?.error === "string") return maybeError.response.data.error;
+  if (typeof maybeError?.response?.data?.error === "string")
+    return maybeError.response.data.error;
   return "Failed to save workflow";
 }
 
@@ -52,7 +53,10 @@ export function WorkflowModal({
     }
 
     try {
-      await onSubmit({ name: trimmedName, description: description.trim() || undefined });
+      await onSubmit({
+        name: trimmedName,
+        description: description.trim() || undefined,
+      });
       onClose();
     } catch (err) {
       setError(getErrorMessage(err));
@@ -61,10 +65,14 @@ export function WorkflowModal({
 
   return (
     <Modal open={open}>
-      <form className="w-[420px] space-y-3" onSubmit={submit}>
+      <form className="w-[420px] space-y-3 z-99" onSubmit={submit}>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">{title}</h2>
-          <button type="button" className="text-sm text-gray-600" onClick={onClose}>
+          <button
+            type="button"
+            className="text-sm text-gray-600"
+            onClick={onClose}
+          >
             Close
           </button>
         </div>
@@ -77,16 +85,28 @@ export function WorkflowModal({
 
         <div>
           <label className="mb-1 block text-sm font-medium">Name</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="My workflow" />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="My workflow"
+          />
         </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium">Description</label>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional" />
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Optional"
+          />
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" className="bg-gray-200 text-black" onClick={onClose}>
+          <Button
+            type="button"
+            className="bg-gray-200 text-black"
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>

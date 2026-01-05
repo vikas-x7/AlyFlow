@@ -4,13 +4,11 @@ import { Navbar } from "@/shared/components/layout/Navbar";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[#010102]">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Navbar />
         <main className="flex-1">{children}</main>
       </div>
     </div>
   );
 }
-

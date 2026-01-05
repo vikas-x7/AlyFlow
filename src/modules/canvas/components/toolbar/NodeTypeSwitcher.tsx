@@ -5,25 +5,48 @@ export function NodeTypeSwitcher({
 }) {
   return (
     <div className="flex gap-2">
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("text")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("text")}
+      >
         Text
       </button>
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("image")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("image")}
+      >
         Image
       </button>
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("video")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("video")}
+      >
         Video
       </button>
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("link")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("link")}
+      >
         Link
       </button>
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("file")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("file")}
+      >
         File
       </button>
-      <button type="button" className="text-xs border rounded px-2 py-1" onClick={() => onAdd("code")}>
+      <button
+        type="button"
+        className="text-xs border rounded px-2 py-1"
+        onClick={() => onAdd("code")}
+      >
         Code
       </button>
     </div>
   );
 }
-

@@ -1,13 +1,11 @@
 export function Features() {
   return (
     <section className="py-12">
-      <h3 className="text-2xl font-semibold mb-4 text-center">Features</h3>
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="border rounded p-4">Feature 1</div>
-        <div className="border rounded p-4">Feature 2</div>
-        <div className="border rounded p-4">Feature 3</div>
-      </div>
+      <img
+        src="https://i.pinimg.com/736x/f9/7d/15/f97d15f7856f96c0febec65399965d64.jpg"
+        alt=""
+        className="w-full"
+      />
     </section>
   );
 }
-

@@ -26,8 +26,15 @@ export function CreateWorkflowModal({
       return;
     }
 
-    await onCreate({ name: name.trim(), description: description.trim() || undefined }).catch((err: any) => {
-      setError(typeof err?.response?.data?.error === "string" ? err.response.data.error : "Failed to create workflow");
+    await onCreate({
+      name: name.trim(),
+      description: description.trim() || undefined,
+    }).catch((err: any) => {
+      setError(
+        typeof err?.response?.data?.error === "string"
+          ? err.response.data.error
+          : "Failed to create workflow",
+      );
     });
 
     if (!error) {
@@ -39,10 +46,14 @@ export function CreateWorkflowModal({
 
   return (
     <Modal open={open}>
-      <form className="w-[420px] space-y-3" onSubmit={submit}>
+      <form className="w-[420px] space-y-3 z-999" onSubmit={submit}>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Create workflow</h2>
-          <button type="button" className="text-sm text-gray-600" onClick={onClose}>
+          <button
+            type="button"
+            className="text-sm text-gray-600"
+            onClick={onClose}
+          >
             Close
           </button>
         </div>
@@ -55,7 +66,11 @@ export function CreateWorkflowModal({
 
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="My workflow" />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="My workflow"
+          />
         </div>
 
         <div>
@@ -68,7 +83,11 @@ export function CreateWorkflowModal({
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" className="bg-gray-200 text-black" onClick={onClose}>
+          <Button
+            type="button"
+            className="bg-gray-200 text-black"
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isCreating}>
@@ -79,4 +98,3 @@ export function CreateWorkflowModal({
     </Modal>
   );
 }
-
