@@ -37,60 +37,52 @@ export function Sidebar() {
   const [editing, setEditing] = useState<Workflow | null>(null);
 
   const activeWorkflowId = useMemo(() => {
-    const parts = pathname.split("/");
-    return parts[1] === "canvas" ? (parts[2] ?? null) : null;
+    const pathParts = pathname.split("/");
+    return pathParts[1] === "canvas" ? (pathParts[2] ?? null) : null;
   }, [pathname]);
 
   return (
     <>
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed top-4 left-4 z-50 bg-black text-white p-2 rounded-md shadow-lg"
-        >
-          <HiBars3 size={20} />
-        </button>
-      )}
-
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-30"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-[#0D0D0D] border-r 
-        transition-transform duration-300 z-40 p-4
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`h-screen transition-all duration-300 border-r bg-[#0D0D0D] ${
+          isOpen ? "w-64 p-4" : "w-16 p-2"
+        }`}
       >
+        {/* Header */}
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm font-semibold text-white/80">Aly flow</div>
+          {isOpen && (
+            <div className="text-sm font-semibold text-white/80">Aly flow</div>
+          )}
 
-          <button onClick={() => setIsOpen(false)} className="text-white/70">
-            <IoClose size={20} />
-          </button>
-        </div>
-
-        <div className="mb-3 flex justify-end">
           <button
-            type="button"
-            className="rounded px-2 py-1 text-xs font-medium text-white/80"
-            onClick={() => setCreateOpen(true)}
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="text-white/70"
           >
-            <FaRegPenToSquare size={18} />
+            {isOpen ? <IoClose size={20} /> : <HiBars3 size={20} />}
           </button>
         </div>
 
-        {/* Content */}
-        {error ? (
+        {/* Create button */}
+        {isOpen && (
+          <div className="mb-3 flex justify-between items-center">
+            <button
+              type="button"
+              className="rounded px-2 py-1 text-xs font-medium text-white/80"
+              onClick={() => setCreateOpen(true)}
+            >
+              <FaRegPenToSquare size={18} />
+            </button>
+          </div>
+        )}
+
+        {!isOpen ? null : error ? (
           <div className="mb-3 rounded border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700">
             {getErrorMessage(error)}
           </div>
         ) : isLoading ? (
           <Loader />
         ) : workflows.length === 0 ? (
-          <div className="rounded border p-3 text-xs text-gray-600 bg-white">
+          <div className="rounded border p-3 text-xs text-gray-600">
             No workflows yet.
           </div>
         ) : (
@@ -111,7 +103,6 @@ export function Sidebar() {
                     <Link
                       href={`/canvas/${workflow.id}`}
                       className="min-w-0 flex-1"
-                      onClick={() => setIsOpen(false)}
                     >
                       <div className="truncate text-sm font-medium">
                         {workflow.name}
@@ -146,7 +137,7 @@ export function Sidebar() {
         )}
       </aside>
 
-      {/* Create Modal */}
+      {/* Modals unchanged */}
       <WorkflowModal
         open={createOpen}
         title="Create workflow"
@@ -156,11 +147,9 @@ export function Sidebar() {
         onSubmit={async (input) => {
           const workflow = await createWorkflow(input);
           router.push(`/canvas/${workflow.id}`);
-          setIsOpen(false);
         }}
       />
 
-      {/* Edit Modal */}
       <WorkflowModal
         open={!!editing}
         title="Edit workflow"
@@ -179,7 +168,6 @@ export function Sidebar() {
           if (!editing) return;
           const workflow = await updateWorkflow(editing.id, input);
           router.push(`/canvas/${workflow.id}`);
-          setIsOpen(false);
         }}
       />
     </>
