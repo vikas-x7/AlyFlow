@@ -5,80 +5,66 @@ import { LoginForm } from "@/modules/auth/components/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#050509] text-white">
-      <div className="mx-auto flex h-full max-w-6xl flex-col px-6 py-6">
-        <header className="mb-10 flex items-center justify-between text-sm text-gray-400">
-          <Link href="/" className="flex items-center gap-2 hover:text-white">
-            <span className="text-lg">←</span>
-            <span>Back to home</span>
+    <div className="min-h-screen bg-[#0D0D0D] text-white flex items-center justify-center px-6">
+      <div className="w-full max-w-md">
+        {/* Back Link */}
+        <div className="mb-8 text-sm text-gray-400">
+          <Link href="/" className="hover:text-white">
+            ← Back to home
           </Link>
-        </header>
+        </div>
 
-        <main className="flex flex-1 flex-col gap-12 lg:flex-row">
-          <section className="hidden flex-1 flex-col justify-between lg:flex">
-            <div />
-            <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-xs text-gray-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                <span>People platform for fast-growing teams</span>
-              </div>
-              <h1 className="mb-4 text-3xl font-semibold leading-tight text-white md:text-4xl">
-                Register or login with your work account.
-              </h1>
-              <p className="max-w-md text-sm text-gray-400">
-                Keep hiring, onboarding, and performance in one place. Designed for modern HR and managers.
-              </p>
-            </div>
-            <div className="mb-4 text-xs text-gray-500">
-              Trusted by startups scaling from 5 to 500+ people.
-            </div>
-          </section>
+        {/* Card */}
+        <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-8 shadow-xl backdrop-blur">
+          {/* Heading */}
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-semibold">Welcome back</h2>
+            <p className="mt-1 text-sm text-gray-400">
+              Please enter your details to sign in.
+            </p>
+          </div>
 
-          <section className="flex flex-1 items-center justify-center">
-            <div className="w-full max-w-md rounded-2xl border border-white/5 bg-white/5 px-6 py-7 shadow-xl backdrop-blur">
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-white">Register or login</h2>
-                <p className="mt-1 text-sm text-gray-400">
-                  To keep things easy, just log in with your work email or HR tool.
-                </p>
-              </div>
+          {/* Social Buttons */}
+          <div className="mb-6 space-y-3">
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+            >
+              <span className="text-lg">G</span>
+              <span>Continue with Google</span>
+            </button>
 
-              <div className="mb-6 space-y-3">
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium text-white hover:border-white/30"
-                >
-                  <span className="text-lg">G</span>
-                  <span>Sign in with Google</span>
-                </button>
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium text-white hover:border-white/30"
-                >
-                  <span className="text-lg"></span>
-                  <span>Sign in with Apple</span>
-                </button>
-              </div>
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+            >
+              <span className="text-lg"></span>
+              <span>Continue with Apple</span>
+            </button>
+          </div>
 
-              <div className="mb-6 flex items-center gap-3 text-xs text-gray-500">
-                <div className="h-px flex-1 bg-white/10" />
-                <span>Or continue with email</span>
-                <div className="h-px flex-1 bg-white/10" />
-              </div>
+          {/* Divider */}
+          <div className="mb-6 flex items-center gap-3 text-xs text-gray-500">
+            <div className="h-px flex-1 bg-white/10" />
+            <span>Or sign in with</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
 
-              <LoginForm showTitle={false} />
+          {/* Form */}
+          <LoginForm showTitle={false} />
 
-              <p className="mt-4 text-center text-xs text-gray-400">
-                Not signed up yet?{" "}
-                <Link href="/register" className="font-medium text-gray-100 hover:underline">
-                  Register now
-                </Link>
-              </p>
-            </div>
-          </section>
-        </main>
+          {/* Register */}
+          <p className="mt-4 text-center text-xs text-gray-400">
+            Not signed up yet?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-white hover:underline"
+            >
+              Register now
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
-
