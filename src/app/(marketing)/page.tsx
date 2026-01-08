@@ -15,13 +15,13 @@ export default function LandingPage() {
             <GiCrossedAirFlows />
             Aly flow
           </Link>
+          <div className="flex gap-5">
+            <p>home </p>
+            <p>About </p>
+            <p>Price </p>
+          </div>
 
           <nav className="flex items-center gap-10 text-sm ">
-            <div className="flex gap-5">
-              <p>home </p>
-              <p>About </p>
-              <p>Price </p>
-            </div>
             <Link
               href="/login"
               className="bg-black text-white/80 px-2  py-1 rounded-sm"
@@ -32,18 +32,6 @@ export default function LandingPage() {
         </div>
       </header>
       <Hero />
-
-      {/* <section className=" py-10 border-y border-white/5 mb-10">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-center gap-15 opacity-60  tracking-wide text-gray-400 text-xl">
-            {logos.map((logo, i) => (
-              <span key={i} className="hover:opacity-100 transition">
-                {logo}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       <IntelligenceSection />
       <Features />

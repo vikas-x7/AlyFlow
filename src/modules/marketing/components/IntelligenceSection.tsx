@@ -26,19 +26,6 @@ export const IntelligenceSection = () => {
     <section className=" text-white px-6 mt-30 mb-40 font-gothic">
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
-        {/* <div className="max-w-3xl mb-16">
-          <h2 className="text-3xl md:text-4xl leading-snug mb-6">
-            Actually understands you in real time,
-            <br /> no awkward pauses, no blank stares
-          </h2>
-
-          <p className="text-gray-400 leading-relaxed">
-            It doesn’t just keep up — it dominates. Complex addresses? Weird
-            phone numbers? Random acronyms no one should be saying out loud? All
-            handled without flinching. You talk, it listens, and responds like
-            it actually paid attention.
-          </p>
-        </div> */}
 
         {/* Feature Grid */}
         <div className="grid md:grid-cols-4 gap-1">
