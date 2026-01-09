@@ -16,8 +16,15 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, password } = parsed.data;
-  const user = await prisma.user.findUnique({
-    where: { email },
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const user = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: normalizedEmail,
+        mode: "insensitive",
+      },
+    },
     select: { id: true, email: true, name: true, passwordHash: true },
   });
 
@@ -36,4 +43,3 @@ export async function POST(req: NextRequest) {
     { status: 200 },
   );
 }
-

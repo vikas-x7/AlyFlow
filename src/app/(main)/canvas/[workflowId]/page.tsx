@@ -1,20 +1,22 @@
 "use client";
 
+import { use } from "react";
 import "reactflow/dist/style.css";
-import ReactFlow, { Background, Controls } from "reactflow";
+import ReactFlow from "reactflow";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
 
 interface CanvasPageProps {
-  params: {
+  params: Promise<{
     workflowId: string;
-  };
+  }>;
 }
 
 export default function CanvasPage({ params }: CanvasPageProps) {
-  return <CanvasClient workflowId={params.workflowId} />;
+  const { workflowId } = use(params);
+  return <CanvasClient workflowId={workflowId} />;
 }
 
 function CanvasClient({ workflowId }: { workflowId: string }) {
@@ -33,14 +35,28 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
   const autosave = useAutoSave({
     workflowId,
-    nodes,
-    edges,
     enabled: true,
     ready: !isLoading,
   });
 
   return (
     <div className="h-[calc(100vh-0px)] flex flex-col">
+      <div className="absolute top-4 right-4 z-50">
+        {autosave.error ? (
+          <div className="rounded border border-red-400 bg-red-50 px-3 py-1 text-xs text-red-700">
+            Autosave failed. Retrying...
+          </div>
+        ) : autosave.isSaving ? (
+          <div className="rounded border border-amber-300 bg-amber-50 px-3 py-1 text-xs text-amber-800">
+            Saving...
+          </div>
+        ) : autosave.lastSavedAt ? (
+          <div className="rounded border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs text-emerald-800">
+            Saved {autosave.lastSavedAt.toLocaleTimeString()}
+          </div>
+        ) : null}
+      </div>
+
       <div className="absolute bottom-4 z-90 right-130">
         <NodeTypeSwitcher onAdd={addNodeOfType} />
       </div>

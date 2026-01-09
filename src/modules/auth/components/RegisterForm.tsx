@@ -18,7 +18,7 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
     e.preventDefault();
     setError(null);
 
-    const parsed = registerSchema.safeParse({ name, email, password });
+    const parsed = registerSchema.safeParse({ name: name.trim(), email: email.trim(), password });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;

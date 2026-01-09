@@ -17,7 +17,7 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
     e.preventDefault();
     setError(null);
 
-    const parsed = loginSchema.safeParse({ email, password });
+    const parsed = loginSchema.safeParse({ email: email.trim(), password });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;

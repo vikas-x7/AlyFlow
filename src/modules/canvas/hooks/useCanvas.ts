@@ -27,6 +27,7 @@ function makeId(prefix: string) {
 export function useCanvas(workflowId: string) {
   const nodes = useCanvasStore((s) => s.nodes);
   const edges = useCanvasStore((s) => s.edges);
+  const setCanvasSnapshot = useCanvasStore((s) => s.setCanvasSnapshot);
   const setNodes = useCanvasStore((s) => s.setNodes);
   const setEdges = useCanvasStore((s) => s.setEdges);
 
@@ -34,6 +35,13 @@ export function useCanvas(workflowId: string) {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!workflowId) {
+      setCanvasSnapshot({ nodes: [], edges: [] });
+      setIsLoading(false);
+      setLoadError("Invalid workflow id");
+      return;
+    }
+
     let cancelled = false;
     setIsLoading(true);
     setLoadError(null);
@@ -43,14 +51,15 @@ export function useCanvas(workflowId: string) {
       .then((res) => {
         if (cancelled) return;
         const canvas = res.data?.canvas;
-        setNodes((Array.isArray(canvas?.nodes) ? canvas.nodes : []) as Node[]);
-        setEdges((Array.isArray(canvas?.edges) ? canvas.edges : []) as Edge[]);
+        setCanvasSnapshot({
+          nodes: (Array.isArray(canvas?.nodes) ? canvas.nodes : []) as Node[],
+          edges: (Array.isArray(canvas?.edges) ? canvas.edges : []) as Edge[],
+        });
       })
       .catch((e: any) => {
         if (cancelled) return;
         setLoadError(typeof e?.response?.data?.error === "string" ? e.response.data.error : "Failed to load canvas");
-        setNodes([]);
-        setEdges([]);
+        setCanvasSnapshot({ nodes: [], edges: [] });
       })
       .finally(() => {
         if (cancelled) return;
@@ -60,18 +69,20 @@ export function useCanvas(workflowId: string) {
     return () => {
       cancelled = true;
     };
-  }, [workflowId, setNodes, setEdges]);
+  }, [workflowId, setCanvasSnapshot]);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      setNodes((prev) => applyNodeChanges(changes, prev));
+      const shouldMarkDirty = changes.some((change) => change.type !== "select");
+      setNodes((prev) => applyNodeChanges(changes, prev), { markDirty: shouldMarkDirty });
     },
     [setNodes],
   );
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      setEdges((prev) => applyEdgeChanges(changes, prev));
+      const shouldMarkDirty = changes.some((change) => change.type !== "select");
+      setEdges((prev) => applyEdgeChanges(changes, prev), { markDirty: shouldMarkDirty });
     },
     [setEdges],
   );
@@ -144,4 +155,3 @@ export function useCanvas(workflowId: string) {
     addNodeOfType,
   };
 }
-

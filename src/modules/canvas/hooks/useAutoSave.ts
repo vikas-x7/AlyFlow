@@ -1,49 +1,157 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Edge, Node } from "reactflow";
-import { useDebounce } from "@/shared/hooks/useDebounce";
 import { canvasService } from "../services/canvas.service";
+import { stripTransientEdge, stripTransientNode, useCanvasStore } from "../store/canvas.store";
+
+const AUTOSAVE_DEBOUNCE_MS = 2000;
+const AUTOSAVE_MAX_RETRY_DELAY_MS = 15000;
+
+type PendingAutosavePayload = {
+  dirtyNodes: Node[];
+  removedNodeIds: string[];
+  edges?: Edge[];
+};
+
+function getPendingAutosavePayload(): PendingAutosavePayload | null {
+  const state = useCanvasStore.getState();
+  const dirtyNodes = state.nodes.filter((node) => node.isDirty);
+  const removedNodeIds = [...state.removedNodeIds];
+  const edges = state.isEdgesDirty ? state.edges.map((edge) => stripTransientEdge(edge)) : undefined;
+
+  if (dirtyNodes.length === 0 && removedNodeIds.length === 0 && !edges) {
+    return null;
+  }
+
+  return {
+    dirtyNodes: dirtyNodes.map((node) => stripTransientNode(node)),
+    removedNodeIds,
+    edges,
+  };
+}
 
 export function useAutoSave({
   workflowId,
-  nodes,
-  edges,
   enabled,
   ready,
 }: {
   workflowId: string;
-  nodes: Node[];
-  edges: Edge[];
   enabled: boolean;
   ready: boolean;
 }) {
+  const lastMutationAt = useCanvasStore((s) => s.lastMutationAt);
+  const markSaved = useCanvasStore((s) => s.markSaved);
+
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const first = useRef(true);
+  const isSavingRef = useRef(false);
+  const queuedWhileSavingRef = useRef(false);
+  const retryAttemptRef = useRef(0);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isUnmountedRef = useRef(false);
 
-  const payload = useDebounce({ nodes, edges }, 800);
+  const flushPendingChanges = useCallback(async () => {
+    if (!workflowId || !enabled || !ready || isUnmountedRef.current) return;
 
-  useEffect(() => {
-    if (!enabled || !ready) return;
-    if (first.current) {
-      first.current = false;
+    if (isSavingRef.current) {
+      queuedWhileSavingRef.current = true;
       return;
     }
 
+    const payload = getPendingAutosavePayload();
+    if (!payload) {
+      setError(null);
+      return;
+    }
+
+    if (retryTimerRef.current) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+
+    isSavingRef.current = true;
     setIsSaving(true);
     setError(null);
-    canvasService
-      .save(workflowId, payload)
-      .then((res) => {
-        const ts = res.data?.updatedAt ? new Date(res.data.updatedAt) : new Date();
-        setLastSavedAt(ts);
-      })
-      .catch((e: any) => {
-        setError(typeof e?.response?.data?.error === "string" ? e.response.data.error : "Autosave failed");
-      })
-      .finally(() => setIsSaving(false));
-  }, [enabled, ready, workflowId, payload]);
+
+    try {
+      const res = await canvasService.save(workflowId, {
+        dirtyNodes: payload.dirtyNodes,
+        removedNodeIds: payload.removedNodeIds,
+        edges: payload.edges,
+      });
+
+      markSaved({
+        savedNodes: payload.dirtyNodes,
+        removedNodeIds: payload.removedNodeIds,
+        savedEdges: payload.edges,
+      });
+
+      const ts = res.data?.updatedAt ? new Date(res.data.updatedAt) : new Date();
+      setLastSavedAt(ts);
+      retryAttemptRef.current = 0;
+    } catch (e: any) {
+      setError(typeof e?.response?.data?.error === "string" ? e.response.data.error : "Autosave failed");
+
+      const attempt = retryAttemptRef.current + 1;
+      retryAttemptRef.current = attempt;
+      const delay = Math.min(
+        AUTOSAVE_DEBOUNCE_MS * 2 ** (attempt - 1),
+        AUTOSAVE_MAX_RETRY_DELAY_MS,
+      );
+
+      retryTimerRef.current = setTimeout(() => {
+        void flushPendingChanges();
+      }, delay);
+    } finally {
+      if (isUnmountedRef.current) return;
+
+      isSavingRef.current = false;
+      setIsSaving(false);
+
+      if (queuedWhileSavingRef.current) {
+        queuedWhileSavingRef.current = false;
+
+        const mutationAt = useCanvasStore.getState().lastMutationAt;
+        const elapsed = mutationAt > 0 ? Date.now() - mutationAt : AUTOSAVE_DEBOUNCE_MS;
+        const delay = Math.max(0, AUTOSAVE_DEBOUNCE_MS - elapsed);
+
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = setTimeout(() => {
+          void flushPendingChanges();
+        }, delay);
+      }
+    }
+  }, [enabled, ready, workflowId, markSaved]);
+
+  useEffect(() => {
+    if (!workflowId || !enabled || !ready || lastMutationAt <= 0) return;
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      void flushPendingChanges();
+    }, AUTOSAVE_DEBOUNCE_MS);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+    };
+  }, [workflowId, enabled, ready, lastMutationAt, flushPendingChanges]);
+
+  useEffect(() => {
+    return () => {
+      isUnmountedRef.current = true;
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, []);
 
   return { isSaving, lastSavedAt, error };
 }
-

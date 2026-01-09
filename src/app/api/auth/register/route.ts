@@ -16,12 +16,27 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, password, name } = parsed.data;
+  const normalizedEmail = email.trim().toLowerCase();
   const passwordHash = await bcrypt.hash(password, 10);
+
+  const existing = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: normalizedEmail,
+        mode: "insensitive",
+      },
+    },
+    select: { id: true },
+  });
+
+  if (existing) {
+    return NextResponse.json({ error: "Email already exists" }, { status: 409 });
+  }
 
   try {
     const user = await prisma.user.create({
       data: {
-        email,
+        email: normalizedEmail,
         name,
         passwordHash,
       },
@@ -39,4 +54,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
