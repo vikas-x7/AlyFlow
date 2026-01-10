@@ -2,37 +2,15 @@ import { Features } from "@/modules/marketing/components/Features";
 import { Footer } from "@/modules/marketing/components/Footer";
 import { Hero } from "@/modules/marketing/components/Hero";
 import { IntelligenceSection } from "@/modules/marketing/components/IntelligenceSection";
+import Navbar from "@/modules/marketing/components/Navbar";
 import Link from "next/link";
 import { GiCrossedAirFlows } from "react-icons/gi";
 
 export default function LandingPage() {
-  const logos = ["tldraw", "eraser", "draw", "exelidraw", "excalidraw"];
   return (
-    <main className="mx-auto w-6xl">
-      <header className="text-black w-6xl fixed  top-10  z-90  bg-[#CFCFCF] font-gothic rounded-sm">
-        <div className="px-6 py-2 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <GiCrossedAirFlows />
-            Aly flow
-          </Link>
-          <div className="flex gap-5">
-            <p>home </p>
-            <p>About </p>
-            <p>Price </p>
-          </div>
-
-          <nav className="flex items-center gap-10 text-sm ">
-            <Link
-              href="/login"
-              className="bg-black text-white/80 px-2  py-1 rounded-sm"
-            >
-              Login
-            </Link>
-          </nav>
-        </div>
-      </header>
+    <main className="mx-auto ">
+      <Navbar />
       <Hero />
-
       <IntelligenceSection />
       <Features />
       <section className=" text-white  font-gothic">

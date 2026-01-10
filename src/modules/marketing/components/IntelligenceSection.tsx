@@ -32,7 +32,7 @@ export const IntelligenceSection = () => {
           {features.map((feature, i) => (
             <div key={i} className="space-y-4">
               {/* Visual Block */}
-              <div className="h-50  overflow-hidden relative bg-[#11161d]">
+              <div className="h-50  overflow-hidden relative bg-black">
                 {feature.variant === "purpleLines" && (
                   <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,#7c3aed,#7c3aed_2px,transparent_2px,transparent_6px)] opacity-60" />
                 )}
@@ -42,7 +42,7 @@ export const IntelligenceSection = () => {
                 )}
 
                 {feature.variant === "gradient" && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-400 to-yellow-300" />
+                  <div className="absolute inset-0 bg-linear-to-br from-purple-500 via-pink-400 to-yellow-300" />
                 )}
               </div>
 
