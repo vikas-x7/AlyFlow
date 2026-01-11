@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer className=" text-white px-6 py-16 border-t border-white/10 font-gothic">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+      <div className=" flex flex-col md:flex-row md:items-center md:justify-between gap-10">
         {/* Left Side */}
         <div className="max-w-md">
           <div className="flex items-center gap-2 mb-4">

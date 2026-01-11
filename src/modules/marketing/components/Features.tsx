@@ -2,7 +2,7 @@ export function Features() {
   return (
     <section className="py-12">
       <img
-        src="https://res.cloudinary.com/dyv9kenuj/image/upload/v1772477502/Screenshot_from_2026-03-03_00-21-21_l4puls.png"
+        src="https://i.pinimg.com/1200x/81/fd/d5/81fdd52c8d014f82ac8d4a84028fa2f7.jpg"
         alt=""
         className="w-full p-3 bg-white/40 mb-50"
       />

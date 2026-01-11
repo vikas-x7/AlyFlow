@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const Hero = () => {
   return (
-    <section className="relative h-screen bg-black text-white overflow-hidden font-gothic">
+    <section className="relative  bg-black text-white overflow-hidden font-gothic">
       <div className="absolute right-1/3 top-30  opacity-80 pointer-events-none">
         <img
           src="https://i.pinimg.com/originals/32/01/26/320126a400f1eba249fd922a119f7281.gif"
@@ -13,7 +13,7 @@ export const Hero = () => {
         />
       </div>
 
-      <div className="z-10 px-6 py-32 mt-65 flex justify-between items-end">
+      <div className="z-10 px-6 py-32 mt-75 flex justify-between items-end">
         <div>
           <h1 className="text-4xl md:text-6xl max-w-2xl mb-8 leading-13 -tracking-[4px]">
             Design, draw, and <br /> organize everything
