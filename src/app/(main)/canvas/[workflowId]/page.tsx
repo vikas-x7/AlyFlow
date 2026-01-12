@@ -75,6 +75,14 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView
+          fitViewOptions={{
+            padding: 0.2,
+            minZoom: 0.5,
+            maxZoom: 1,
+          }}
+          minZoom={0.1}
+          maxZoom={2}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
         ></ReactFlow>
       </div>
     </div>

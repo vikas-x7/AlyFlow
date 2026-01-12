@@ -11,8 +11,9 @@ export default function LandingPage() {
     <main className="mx-auto ">
       <Navbar />
       <Hero />
-      <IntelligenceSection />
       <Features />
+      <IntelligenceSection />
+
       <Footer />
     </main>
   );
