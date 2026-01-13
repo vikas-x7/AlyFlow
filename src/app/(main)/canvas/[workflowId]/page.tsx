@@ -76,7 +76,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           onConnect={onConnect}
           fitView
           fitViewOptions={{
-            padding: 0.2,
             minZoom: 0.5,
             maxZoom: 1,
           }}

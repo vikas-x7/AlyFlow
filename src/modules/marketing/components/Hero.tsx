@@ -27,10 +27,6 @@ export const Hero = () => {
                 Map systems, plan projects, and structure complex ideas with
                 complete freedom and precision.
               </p>
-              <p className="text-gray-400 max-w-xs text-xs sm:text-sm md:text-[13px] leading-relaxed hidden md:block">
-                Map systems, plan projects, and structure complex ideas with
-                complete freedom and precision.
-              </p>
             </div>
           </div>
 
@@ -38,9 +34,7 @@ export const Hero = () => {
             <div className="hidden sm:block leading-tight text-xs md:text-sm">
               free <br /> forever
             </div>
-            <div className="hidden sm:block leading-tight text-xs md:text-sm">
-              free <br /> forever
-            </div>
+
             <Link
               href="/canvas"
               className="bg-white transition hover:bg-gray-200 text-black px-4 md:px-6 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
