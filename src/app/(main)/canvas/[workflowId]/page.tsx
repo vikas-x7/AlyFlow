@@ -7,6 +7,7 @@ import ReactFlow from "reactflow";
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
+import { Loader } from "@/shared/components/ui/Loader";
 
 interface CanvasPageProps {
   params: Promise<{
@@ -39,6 +40,24 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
     ready: !isLoading,
   });
 
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#101011]">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#101011]">
+        <div className="rounded border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
+          {loadError}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[calc(100vh-0px)] flex flex-col">
       <div className="absolute top-4 right-4 z-50">
@@ -61,10 +80,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         <NodeTypeSwitcher onAdd={addNodeOfType} />
       </div>
 
-      {loadError ? (
-        <div className="p-4 text-sm text-red-600">{loadError}</div>
-      ) : null}
-
       <div className="flex-1 bg-[#101011]">
         <ReactFlow
           nodes={nodes}
@@ -75,14 +90,11 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView
-          fitViewOptions={{
-            minZoom: 0.5,
-            maxZoom: 1,
-          }}
+          fitViewOptions={{ minZoom: 0.5, maxZoom: 1 }}
           minZoom={0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
-        ></ReactFlow>
+        />
       </div>
     </div>
   );

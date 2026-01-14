@@ -8,8 +8,8 @@ import type { Workflow } from "@/modules/dashboard/types";
 import { Loader } from "../ui/Loader";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { HiBars3 } from "react-icons/hi2";
+import { BsLayoutSidebar } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
@@ -49,8 +49,6 @@ export function Sidebar() {
   const [editingTitle, setEditingTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
 
-  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
-
   const activeWorkflowId = useMemo(() => {
     const pathParts = pathname.split("/");
     return pathParts[1] === "canvas" ? (pathParts[2] ?? null) : null;
@@ -62,20 +60,12 @@ export function Sidebar() {
   }, [inlineTitle]);
 
   useEffect(() => {
-    if (editingId !== null) setTimeout(() => editInputRef.current?.focus(), 50);
+    if (editingId !== null)
+      setTimeout(() => {
+        editInputRef.current?.focus();
+        editInputRef.current?.select();
+      }, 50);
   }, [editingId]);
-
-  // ✅ Fixed: mousedown + data-menu to avoid conflict
-  useEffect(() => {
-    function handleMouseDown(e: MouseEvent) {
-      const target = e.target as HTMLElement;
-      if (!target.closest("[data-menu]")) {
-        setMenuOpenId(null);
-      }
-    }
-    document.addEventListener("mousedown", handleMouseDown);
-    return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, []);
 
   function handleStartCreate() {
     setInlineTitle(getAutoTitle(workflows));
@@ -96,8 +86,7 @@ export function Sidebar() {
     if (e.key === "Escape") setInlineTitle(null);
   }
 
-  function handleStartEdit(workflow: Workflow) {
-    setMenuOpenId(null);
+  function handleDoubleClick(workflow: Workflow) {
     setEditingId(workflow.id);
     setEditingTitle(workflow.name);
   }
@@ -122,19 +111,22 @@ export function Sidebar() {
   return (
     <aside
       className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${
-        isOpen ? "w-64 p-4" : "w-16 p-2"
+        isOpen ? "w-64 p-4" : "w-12 p-3"
       }`}
     >
-      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         {isOpen && (
-          <div className="text-sm font-semibold text-white/80">Aly flow</div>
+          <div className="text-sm font-semibold text-white/80">Alyflow</div>
         )}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className="text-white/70 hover:text-white transition-colors "
+          className="text-white/70 hover:text-white transition-colors cursor-po"
         >
-          {isOpen ? <IoClose size={20} /> : <HiBars3 size={20} />}
+          {isOpen ? (
+            <BsLayoutSidebar size={14} />
+          ) : (
+            <BsLayoutSidebar size={14} />
+          )}
         </button>
       </div>
 
@@ -168,8 +160,8 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Workflow list — flex-1 so it fills space */}
-      <div className="flex-1 overflow-hidden">
+      {/* Workflow list */}
+      <div className="flex-1 overflow-hidden ">
         {!isOpen ? null : error ? (
           <div className="mb-3 rounded border border-red-900 bg-red-950 px-2 py-1 text-xs text-red-400">
             {getErrorMessage(error)}
@@ -185,71 +177,44 @@ export function Sidebar() {
             {workflows.map((workflow) => {
               const isActive = workflow.id === activeWorkflowId;
               const isEditing = editingId === workflow.id;
-              const isMenuOpen = menuOpenId === workflow.id;
 
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded border px-2 py-1.5 transition-colors relative ${
+                  className={`rounded border px-2 py-1.5 transition-colors relative ${
                     isActive
                       ? "border-[#2e2e2e] bg-[#1f1f1f]"
                       : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
                   }`}
                 >
-                  <div className="flex items-center gap-1">
-                    {isEditing ? (
-                      <input
-                        ref={editInputRef}
-                        value={editingTitle}
-                        onChange={(e) => setEditingTitle(e.target.value)}
-                        onBlur={() => handleEditSubmit(workflow)}
-                        onKeyDown={(e) => handleEditKeyDown(e, workflow)}
-                        className="min-w-0 flex-1 bg-transparent text-xs text-white outline-none border-b border-[#3a3a3a]"
-                      />
-                    ) : (
-                      <Link
-                        href={`/canvas/${workflow.id}`}
-                        className="min-w-0 flex-1"
-                      >
-                        <div
-                          className={`truncate text-xs font-medium ${
-                            isActive ? "text-white" : "text-white/60"
-                          }`}
-                        >
-                          {workflow.name}
-                        </div>
-                      </Link>
-                    )}
-
-                    {!isEditing && (
-                      <button
-                        data-menu
-                        type="button"
-                        className="shrink-0 opacity-0 group-hover:opacity-100 text-white/40 hover:text-white transition-all"
-                        onClick={() =>
-                          setMenuOpenId(isMenuOpen ? null : workflow.id)
-                        }
-                      >
-                        <HiOutlineDotsHorizontal size={14} />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Dropdown */}
-                  {isMenuOpen && (
-                    <div
-                      data-menu
-                      className="absolute left-full top-0 ml-1 z-50 rounded border border-[#2e2e2e] bg-[#1a1a1a] shadow-lg overflow-hidden"
+                  {isEditing ? (
+                    // Inline edit input on double click
+                    <input
+                      ref={editInputRef}
+                      value={editingTitle}
+                      onChange={(e) => setEditingTitle(e.target.value)}
+                      onBlur={() => handleEditSubmit(workflow)}
+                      onKeyDown={(e) => handleEditKeyDown(e, workflow)}
+                      className="w-full bg-transparent text-xs text-white outline-none border-b border-[#3a3a3a] py-0.5"
+                    />
+                  ) : (
+                    // Single click = navigate, Double click = edit
+                    <Link
+                      href={`/canvas/${workflow.id}`}
+                      className="block"
+                      onDoubleClick={(e) => {
+                        e.preventDefault();
+                        handleDoubleClick(workflow);
+                      }}
                     >
-                      <button
-                        data-menu
-                        type="button"
-                        className="w-full px-4 py-2 text-left text-xs text-white/70 hover:bg-[#2a2a2a] hover:text-white transition-colors"
-                        onClick={() => handleStartEdit(workflow)}
+                      <div
+                        className={`truncate text-xs font-medium select-none ${
+                          isActive ? "text-white" : "text-white/60"
+                        }`}
                       >
-                        Rename
-                      </button>
-                    </div>
+                        {workflow.name}
+                      </div>
+                    </Link>
                   )}
                 </div>
               );
