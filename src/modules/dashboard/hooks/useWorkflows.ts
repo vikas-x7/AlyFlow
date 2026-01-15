@@ -39,6 +39,15 @@ export function useWorkflows() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await workflowService.remove(id);
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ["workflows"] });
+    },
+  });
+
   return {
     workflows: workflowsQuery.data ?? [],
     isLoading: workflowsQuery.isLoading,
@@ -49,5 +58,8 @@ export function useWorkflows() {
     updateWorkflow: (id: string, input: { name: string; description?: string }) =>
       updateMutation.mutateAsync({ id, input }),
     isUpdating: updateMutation.isPending,
+    deleteWorkflow: deleteMutation.mutateAsync,
+    isDeleting: deleteMutation.isPending,
   };
 }
+

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useWorkflows } from "@/modules/dashboard/hooks/useWorkflows";
 import type { Workflow } from "@/modules/dashboard/types";
 import { Loader } from "../ui/Loader";
-import { FaRegPenToSquare } from "react-icons/fa6";
+import { FaRegPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { HiBars3 } from "react-icons/hi2";
 import { BsLayoutSidebar } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
@@ -38,6 +38,7 @@ export function Sidebar() {
     createWorkflow,
     isCreating,
     updateWorkflow,
+    deleteWorkflow,
   } = useWorkflows();
 
   const [isOpen, setIsOpen] = useState(true);
@@ -110,9 +111,8 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${
-        isOpen ? "w-64 p-4" : "w-12 p-3"
-      }`}
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${isOpen ? "w-64 p-4" : "w-12 p-3"
+        }`}
     >
       <div className="mb-4 flex items-center justify-between">
         {isOpen && (
@@ -181,11 +181,10 @@ export function Sidebar() {
               return (
                 <div
                   key={workflow.id}
-                  className={`rounded border px-2 py-1.5 transition-colors relative ${
-                    isActive
+                  className={`group rounded border px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive
                       ? "border-[#2e2e2e] bg-[#1f1f1f]"
                       : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
-                  }`}
+                    }`}
                 >
                   {isEditing ? (
                     // Inline edit input on double click
@@ -198,23 +197,44 @@ export function Sidebar() {
                       className="w-full bg-transparent text-xs text-white outline-none border-b border-[#3a3a3a] py-0.5"
                     />
                   ) : (
-                    // Single click = navigate, Double click = edit
-                    <Link
-                      href={`/canvas/${workflow.id}`}
-                      className="block"
-                      onDoubleClick={(e) => {
-                        e.preventDefault();
-                        handleDoubleClick(workflow);
-                      }}
-                    >
-                      <div
-                        className={`truncate text-xs font-medium select-none ${
-                          isActive ? "text-white" : "text-white/60"
-                        }`}
+                    <>
+                      {/* Single click = navigate, Double click = edit */}
+                      <Link
+                        href={`/canvas/${workflow.id}`}
+                        className="flex-1 min-w-0"
+                        onDoubleClick={(e) => {
+                          e.preventDefault();
+                          handleDoubleClick(workflow);
+                        }}
                       >
-                        {workflow.name}
-                      </div>
-                    </Link>
+                        <div
+                          className={`truncate text-xs font-medium select-none ${isActive ? "text-white" : "text-white/60 group-hover:text-white/80"
+                            }`}
+                        >
+                          {workflow.name}
+                        </div>
+                      </Link>
+
+                      {/* Delete button (shows on hover) */}
+                      <button
+                        type="button"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (window.confirm("Are you sure you want to delete this workflow?")) {
+                            await deleteWorkflow(workflow.id);
+                            if (activeWorkflowId === workflow.id) {
+                              router.push("/");
+                            }
+                          }
+                        }}
+                        className={`text-red-400/0 hover:!text-red-400 transition-colors p-1 -mr-1 rounded hover:bg-red-400/10 group-hover:text-red-400/50 ${isActive ? "text-red-400/50" : ""
+                          }`}
+                        title="Delete workflow"
+                      >
+                        <FaRegTrashCan size={12} />
+                      </button>
+                    </>
                   )}
                 </div>
               );

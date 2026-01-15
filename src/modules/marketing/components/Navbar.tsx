@@ -41,13 +41,13 @@ function Navbar() {
         <nav className="hidden md:flex items-center gap-3 text-xs md:text-sm font-light tracking-wider">
           <Link
             href="/login"
-            className="bg-black hover:bg-white/10 text-white/80 px-3 md:px-4 py-1.5 md:py-2 rounded-sm transition text-xs md:text-sm"
+            className="bg-black hover:bg-white/10 text-white/80 px-3 md:px-4 py-1.5 md:py-2  transition text-xs md:text-sm"
           >
             LOGIN
           </Link>
           <Link
-            href="/signup"
-            className="bg-[#e72a0d] hover:bg-white/10 text-black px-3 md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-sm"
+            href="/register"
+            className="bg-[#e72a0d] hover:bg-[#e72a0d]/70 text-black px-3 md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-sm"
           >
             SIGN UP
           </Link>
