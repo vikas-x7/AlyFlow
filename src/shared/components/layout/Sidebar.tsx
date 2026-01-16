@@ -50,6 +50,8 @@ export function Sidebar() {
   const [editingTitle, setEditingTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
 
+  const [workflowToDelete, setWorkflowToDelete] = useState<Workflow | null>(null);
+
   const activeWorkflowId = useMemo(() => {
     const pathParts = pathname.split("/");
     return pathParts[1] === "canvas" ? (pathParts[2] ?? null) : null;
@@ -182,8 +184,8 @@ export function Sidebar() {
                 <div
                   key={workflow.id}
                   className={`group rounded border px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive
-                      ? "border-[#2e2e2e] bg-[#1f1f1f]"
-                      : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
+                    ? "border-[#2e2e2e] bg-[#1f1f1f]"
+                    : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
                     }`}
                 >
                   {isEditing ? (
@@ -218,15 +220,10 @@ export function Sidebar() {
                       {/* Delete button (shows on hover) */}
                       <button
                         type="button"
-                        onClick={async (e) => {
+                        onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          if (window.confirm("Are you sure you want to delete this workflow?")) {
-                            await deleteWorkflow(workflow.id);
-                            if (activeWorkflowId === workflow.id) {
-                              router.push("/");
-                            }
-                          }
+                          setWorkflowToDelete(workflow);
                         }}
                         className={`text-red-400/0 hover:!text-red-400 transition-colors p-1 -mr-1 rounded hover:bg-red-400/10 group-hover:text-red-400/50 ${isActive ? "text-red-400/50" : ""
                           }`}
@@ -263,6 +260,38 @@ export function Sidebar() {
         <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex justify-center">
           <div className="w-7 h-7 rounded-full bg-[#2e2e2e] flex items-center justify-center text-white/60 text-xs font-semibold">
             U
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {workflowToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-lg p-5 w-80 shadow-xl font-gothic text-left">
+            <h3 className="text-white font-medium text-base mb-2">Delete Workflow</h3>
+            <p className="text-white/60 text-sm mb-5 leading-relaxed">
+              Are you sure you want to delete <span className="font-semibold text-white/80">"{workflowToDelete.name}"</span>? This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setWorkflowToDelete(null)}
+                className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const id = workflowToDelete.id;
+                  setWorkflowToDelete(null);
+                  await deleteWorkflow(id);
+                }}
+                className="text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer px-4 py-1.5 rounded"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
