@@ -10,7 +10,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-[#000000] text-white flex font-gothic">
       <div className="hidden lg:block lg:w-1/2 relative">
         <img
-          src="https://i.pinimg.com/736x/da/de/ad/dadead154e13fc8bf31f625a96f702e6.jpg"
+          src="https://i.pinimg.com/1200x/96/5b/38/965b38428cae6266af88c1bbfc0dfe89.jpg"
           alt="register visual"
           className="absolute inset-0 w-full h-full object-cover"
         />

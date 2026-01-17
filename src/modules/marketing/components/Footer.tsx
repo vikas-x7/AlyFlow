@@ -1,4 +1,6 @@
+import { FaCuttlefish } from "react-icons/fa6";
 import { IoFishOutline } from "react-icons/io5";
+import { PiFlowArrowThin } from "react-icons/pi";
 
 export const Footer = () => {
   return (
@@ -6,8 +8,8 @@ export const Footer = () => {
       <div className=" flex flex-col md:flex-row md:items-center md:justify-between gap-10">
         <div className="max-w-md">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 flex items-center justify-center rounded-sm">
-              <IoFishOutline size={50} />
+            <div className=" flex items-center justify-center rounded-sm">
+              <PiFlowArrowThin size={40} />
             </div>
             <span className="text-xl  tracking-wide">Aly flow</span>
           </div>
@@ -22,9 +24,9 @@ export const Footer = () => {
             <input
               type="email"
               placeholder="NAME@EMAIL.COM"
-              className="flex-1 bg-white text-black px-4 py-3 text-sm outline-none"
+              className="flex-1 bg-white text-black px-4 py-2 text-sm outline-none"
             />
-            <button className="bg-[#E72A0D] border border-white/20 px-6 py-3 text-sm font-medium hover:bg-[#E72A0D]/80  hover:text-black transition">
+            <button className="bg-black border border-white/20 px-6 py-2 text-sm font-medium transition">
               SUBSCRIBE
             </button>
           </div>

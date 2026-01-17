@@ -50,7 +50,9 @@ export function Sidebar() {
   const [editingTitle, setEditingTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
 
-  const [workflowToDelete, setWorkflowToDelete] = useState<Workflow | null>(null);
+  const [workflowToDelete, setWorkflowToDelete] = useState<Workflow | null>(
+    null,
+  );
 
   const activeWorkflowId = useMemo(() => {
     const pathParts = pathname.split("/");
@@ -113,8 +115,9 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${isOpen ? "w-64 p-4" : "w-12 p-3"
-        }`}
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${
+        isOpen ? "w-64 p-4" : "w-10 p-3"
+      }`}
     >
       <div className="mb-4 flex items-center justify-between">
         {isOpen && (
@@ -183,10 +186,11 @@ export function Sidebar() {
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded border px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive
-                    ? "border-[#2e2e2e] bg-[#1f1f1f]"
-                    : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
-                    }`}
+                  className={`group rounded border px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
+                    isActive
+                      ? "border-[#2e2e2e] bg-[#1f1f1f]"
+                      : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
+                  }`}
                 >
                   {isEditing ? (
                     // Inline edit input on double click
@@ -210,8 +214,11 @@ export function Sidebar() {
                         }}
                       >
                         <div
-                          className={`truncate text-xs font-medium select-none ${isActive ? "text-white" : "text-white/60 group-hover:text-white/80"
-                            }`}
+                          className={`truncate text-xs font-medium select-none ${
+                            isActive
+                              ? "text-white"
+                              : "text-white/60 group-hover:text-white/80"
+                          }`}
                         >
                           {workflow.name}
                         </div>
@@ -225,8 +232,9 @@ export function Sidebar() {
                           e.stopPropagation();
                           setWorkflowToDelete(workflow);
                         }}
-                        className={`text-red-400/0 hover:!text-red-400 transition-colors p-1 -mr-1 rounded hover:bg-red-400/10 group-hover:text-red-400/50 ${isActive ? "text-red-400/50" : ""
-                          }`}
+                        className={`text-red-400/0 hover:text-red-400! transition-colors p-1 -mr-1 rounded hover:bg-red-400/10 group-hover:text-red-400/50 ${
+                          isActive ? "text-red-400/50" : ""
+                        }`}
                         title="Delete workflow"
                       >
                         <FaRegTrashCan size={12} />
@@ -268,9 +276,15 @@ export function Sidebar() {
       {workflowToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-lg p-5 w-80 shadow-xl font-gothic text-left">
-            <h3 className="text-white font-medium text-base mb-2">Delete Workflow</h3>
+            <h3 className="text-white font-medium text-base mb-2">
+              Delete Workflow
+            </h3>
             <p className="text-white/60 text-sm mb-5 leading-relaxed">
-              Are you sure you want to delete <span className="font-semibold text-white/80">"{workflowToDelete.name}"</span>? This action cannot be undone.
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-white/80">
+                "{workflowToDelete.name}"
+              </span>
+              ? This action cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
