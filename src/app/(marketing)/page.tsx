@@ -1,3 +1,4 @@
+import FAQ from "@/modules/marketing/components/Faq";
 import { Features } from "@/modules/marketing/components/Features";
 import { Footer } from "@/modules/marketing/components/Footer";
 import { Hero } from "@/modules/marketing/components/Hero";
@@ -13,7 +14,7 @@ export default function LandingPage() {
       <Hero />
       <Features />
       <IntelligenceSection />
-
+      <FAQ />
       <Footer />
     </main>
   );

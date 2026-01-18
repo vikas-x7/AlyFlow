@@ -4,6 +4,7 @@ import Link from "next/link";
 import { RegisterForm } from "@/modules/auth/components/RegisterForm";
 import { FaSquareGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
+import { IoLogoGithub } from "react-icons/io5";
 
 export default function RegisterPage() {
   return (
@@ -43,7 +44,7 @@ export default function RegisterPage() {
                 className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
               >
                 <span className="text-lg">
-                  <FaSquareGithub />
+                  <IoLogoGithub />
                 </span>
                 <span>Continue with Github</span>
               </button>
