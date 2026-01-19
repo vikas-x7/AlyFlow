@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import "reactflow/dist/style.css";
-import ReactFlow, { Background, BackgroundVariant } from "reactflow";
+import ReactFlow, { Background, BackgroundVariant, MiniMap } from "reactflow";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
@@ -94,7 +94,17 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           minZoom={0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
-        ></ReactFlow>
+        >
+          <MiniMap
+            style={{
+              width: 120,
+              height: 80,
+              background: "#0D0D0D",
+            }}
+            pannable
+            zoomable
+          />
+        </ReactFlow>
       </div>
     </div>
   );
