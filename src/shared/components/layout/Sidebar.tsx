@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useWorkflows } from "@/modules/dashboard/hooks/useWorkflows";
 import type { Workflow } from "@/modules/dashboard/types";
 import { Loader } from "../ui/Loader";
+import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { FaRegPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { HiBars3 } from "react-icons/hi2";
 import { BsLayoutSidebar } from "react-icons/bs";
@@ -53,6 +54,9 @@ export function Sidebar() {
   const [workflowToDelete, setWorkflowToDelete] = useState<Workflow | null>(
     null,
   );
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const { logout, user } = useAuth();
 
   const activeWorkflowId = useMemo(() => {
     const pathParts = pathname.split("/");
@@ -256,9 +260,20 @@ export function Sidebar() {
           </div>
           <div className="min-w-0">
             <div className="truncate text-xs font-medium text-white/80">
-              Username
+              {user?.name ?? "Username"}
             </div>
-            <div className="truncate text-xs text-white/40">user@email.com</div>
+            <div className="truncate text-xs text-white/40">
+              {user?.email ?? "user@email.com"}
+            </div>
+          </div>
+          <div className="ml-auto">
+            <button
+              type="button"
+              onClick={() => setShowLogoutConfirm(true)}
+              className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}
@@ -304,6 +319,45 @@ export function Sidebar() {
                 className="text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer px-4 py-1.5 rounded"
               >
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-lg p-5 w-80 shadow-xl font-gothic text-left">
+            <h3 className="text-white font-medium text-base mb-2">
+              Confirm Logout
+            </h3>
+            <p className="text-white/60 text-sm mb-5 leading-relaxed">
+              Are you sure you want to log out? You will need to sign in again
+              to access your canvases.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  setShowLogoutConfirm(false);
+                  try {
+                    await logout();
+                  } catch (e) {
+                    // ignore
+                  }
+                  router.replace("/login");
+                }}
+                className="text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer px-4 py-1.5 rounded"
+              >
+                Logout
               </button>
             </div>
           </div>
