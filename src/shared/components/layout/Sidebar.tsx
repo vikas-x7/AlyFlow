@@ -57,6 +57,20 @@ export function Sidebar() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const { logout, user } = useAuth();
+  const avatarUrl = (user as any)?.avatar || (user as any)?.image || null;
+  const initials = (() => {
+    const name = user?.name?.trim();
+    if (name)
+      return name
+        .split(" ")
+        .map((p) => p[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+    const email = user?.email?.trim();
+    if (email) return email[0].toUpperCase();
+    return "U";
+  })();
 
   const activeWorkflowId = useMemo(() => {
     const pathParts = pathname.split("/");
@@ -255,8 +269,18 @@ export function Sidebar() {
       {/* Bottom user section */}
       {isOpen && (
         <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#2e2e2e] flex items-center justify-center text-white/60 text-xs font-semibold shrink-0">
-            U
+          <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
+                {initials}
+              </div>
+            )}
           </div>
           <div className="min-w-0">
             <div className="truncate text-xs font-medium text-white/80">
@@ -281,8 +305,18 @@ export function Sidebar() {
       {/* Collapsed — just avatar */}
       {!isOpen && (
         <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex justify-center">
-          <div className="w-7 h-7 rounded-full bg-[#2e2e2e] flex items-center justify-center text-white/60 text-xs font-semibold">
-            U
+          <div className="w-7 h-7 rounded-full overflow-hidden">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
+                {initials}
+              </div>
+            )}
           </div>
         </div>
       )}
