@@ -11,6 +11,7 @@ import { FaRegPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { HiBars3 } from "react-icons/hi2";
 import { BsLayoutSidebar } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
+import { IoIosLogOut } from "react-icons/io";
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
@@ -133,11 +134,11 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic ${
-        isOpen ? "w-64 p-4" : "w-10 p-3"
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic  ${
+        isOpen ? "w-64 " : "w-10 "
       }`}
     >
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between p-3 border-b border-[#1f1f1f]">
         {isOpen && (
           <div className="text-sm font-semibold text-white/80">Alyflow</div>
         )}
@@ -155,10 +156,10 @@ export function Sidebar() {
 
       {/* Create button */}
       {isOpen && (
-        <div className="mb-3">
+        <div className="mb-3 px-3">
           <button
             type="button"
-            className="text-black cursor-pointer rounded-sm hover:text-black/80 transition-colors bg-white/70 w-full py-1 flex items-center justify-center gap-2"
+            className="text-black cursor-pointer rounded-sm hover:text-black/80 transition-colors bg-white/70 w-full py-1 flex items-center justify-center gap-2 "
             onClick={handleStartCreate}
             disabled={isCreating}
           >
@@ -170,21 +171,23 @@ export function Sidebar() {
 
       {/* Inline create input */}
       {isOpen && inlineTitle !== null && (
-        <div className="mb-2 rounded border border-[#3a3a3a] bg-[#1a1a1a] px-2 py-1">
-          <input
-            ref={inlineInputRef}
-            value={inlineTitle}
-            onChange={(e) => setInlineTitle(e.target.value)}
-            onBlur={handleInlineSubmit}
-            onKeyDown={handleInlineKeyDown}
-            className="w-full bg-transparent text-xs text-white outline-none placeholder:text-white/30"
-            placeholder="Untitled"
-          />
+        <div className="px-3">
+          <div className=" rounded border border-[#3a3a3a] bg-[#1a1a1a] px-2 py-1 ">
+            <input
+              ref={inlineInputRef}
+              value={inlineTitle}
+              onChange={(e) => setInlineTitle(e.target.value)}
+              onBlur={handleInlineSubmit}
+              onKeyDown={handleInlineKeyDown}
+              className="w-full bg-transparent  text-xs text-white outline-none placeholder:text-white/30  "
+              placeholder="Untitled"
+            />
+          </div>
         </div>
       )}
 
       {/* Workflow list */}
-      <div className="flex-1 overflow-hidden ">
+      <div className="flex-1 overflow-hidden p-3 ">
         {!isOpen ? null : error ? (
           <div className="mb-3 rounded border border-red-900 bg-red-950 px-2 py-1 text-xs text-red-400">
             {getErrorMessage(error)}
@@ -218,7 +221,7 @@ export function Sidebar() {
                       onChange={(e) => setEditingTitle(e.target.value)}
                       onBlur={() => handleEditSubmit(workflow)}
                       onKeyDown={(e) => handleEditKeyDown(e, workflow)}
-                      className="w-full bg-transparent text-xs text-white outline-none border-b border-[#3a3a3a] py-0.5"
+                      className="w-full bg-transparent text-xs text-white outline-none  py-0.5"
                     />
                   ) : (
                     <>
@@ -268,7 +271,7 @@ export function Sidebar() {
 
       {/* Bottom user section */}
       {isOpen && (
-        <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex items-center gap-2">
+        <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex items-center gap-2 p-3">
           <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
             {avatarUrl ? (
               <img
@@ -294,9 +297,9 @@ export function Sidebar() {
             <button
               type="button"
               onClick={() => setShowLogoutConfirm(true)}
-              className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+              className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
             >
-              Logout
+              <IoIosLogOut size={22} />
             </button>
           </div>
         </div>
@@ -305,7 +308,7 @@ export function Sidebar() {
       {/* Collapsed — just avatar */}
       {!isOpen && (
         <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex justify-center">
-          <div className="w-7 h-7 rounded-full overflow-hidden">
+          <div className="w-4 h-4 p-3 rounded-full overflow-hidden">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
