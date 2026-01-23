@@ -10,9 +10,24 @@ function Navbar() {
     <header className="bg-black fixed w-full z-90 py-1 text-white font-gothic border-b border-white/5">
       <div className="px-4 md:px-6 py-3 md:py-2 flex items-center justify-between">
         <div className="hidden md:flex gap-6 text-xs md:text-sm lg:text-[14px] font-light tracking-wider">
-          <p className="hover:text-white/60 transition cursor-pointer">HOME</p>
-          <p className="hover:text-white/60 transition cursor-pointer">ABOUT</p>
-          <p className="hover:text-white/60 transition cursor-pointer">FAQ</p>
+          <Link
+            href="/#home"
+            className="hover:text-white/60 transition cursor-pointer"
+          >
+            HOME
+          </Link>
+          <Link
+            href="/#about"
+            className="hover:text-white/60 transition cursor-pointer"
+          >
+            ABOUT
+          </Link>
+          <Link
+            href="/#faq"
+            className="hover:text-white/60 transition cursor-pointer"
+          >
+            FAQ
+          </Link>
         </div>
 
         <Link
@@ -56,15 +71,24 @@ function Navbar() {
 
       {isMenuOpen && (
         <div className="md:hidden bg-black border-t border-white/5 px-4 py-4 flex flex-col gap-4 animate-in fade-in duration-200">
-          <p className="text-sm hover:text-white/60 transition cursor-pointer">
+          <Link
+            href="/#home"
+            className="text-sm hover:text-white/60 transition cursor-pointer"
+          >
             HOME
-          </p>
-          <p className="text-sm hover:text-white/60 transition cursor-pointer">
+          </Link>
+          <Link
+            href="/#about"
+            className="text-sm hover:text-white/60 transition cursor-pointer"
+          >
             ABOUT
-          </p>
-          <p className="text-sm hover:text-white/60 transition cursor-pointer">
+          </Link>
+          <Link
+            href="/#faq"
+            className="text-sm hover:text-white/60 transition cursor-pointer"
+          >
             FAQ
-          </p>
+          </Link>
           <div className="border-t border-white/5 pt-4 flex flex-col gap-2">
             <Link
               href="/login"

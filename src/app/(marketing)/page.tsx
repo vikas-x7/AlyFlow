@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/modules/auth/store/auth.store";
 import FAQ from "@/modules/marketing/components/Faq";
+
 import { Features } from "@/modules/marketing/components/Features";
 import { Footer } from "@/modules/marketing/components/Footer";
 import { Hero } from "@/modules/marketing/components/Hero";
@@ -28,9 +29,10 @@ export default function LandingPage() {
   if (!mounted || token) return null;
 
   return (
-    <main className="mx-auto ">
+    <main id="home" className="mx-auto ">
       <Navbar />
       <Hero />
+
       <Features />
       <IntelligenceSection />
       <FAQ />

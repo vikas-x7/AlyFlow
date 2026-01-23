@@ -9,29 +9,34 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: "How much does a website cost?",
+    question: "What is Alyflow?",
     answer:
-      "Our pricing depends on the scope and complexity of your project. We offer flexible packages starting from a one-time build fee to ongoing subscription plans. Book a free discovery call and we'll provide a custom quote tailored to your needs.",
+      "Alyflow is a lightweight, Excel-style canvas for visually drawing workflows and diagrams. It's built for fast sketching - drag nodes, connect them, add labels, and organize ideas into reusable workflows.",
   },
   {
-    question: "How does the subscription work?",
+    question: "Is it like Excel?",
     answer:
-      "Our subscription gives you access to unlimited design revisions, monthly updates, hosting, and priority support — all for a flat monthly fee. You stay in full control with no long-term contracts.",
+      "While inspired by the grid and simplicity of spreadsheets, Alyflow focuses on visual workflows rather than cells and formulas. Think of it as a drawing canvas with spreadsheet-like speed and familiarity.",
   },
   {
-    question: "How do I pause or cancel?",
+    question: "How do I start a new workflow?",
     answer:
-      "You can pause or cancel your subscription at any time from your client dashboard. Pausing freezes billing for up to 60 days. Cancellations take effect at the end of your current billing cycle.",
+      "Click 'create new' in the sidebar or open the Canvas. You can add nodes, drag to connect them, rename items, and save your project. Workflows are automatically stored in your account.",
   },
   {
-    question: "How do I communicate with you?",
+    question: "Can I share or export my workflows?",
     answer:
-      "We primarily communicate via a shared Slack channel or email — whichever you prefer. You'll have a dedicated point of contact and can expect responses within one business day.",
+      "Yes — you can export workflows for reporting or share a link with collaborators (coming soon). Export options include common image and JSON formats for handoff or backup.",
   },
   {
-    question: "What if I don't like the design?",
+    question: "Is my data saved and private?",
     answer:
-      "We offer unlimited revisions until you're 100% satisfied. Our process begins with a detailed brief so we understand your vision before a single pixel is placed. Your approval is non-negotiable.",
+      "Workflows are saved to your account and only accessible to you and collaborators you explicitly share with. We recommend using a secure account and keeping your credentials private.",
+  },
+  {
+    question: "Is Alyflow free to use?",
+    answer:
+      "The core canvas experience is free to start. Advanced features, team collaboration, and additional export options may be offered under paid plans in the future.",
   },
 ];
 
@@ -43,7 +48,10 @@ export default function FAQ() {
   };
 
   return (
-    <section className="min-h-screen px-6 py-16 sm:px-10 md:px-16 lg:px-6 font-gothic">
+    <section
+      id="faq"
+      className="min-h-screen px-6 py-16 sm:px-10 md:px-16 lg:px-6 font-gothic"
+    >
       {/* Heading */}
       <h1 className="text-white mb-12 leading-none tracking-[-0.02em] text-[clamp(2.5rem,6vw,4rem)] font-light">
         FAQ's

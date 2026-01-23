@@ -390,7 +390,7 @@ export function Sidebar() {
                   } catch (e) {
                     // ignore
                   }
-                  router.replace("/login");
+                  router.replace("/");
                 }}
                 className="text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer px-4 py-1.5 rounded"
               >
