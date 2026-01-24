@@ -5,11 +5,11 @@ import Link from "next/link";
 export const Hero = () => {
   return (
     <section className="relative bg-black text-white overflow-hidden font-gothic">
-      <div className="absolute right-1/4 md:right-1/3 top-12 md:top-20 lg:top-30 opacity-60 md:opacity-80 pointer-events-none w-64 md:w-96 lg:w-125">
+      <div className="absolute right-1/4 md:right-1/3 top-12 md:top-20 lg:top-30 opacity-60 md:opacity-80  pointer-events-none w-64 md:w-96 lg:w-125">
         <img
-          src="https://i.pinimg.com/originals/32/01/26/320126a400f1eba249fd922a119f7281.gif"
+          src="https://i.pinimg.com/originals/70/65/4f/70654fd75f2991e168ec22b75fdbd6a5.gif"
           alt="Abstract Shape"
-          className="w-full h-auto"
+          className="w-108"
         />
       </div>
 

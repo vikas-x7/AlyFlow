@@ -19,15 +19,15 @@ export const IntelligenceSection = () => {
   ];
 
   return (
-    <section className="relative bg-black text-white font-gothic py-16 md:py-24 lg:py-32">
-      <div className="mx-auto px-4 md:px-6">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-          <div className="flex-1 lg:px-8  overflow-x-auto scroll-smooth pb-4 no-scrollbar">
+    <section className="relative bg-black text-white font-gothic py-16 md:py-24 lg:py-32 flex justify-between  ">
+      <div className="mx-auto ">
+        <div className="flex flex-col lg:flex-row justify-between gap-8 lg:gap-0">
+          <div className="  w-full  flex justify-between overflow-x-auto scroll-smooth pb-4 no-scrollbar">
             <div className="flex gap-4 md:gap-6">
               {cards.map((c, idx) => (
                 <div
                   key={idx}
-                  className="relative flex-none w-[320px] h-80 md:h-96 bg-white/70 text-black p-6 md:p-10 flex flex-col justify-end rounded-lg hover:bg-white transition-colors duration-300 group cursor-pointer"
+                  className="relative flex-none w-[320px] h-80 md:h-96 bg-white/70 text-black p-6 md:p-10 flex flex-col justify-end  hover:bg-white transition-colors duration-300 group cursor-pointer"
                 >
                   <div className="absolute left-4 top-4 text-4xl font-bold text-black/10">
                     {String(idx + 1).padStart(2, "0")}

@@ -78,7 +78,7 @@ export default function FAQ() {
 
                 {/* Plus / Minus icon */}
                 <span
-                  className={`flex-shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.5rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
+                  className={`shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.5rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
                     isOpen ? "rotate-45" : "rotate-0"
                   }`}
                 >
@@ -88,7 +88,7 @@ export default function FAQ() {
 
               {/* Answer panel */}
               <div
-                className="overflow-hidden transition-[max-height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+                className="overflow-hidden transition-[max-height] duration-400ms ease-[cubic-bezier(0.4,0,0.2,1)]"
                 style={{ maxHeight: isOpen ? "400px" : "0px" }}
               >
                 <p className="text-[#999] pb-8 pr-12 text-[clamp(0.875rem,1.5vw,1rem)] font-normal leading-[1.7] tracking-[0.01em]">

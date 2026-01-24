@@ -62,7 +62,7 @@ function Navbar() {
           </Link>
           <Link
             href="/register"
-            className="bg-[#e72a0d] hover:bg-[#e72a0d]/70 text-black px-3 md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-sm"
+            className="bg-[#ffffff] hover:bg-white/50 text-black px-3 md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-sm"
           >
             SIGN UP
           </Link>
