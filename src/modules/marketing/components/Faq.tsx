@@ -52,12 +52,10 @@ export default function FAQ() {
       id="faq"
       className="min-h-screen px-6 py-16 sm:px-10 md:px-16 lg:px-6 font-gothic"
     >
-      {/* Heading */}
       <h1 className="text-white mb-12 leading-none tracking-[-0.02em] text-[clamp(2.5rem,6vw,4rem)] font-light">
         FAQ's
       </h1>
 
-      {/* Accordion */}
       <div className="w-full">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
@@ -76,7 +74,6 @@ export default function FAQ() {
                   {faq.question}
                 </span>
 
-                {/* Plus / Minus icon */}
                 <span
                   className={`shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.5rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
                     isOpen ? "rotate-45" : "rotate-0"
@@ -86,7 +83,6 @@ export default function FAQ() {
                 </span>
               </button>
 
-              {/* Answer panel */}
               <div
                 className="overflow-hidden transition-[max-height] duration-400ms ease-[cubic-bezier(0.4,0,0.2,1)]"
                 style={{ maxHeight: isOpen ? "400px" : "0px" }}

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Edge, Node } from "reactflow";
 import { canvasService } from "../services/canvas.service";
-import { stripTransientEdge, stripTransientNode, useCanvasStore } from "../store/canvas.store";
+import {
+  stripTransientEdge,
+  stripTransientNode,
+  useCanvasStore,
+} from "../store/canvas.store";
 
 const AUTOSAVE_DEBOUNCE_MS = 2000;
 const AUTOSAVE_MAX_RETRY_DELAY_MS = 15000;
@@ -16,7 +20,9 @@ function getPendingAutosavePayload(): PendingAutosavePayload | null {
   const state = useCanvasStore.getState();
   const dirtyNodes = state.nodes.filter((node) => node.isDirty);
   const removedNodeIds = [...state.removedNodeIds];
-  const edges = state.isEdgesDirty ? state.edges.map((edge) => stripTransientEdge(edge)) : undefined;
+  const edges = state.isEdgesDirty
+    ? state.edges.map((edge) => stripTransientEdge(edge))
+    : undefined;
 
   if (dirtyNodes.length === 0 && removedNodeIds.length === 0 && !edges) {
     return null;
@@ -87,11 +93,17 @@ export function useAutoSave({
         savedEdges: payload.edges,
       });
 
-      const ts = res.data?.updatedAt ? new Date(res.data.updatedAt) : new Date();
+      const ts = res.data?.updatedAt
+        ? new Date(res.data.updatedAt)
+        : new Date();
       setLastSavedAt(ts);
       retryAttemptRef.current = 0;
     } catch (e: any) {
-      setError(typeof e?.response?.data?.error === "string" ? e.response.data.error : "Autosave failed");
+      setError(
+        typeof e?.response?.data?.error === "string"
+          ? e.response.data.error
+          : "Autosave failed",
+      );
 
       const attempt = retryAttemptRef.current + 1;
       retryAttemptRef.current = attempt;
@@ -113,7 +125,8 @@ export function useAutoSave({
         queuedWhileSavingRef.current = false;
 
         const mutationAt = useCanvasStore.getState().lastMutationAt;
-        const elapsed = mutationAt > 0 ? Date.now() - mutationAt : AUTOSAVE_DEBOUNCE_MS;
+        const elapsed =
+          mutationAt > 0 ? Date.now() - mutationAt : AUTOSAVE_DEBOUNCE_MS;
         const delay = Math.max(0, AUTOSAVE_DEBOUNCE_MS - elapsed);
 
         if (debounceTimerRef.current) {
@@ -152,6 +165,54 @@ export function useAutoSave({
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     };
   }, []);
+
+  // Try to flush pending changes when the user closes or navigates away.
+  useEffect(() => {
+    if (!workflowId || !enabled || !ready) return;
+
+    const sendKeepalive = () => {
+      try {
+        const payload = getPendingAutosavePayload();
+        if (!payload) return;
+
+        const token =
+          typeof window !== "undefined"
+            ? window.localStorage.getItem("auth_token")
+            : null;
+
+        void fetch(`/api/canvas/${workflowId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            dirtyNodes: payload.dirtyNodes,
+            removedNodeIds: payload.removedNodeIds,
+            edges: payload.edges,
+          }),
+          keepalive: true,
+        }).catch(() => {
+          // ignore
+        });
+      } catch (err) {
+        // ignore
+      }
+    };
+
+    const onBeforeUnload = () => sendKeepalive();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") sendKeepalive();
+    };
+
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [workflowId, enabled, ready]);
 
   return { isSaving, lastSavedAt, error };
 }

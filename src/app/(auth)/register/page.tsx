@@ -18,7 +18,7 @@ export default function RegisterPage() {
         <div className="absolute inset-0 bg-black/40" />
 
         <div className="absolute left-6 top-6 text-white">
-          <p className="text-sm text-white/70">Alyflow</p>
+          <p className="text-[30px] text-white/70">Alyflow</p>
         </div>
 
         <div className="absolute left-6 bottom-8 max-w-xs text-white">
