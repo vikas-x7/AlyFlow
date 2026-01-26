@@ -3,6 +3,7 @@
 import { use } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, { Background, BackgroundVariant, MiniMap } from "reactflow";
+import { useState } from "react";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
@@ -33,6 +34,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
     onConnect,
     addNodeOfType,
   } = useCanvas(workflowId);
+
+  const [activeTool, setActiveTool] = useState<string>("cursor");
 
   const autosave = useAutoSave({
     workflowId,
@@ -77,7 +80,17 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
       </div>
 
       <div className="absolute bottom-4 z-90 right-130">
-        <NodeTypeSwitcher onAdd={addNodeOfType} />
+        <NodeTypeSwitcher
+          active={activeTool}
+          onAdd={(type) => {
+            // set active tool for UI
+            setActiveTool(type);
+            // if it's a node type, add it to canvas
+            if (["text", "image", "video", "link", "file", "code"].includes(type)) {
+              addNodeOfType(type as any);
+            }
+          }}
+        />
       </div>
 
       <div className="flex-1 bg-[#101011]">
