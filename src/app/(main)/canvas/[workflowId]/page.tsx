@@ -2,8 +2,13 @@
 
 import { use } from "react";
 import "reactflow/dist/style.css";
-import ReactFlow, { Background, BackgroundVariant, MiniMap } from "reactflow";
-import { useState } from "react";
+import ReactFlow, {
+  Background,
+  BackgroundVariant,
+  MiniMap,
+  ReactFlowInstance,
+} from "reactflow";
+import { useState, useRef } from "react";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
@@ -36,6 +41,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   } = useCanvas(workflowId);
 
   const [activeTool, setActiveTool] = useState<string>("cursor");
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const autosave = useAutoSave({
     workflowId,
@@ -83,18 +90,30 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
-            // set active tool for UI
+            // set active tool for UI only; placement happens on canvas clicks
             setActiveTool(type);
-            // if it's a node type, add it to canvas
-            if (["text", "image", "video", "link", "file", "code"].includes(type)) {
-              addNodeOfType(type as any);
-            }
           }}
         />
       </div>
 
-      <div className="flex-1 bg-[#101011]">
+      <div className="flex-1 bg-[#101011]" ref={containerRef}>
         <ReactFlow
+          onInit={(instance) => setRfInstance(instance)}
+          onPaneClick={(event: any) => {
+            if (!rfInstance) return;
+            if (
+              !["text", "image", "video", "link", "file", "code"].includes(
+                activeTool,
+              )
+            )
+              return;
+            const rect = containerRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const pos = rfInstance.project({ x, y });
+            addNodeOfType(activeTool as any, pos);
+          }}
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}

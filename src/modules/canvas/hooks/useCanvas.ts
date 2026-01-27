@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type {
-  Connection,
-  Edge,
-  EdgeChange,
-  Node,
-  NodeChange,
-} from "reactflow";
+import type { Connection, Edge, EdgeChange, Node, NodeChange } from "reactflow";
 import { addEdge, applyEdgeChanges, applyNodeChanges } from "reactflow";
 import { canvasService } from "../services/canvas.service";
 import { useCanvasStore } from "../store/canvas.store";
@@ -20,7 +14,8 @@ import { CustomEdge } from "../components/edges/CustomEdge";
 type CanvasNodeType = "text" | "image" | "video" | "link" | "file" | "code";
 
 function makeId(prefix: string) {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return `${prefix}_${crypto.randomUUID()}`;
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto)
+    return `${prefix}_${crypto.randomUUID()}`;
   return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 
@@ -58,7 +53,11 @@ export function useCanvas(workflowId: string) {
       })
       .catch((e: any) => {
         if (cancelled) return;
-        setLoadError(typeof e?.response?.data?.error === "string" ? e.response.data.error : "Failed to load canvas");
+        setLoadError(
+          typeof e?.response?.data?.error === "string"
+            ? e.response.data.error
+            : "Failed to load canvas",
+        );
         setCanvasSnapshot({ nodes: [], edges: [] });
       })
       .finally(() => {
@@ -73,16 +72,24 @@ export function useCanvas(workflowId: string) {
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      const shouldMarkDirty = changes.some((change) => change.type !== "select");
-      setNodes((prev) => applyNodeChanges(changes, prev), { markDirty: shouldMarkDirty });
+      const shouldMarkDirty = changes.some(
+        (change) => change.type !== "select",
+      );
+      setNodes((prev) => applyNodeChanges(changes, prev), {
+        markDirty: shouldMarkDirty,
+      });
     },
     [setNodes],
   );
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      const shouldMarkDirty = changes.some((change) => change.type !== "select");
-      setEdges((prev) => applyEdgeChanges(changes, prev), { markDirty: shouldMarkDirty });
+      const shouldMarkDirty = changes.some(
+        (change) => change.type !== "select",
+      );
+      setEdges((prev) => applyEdgeChanges(changes, prev), {
+        markDirty: shouldMarkDirty,
+      });
     },
     [setEdges],
   );
@@ -104,12 +111,15 @@ export function useCanvas(workflowId: string) {
   );
 
   const addNodeOfType = useCallback(
-    (type: CanvasNodeType) => {
+    (type: CanvasNodeType, position?: { x: number; y: number }) => {
       const id = makeId(type);
       const base: Node = {
         id,
         type,
-        position: { x: 80 + Math.random() * 320, y: 80 + Math.random() * 220 },
+        position: position ?? {
+          x: 80 + Math.random() * 320,
+          y: 80 + Math.random() * 220,
+        },
         data: {},
       };
 
