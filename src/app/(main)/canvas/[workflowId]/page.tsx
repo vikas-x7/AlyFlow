@@ -8,9 +8,10 @@ import ReactFlow, {
   MiniMap,
   ReactFlowInstance,
 } from "reactflow";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
+import { DrawingOverlay } from "@/modules/canvas/components/DrawingOverlay";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
 import { Loader } from "@/shared/components/ui/Loader";
@@ -38,11 +39,39 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
     onEdgesChange,
     onConnect,
     addNodeOfType,
+    addCustomNode,
   } = useCanvas(workflowId);
 
   const [activeTool, setActiveTool] = useState<string>("cursor");
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const isConnectingRef = useRef(false);
+
+  const handleDrawingComplete = useCallback(
+    (
+      flowPoints: { x: number; y: number }[],
+      color: string,
+      strokeWidth: number,
+    ) => {
+      if (flowPoints.length < 2) return;
+      const xs = flowPoints.map((p) => p.x);
+      const ys = flowPoints.map((p) => p.y);
+      const minX = Math.min(...xs);
+      const minY = Math.min(...ys);
+      const width = Math.max(Math.max(...xs) - minX, 1);
+      const height = Math.max(Math.max(...ys) - minY, 1);
+      const relPoints = flowPoints.map((p) => ({
+        x: p.x - minX,
+        y: p.y - minY,
+      }));
+      addCustomNode(
+        "drawing",
+        { points: relPoints, color, strokeWidth, width, height },
+        { x: minX, y: minY },
+      );
+    },
+    [addCustomNode],
+  );
 
   const autosave = useAutoSave({
     workflowId,
@@ -96,10 +125,31 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         />
       </div>
 
-      <div className="flex-1 bg-[#101011]" ref={containerRef}>
+      <div className="flex-1 bg-[#101011] relative" ref={containerRef}>
+        <DrawingOverlay
+          active={activeTool === "pen"}
+          rfInstance={rfInstance}
+          containerRef={containerRef}
+          color="#e05555"
+          strokeWidth={3}
+          onDrawingComplete={handleDrawingComplete}
+        />
         <ReactFlow
           onInit={(instance) => setRfInstance(instance)}
+          onConnectStart={() => {
+            isConnectingRef.current = true;
+          }}
+          onConnectEnd={() => {
+            setTimeout(() => {
+              isConnectingRef.current = false;
+            }, 50);
+          }}
+          onConnect={(connection) => {
+            isConnectingRef.current = false;
+            onConnect(connection);
+          }}
           onPaneClick={(event: any) => {
+            if (isConnectingRef.current) return;
             if (!rfInstance) return;
             if (
               !["text", "image", "video", "link", "file", "code"].includes(
@@ -120,7 +170,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
           fitView
           fitViewOptions={{ minZoom: 0.5, maxZoom: 1 }}
           minZoom={0.1}

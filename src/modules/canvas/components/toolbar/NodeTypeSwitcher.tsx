@@ -4,7 +4,7 @@ import { CiVideoOn } from "react-icons/ci";
 import { HiMiniLink } from "react-icons/hi2";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoCodeSlashOutline } from "react-icons/io5";
-import { PiCursorLight } from "react-icons/pi";
+import { PiCursorLight, PiPencilSimple } from "react-icons/pi";
 import { LiaHandPaperSolid } from "react-icons/lia";
 
 export function NodeTypeSwitcher({
@@ -20,7 +20,8 @@ export function NodeTypeSwitcher({
       | "file"
       | "code"
       | "cursor"
-      | "hand",
+      | "hand"
+      | "pen",
   ) => void;
   active?: string;
 }) {
@@ -46,6 +47,21 @@ export function NodeTypeSwitcher({
       >
         <LiaHandPaperSolid />
       </button>
+      <button
+        type="button"
+        className={
+          "px-2 py-1 " +
+          (active === "pen" ? "bg-white/10 text-white rounded" : "")
+        }
+        onClick={() => onAdd("pen")}
+        title="Pen (draw)"
+      >
+        <PiPencilSimple />
+      </button>
+
+      {/* divider */}
+      <span className="w-px bg-[#28272F] self-stretch" />
+
       <button
         type="button"
         className={

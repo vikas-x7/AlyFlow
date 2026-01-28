@@ -10,6 +10,7 @@ import { LinkNode } from "../components/nodes/LinkNode";
 import { FileNode } from "../components/nodes/FileNode";
 import { CodeNode } from "../components/nodes/CodeNode";
 import { CustomEdge } from "../components/edges/CustomEdge";
+import { DrawingNode } from "../components/nodes/DrawingNode";
 
 type CanvasNodeType = "text" | "image" | "video" | "link" | "file" | "code";
 
@@ -138,6 +139,15 @@ export function useCanvas(workflowId: string) {
     [setNodes],
   );
 
+  const addCustomNode = useCallback(
+    (type: string, data: any, position: { x: number; y: number }) => {
+      const id = makeId(type);
+      setNodes((prev) => prev.concat({ id, type, position, data }));
+      return id;
+    },
+    [setNodes],
+  );
+
   const nodeTypes = useMemo(
     () => ({
       text: TextNode,
@@ -146,6 +156,7 @@ export function useCanvas(workflowId: string) {
       link: LinkNode,
       file: FileNode,
       code: CodeNode,
+      drawing: DrawingNode,
     }),
     [],
   );
@@ -163,5 +174,6 @@ export function useCanvas(workflowId: string) {
     onEdgesChange,
     onConnect,
     addNodeOfType,
+    addCustomNode,
   };
 }
