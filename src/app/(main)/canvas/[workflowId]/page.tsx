@@ -64,10 +64,14 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         x: p.x - minX,
         y: p.y - minY,
       }));
+      // DrawingNode adds internal padding (strokeWidth + 6) around the path
+      // via an SVG translate. Offset the node position so the visible stroke
+      // lands exactly where the user drew it.
+      const padding = strokeWidth + 6;
       addCustomNode(
         "drawing",
         { points: relPoints, color, strokeWidth, width, height },
-        { x: minX, y: minY },
+        { x: minX - padding, y: minY - padding },
       );
     },
     [addCustomNode],
