@@ -7,24 +7,24 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-black fixed w-full z-90 py-1 text-white font-gothic border-b border-white/5">
-      <div className="px-4 md:px-6 py-3 md:py-2 flex items-center justify-between">
-        <div className="hidden md:flex gap-6 text-xs md:text-sm lg:text-[14px] font-light tracking-wider">
+    <header className="bg-black fixed w-full z-90 py-1 text-white font-gothic border-b border-white/10">
+      <div className="px-4 md:px-6 py-3 md:py-1 flex items-center justify-between">
+        <div className="hidden md:flex gap-6 text-xs md:text-sm lg:text-[12px] font-light tracking-wider">
           <Link
             href="/#home"
-            className="hover:text-white/60 transition cursor-pointer"
+            className="text-[#626262] hover:text-white transition cursor-pointer"
           >
             HOME
           </Link>
           <Link
             href="/#about"
-            className="hover:text-white/60 transition cursor-pointer"
+            className="text-[#626262] hover:text-white transition cursor-pointer"
           >
             ABOUT
           </Link>
           <Link
             href="/#faq"
-            className="hover:text-white/60 transition cursor-pointer"
+            className="text-[#626262] hover:text-white transition cursor-pointer"
           >
             FAQ
           </Link>
@@ -32,7 +32,7 @@ function Navbar() {
 
         <Link
           href="/"
-          className="flex items-center justify-center text-lg md:text-2xl font-bold tracking-tight hover:opacity-80 transition absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+          className="flex items-center justify-center text-lg md:text-xl font-bold tracking-tight hover:opacity-80 transition absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-[#FAFAF9]"
         >
           Alyflow
         </Link>
@@ -43,26 +43,26 @@ function Navbar() {
           aria-label="Toggle menu"
         >
           <span
-            className={`w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
           ></span>
           <span
-            className={`w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`}
+            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`}
           ></span>
           <span
-            className={`w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
           ></span>
         </button>
 
-        <nav className="hidden md:flex items-center gap-3 text-xs md:text-sm font-light tracking-wider">
+        <nav className="hidden md:flex items-center gap-3 text-xs md:text-sm  tracking-wider">
           <Link
             href="/login"
-            className="bg-black hover:bg-white/10 text-white/80 px-3 md:px-4 py-1.5 md:py-2  transition text-xs md:text-sm"
+            className="bg-black hover:bg-white/10 text-white/80 px-3 md:px-4 py-1.5 md:py-2  transition text-xs md:text-[11px] "
           >
             LOGIN
           </Link>
           <Link
             href="/register"
-            className="bg-[#ffffff] hover:bg-white/50 text-black px-3 md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-sm"
+            className="bg-white hover:bg-white text-black px-2  md:px-4 py-1.5 md:py-1.5  transition text-xs md:text-[11px]  flex items-center justify-center "
           >
             SIGN UP
           </Link>
@@ -98,7 +98,7 @@ function Navbar() {
             </Link>
             <Link
               href="/signup"
-              className="bg-white/5 hover:bg-white/10 text-white/80 px-3 py-2 rounded-sm transition text-sm"
+              className="bg-white hover:bg-white/10 text-white/80 px-3 py-2 rounded-sm transition text-sm"
             >
               SIGN UP
             </Link>

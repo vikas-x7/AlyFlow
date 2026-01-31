@@ -32,7 +32,6 @@ export default function LandingPage() {
     <main id="home" className="mx-auto ">
       <Navbar />
       <Hero />
-
       <Features />
       <IntelligenceSection />
       <FAQ />

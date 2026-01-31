@@ -3,15 +3,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --font-gothic: var(--font-vilo-gothic);
+  --font-volimono: var(--font-vilo-mono);
 }
 
 .react-flow__attribution {
   display: none !important;
 }
-/* Thin scrollbar */
+
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
