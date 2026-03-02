@@ -1,4 +1,5 @@
 import { Features } from "@/modules/marketing/components/Features";
+import { Footer } from "@/modules/marketing/components/Footer";
 import { Hero } from "@/modules/marketing/components/Hero";
 import { IntelligenceSection } from "@/modules/marketing/components/IntelligenceSection";
 import Link from "next/link";
@@ -32,7 +33,7 @@ export default function LandingPage() {
       </header>
       <Hero />
 
-      <section className=" py-10 border-y border-white/5 mb-50">
+      {/* <section className=" py-10 border-y border-white/5 mb-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-wrap items-center justify-center gap-15 opacity-60  tracking-wide text-gray-400 text-xl">
             {logos.map((logo, i) => (
@@ -42,8 +43,10 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-      </section>
-      {/* <Features /> */}
+      </section> */}
+
+      <IntelligenceSection />
+      <Features />
       <section className=" text-white  font-gothic">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 ">
           {/* Left Side */}
@@ -60,16 +63,15 @@ export default function LandingPage() {
           </div>
 
           {/* Right Side */}
-          <div className="relative w-full h-[500px]  overflow-hidden mb-90">
+          <div className="relative w-full h-125  overflow-hidden mb-90">
             <img
-              src="https://i.pinimg.com/1200x/e4/76/37/e476377753a471e80ca9e869e1b394e1.jpg"
+              src="https://i.pinimg.com/1200x/e2/74/d7/e274d78176dad801c50d008fcf775e6b.jpg"
               alt="preview"
-              className="absolute inset-0 w-full h-full object-cover opacity-40 rounded-sm"
+              className="absolute inset-0 w-full h-full object-cover opacity-40 "
             />
           </div>
         </div>
-
-        <IntelligenceSection />
+        <Footer />
       </section>
     </main>
   );

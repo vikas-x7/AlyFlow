@@ -23,10 +23,10 @@ export const IntelligenceSection = () => {
   ];
 
   return (
-    <section className=" text-white px-6 py-24 font-gothic">
+    <section className=" text-white px-6 mt-30 mb-40 font-gothic">
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
-        <div className="max-w-3xl mb-16">
+        {/* <div className="max-w-3xl mb-16">
           <h2 className="text-3xl md:text-4xl leading-snug mb-6">
             Actually understands you in real time,
             <br /> no awkward pauses, no blank stares
@@ -38,7 +38,7 @@ export const IntelligenceSection = () => {
             handled without flinching. You talk, it listens, and responds like
             it actually paid attention.
           </p>
-        </div>
+        </div> */}
 
         {/* Feature Grid */}
         <div className="grid md:grid-cols-4 gap-1">

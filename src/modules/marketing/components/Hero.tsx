@@ -3,7 +3,7 @@ import Link from "next/link";
 export const Hero = () => {
   return (
     <section className="mb-20 flex items-center justify-center px-6 bg-cover bg-center relative font-gothic">
-      <div className="relative max-w-6xl w-full  z-10 mt-50 text-center">
+      <div className="relative max-w-6xl w-full  z-10 mt-50 text-start">
         <h1 className="text-4xl md:text-5xl text-white/90 mb-6 tracking-tight">
           Design, draw, and organize everything <br /> in one flexible workspace
         </h1>
