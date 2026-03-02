@@ -1,16 +1,26 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { AuthUser } from "../types";
 
 interface AuthState {
-  user: unknown;
+  user: AuthUser | null;
   token: string | null;
-  setUser: (user: unknown) => void;
-  setToken: (token: string | null) => void;
+  setAuth: (payload: { user: AuthUser; token: string }) => void;
+  clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  setUser: (user) => set({ user }),
-  setToken: (token) => set({ token }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      setAuth: ({ user, token }) => set({ user, token }),
+      clearAuth: () => set({ user: null, token: null }),
+    }),
+    {
+      name: "auth_store",
+      partialize: (s) => ({ user: s.user, token: s.token }),
+    },
+  ),
+);
 

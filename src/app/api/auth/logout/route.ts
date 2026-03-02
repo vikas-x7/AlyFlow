@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  return NextResponse.json({ message: "logout placeholder" }, { status: 200 });
+  // Stateless JWT: client just discards token.
+  return NextResponse.json({ ok: true }, { status: 200 });
 }
 

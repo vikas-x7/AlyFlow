@@ -1,7 +1,26 @@
-export function Toolbar() {
+export function Toolbar({
+  isSaving,
+  lastSavedAt,
+  error,
+}: {
+  isSaving: boolean;
+  lastSavedAt: Date | null;
+  error: string | null;
+}) {
   return (
-    <div className="flex gap-2 border-b p-2">
-      <span className="text-sm text-gray-600">Toolbar</span>
+    <div className="flex items-center justify-between gap-2 border-b p-2 bg-white">
+      <span className="text-sm font-medium">Canvas</span>
+      <div className="text-xs text-gray-600">
+        {error ? (
+          <span className="text-red-600">{error}</span>
+        ) : isSaving ? (
+          "Saving..."
+        ) : lastSavedAt ? (
+          `Saved ${lastSavedAt.toLocaleTimeString()}`
+        ) : (
+          "Not saved yet"
+        )}
+      </div>
     </div>
   );
 }

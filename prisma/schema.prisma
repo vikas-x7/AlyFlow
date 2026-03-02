@@ -1,9 +1,46 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  workflows    Workflow[]
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  canvas      Canvas?
+
+  @@index([ownerId])
+}
+
+model Canvas {
+  id         String   @id @default(cuid())
+  workflowId String   @unique
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  nodes      Json     @default("[]")
+  edges      Json     @default("[]")
+
+  updatedAt  DateTime @updatedAt
 }
 
