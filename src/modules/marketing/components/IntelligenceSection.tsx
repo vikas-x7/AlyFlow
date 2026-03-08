@@ -32,72 +32,13 @@ export const IntelligenceSection = () => {
     {
       title: "Curate custom tools",
       desc: "Refine prompts and design higher order tools for your MCP servers.",
-      mockup: (
-        <div className="mt-6">
-          <div className="grid grid-cols-4 gap-2 mb-2">
-            {["🔗", "✏️", "✂️", "🔨", "🎯", null, "🔑", "🔧"].map((icon, i) =>
-              icon === null ? (
-                <div
-                  key={i}
-                  className="h-10 rounded border-2 border-transparent"
-                  style={{
-                    background:
-                      "linear-gradient(black, black) padding-box, linear-gradient(90deg, #f97316, #a855f7, #3b82f6) border-box",
-                  }}
-                >
-                  <div className="h-full flex items-center justify-center text-[10px] font-mono font-bold tracking-widest text-white">
-                    AI-READY
-                  </div>
-                </div>
-              ) : (
-                <div
-                  key={i}
-                  className="h-10 rounded border border-white/10 bg-white/5 flex items-center justify-center text-sm"
-                >
-                  {icon}
-                </div>
-              ),
-            )}
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {["🚀", "🔧", "👤", "📡"].map((icon, i) => (
-              <div
-                key={i}
-                className="h-10 rounded border border-white/10 bg-white/5 flex items-center justify-center text-sm"
-              >
-                {icon}
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
+      mockup: <div className="mt-6"></div>,
     },
     {
       title: "Deploy MCP servers",
       desc: "Deploy a remotely hosted MCP server for public consumption.",
       mockup: (
         <div className="mt-6 font-mono text-xs space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded border border-white/10 bg-white/5 flex items-center justify-center text-[10px]">
-              🔗
-            </div>
-            <div className="h-8 w-8 rounded border border-white/10 bg-white/5 flex items-center justify-center text-[10px]">
-              ✂️
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded border border-white/10 bg-white/5 flex items-center justify-center text-[10px]">
-              🔗
-            </div>
-            <span className="text-white/30">&gt;</span>
-            <div className="px-4 h-8 rounded border border-orange-500/60 bg-orange-500/5 flex items-center text-orange-300 text-[11px] font-bold tracking-widest">
-              AGENT
-            </div>
-            <span className="text-white/30">&lt;</span>
-            <div className="h-8 w-8 rounded border border-white/10 bg-white/5 flex items-center justify-center text-[10px]">
-              ✏️
-            </div>
-          </div>
           <div className="border border-white/10 rounded p-3 bg-white/5">
             <div className="text-white/50 uppercase tracking-widest text-[9px] mb-2">
               FIND_AND_UPDATE_PETS
@@ -117,21 +58,37 @@ export const IntelligenceSection = () => {
   return (
     <section className="relative bg-black text-white py-16 md:py-24">
       <div className="relative px-2 mx-auto ">
-        <div className="h-120 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 border border-white/10 ">
+        <div className="h-50 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 border border-white/10 ">
           {cards.map((card, idx) => (
-            <div key={idx} className="p-8 md:p-5 flex flex-col">
-              <h2
-                className="text-2xl md:text-3xl font-light tracking-tight text-white mb-3 "
-                style={{ fontFamily: "'Georgia', serif" }}
-              >
+            <div key={idx} className="p-8 md:p-5 ">
+              <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-3  font-gothic">
                 {card.title}
               </h2>
-              <p className="text-sm text-white/50 leading-relaxed mb-30 ">
+              <p className="text-sm text-white/50 leading-relaxed mb-30  font-gothic">
                 {card.desc}
               </p>
-              {card.mockup}
             </div>
           ))}
+        </div>
+
+        <div className="flex border border-white/10 divide-x divide-white/10 text-white font-gothic">
+          <div className="w-[60%] p-10">
+            <p className="text-xl leading-relaxed text-white/70">
+              Turn your API into an MCP server with structured inputs,
+              prompt-tuned descriptions, and hosted execution.
+            </p>
+          </div>
+
+          <div className="w-[40%] p-10 flex flex-col justify-center gap-6">
+            <p className="text-white/60">
+              Start with your OpenAPI spec and unlock tools that work out of the
+              box with agents like Claude and Cursor.
+            </p>
+
+            <button className="w-fit px-6 py-2 rounded-xs bg-white/10 hover:bg-white/20 transition">
+              START BUILDING
+            </button>
+          </div>
         </div>
       </div>
     </section>

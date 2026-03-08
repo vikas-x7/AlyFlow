@@ -41,59 +41,77 @@ const faqs: FAQItem[] = [
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <section
-      id="faq"
-      className="min-h-screen px-6 py-16 sm:px-10 md:px-16 lg:px-6 font-gothic"
-    >
-      <h1 className="text-white mb-12 leading-none tracking-[-0.02em] text-[clamp(2.5rem,6vw,4rem)] font-light">
-        FAQ's
-      </h1>
+    <section id="faq" className="min-h-screen px-6 py-20 sm:px-10 font-gothic">
+      {/* Two-column layout */}
+      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 ">
+        {/* LEFT COLUMN — Sticky heading + description */}
+        <div className="lg:w-[38%] lg:sticky lg:top-20 lg:self-start">
+          <h1 className="text-white/80 text-5xl mb-3  ">
+            Any questions? <span className="block">We got you.</span>
+          </h1>
 
-      <div className="w-full">
-        {faqs.map((faq, index) => {
-          const isOpen = openIndex === index;
+          <p className="text-[#888] text-[clamp(0.875rem,1.4vw,1rem)] leading-[1.75] font-normal mb-8 max-w-xs">
+            Everything you need to know about Alyflow. Can't find the answer
+            you're looking for? Reach out to our team.
+          </p>
+          <a
+            href="#"
+            className="inline-flex items-center gap-2 text-[#6b7cff] text-sm font-medium hover:gap-3 transition-all duration-200 group"
+          >
+            More FAQs
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
+          </a>
+        </div>
 
-          return (
-            <div
-              key={index}
-              className="border-t border-[#2e2e2e] last:border-b"
-            >
-              <button
-                onClick={() => toggle(index)}
-                className="w-full flex items-center justify-between py-7 sm:py-8 text-left group transition-all duration-200 cursor-pointer"
-                aria-expanded={isOpen}
-              >
-                <span className="text-white pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[clamp(0.95rem,2vw,1.1rem)] font-normal tracking-[0.01em]">
-                  {faq.question}
-                </span>
+        {/* RIGHT COLUMN — Accordion */}
+        <div className="lg:w-[62%]">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
 
-                <span
-                  className={`shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.5rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
-                    isOpen ? "rotate-45" : "rotate-0"
-                  }`}
-                >
-                  +
-                </span>
-              </button>
-
+            return (
               <div
-                className="overflow-hidden transition-[max-height] duration-400ms ease-[cubic-bezier(0.4,0,0.2,1)]"
-                style={{ maxHeight: isOpen ? "400px" : "0px" }}
+                key={index}
+                className="border-t border-[#2e2e2e] last:border-b"
               >
-                <p className="text-[#999] pb-8 pr-12 text-[clamp(0.875rem,1.5vw,1rem)] font-normal leading-[1.7] tracking-[0.01em]">
-                  {faq.answer}
-                </p>
+                <button
+                  onClick={() => toggle(index)}
+                  className="w-full flex items-center justify-between py-6 sm:py-7 text-left group transition-all duration-200 cursor-pointer"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-white pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[clamp(0.95rem,1.8vw,1.05rem)] font-normal tracking-[0.01em]">
+                    {faq.question}
+                  </span>
+
+                  <span
+                    className={`shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.4rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
+                      isOpen ? "rotate-45" : "rotate-0"
+                    }`}
+                  >
+                    +
+                  </span>
+                </button>
+
+                <div
+                  className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                  style={{ maxHeight: isOpen ? "400px" : "0px" }}
+                >
+                  <p className="text-[#888] pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
