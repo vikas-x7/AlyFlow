@@ -44,6 +44,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
   const [activeTool, setActiveTool] = useState<string>("cursor");
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const [zoom, setZoom] = useState<number>(0.1);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const isConnectingRef = useRef(false);
 
@@ -138,8 +139,27 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           strokeWidth={3}
           onDrawingComplete={handleDrawingComplete}
         />
+        <div className="absolute bottom-0  z-50">
+          <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-[100px] text-[15px] text-white font-gothic">
+            {Math.round(zoom * 100)}%
+          </div>
+        </div>
         <ReactFlow
-          onInit={(instance) => setRfInstance(instance)}
+          onInit={(instance) => {
+            setRfInstance(instance);
+            try {
+              const v = (instance as any).getViewport?.();
+              if (typeof v?.zoom === "number") setZoom(v.zoom);
+            } catch (e) {}
+          }}
+          onMove={(_e: any, viewport?: any) => {
+            const z = viewport?.zoom ?? _e?.viewport?.zoom;
+            if (typeof z === "number") setZoom(z);
+          }}
+          onMoveEnd={(_e: any, viewport?: any) => {
+            const z = viewport?.zoom ?? _e?.viewport?.zoom;
+            if (typeof z === "number") setZoom(z);
+          }}
           onConnectStart={() => {
             isConnectingRef.current = true;
           }}
