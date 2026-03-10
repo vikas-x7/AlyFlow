@@ -65,9 +65,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         x: p.x - minX,
         y: p.y - minY,
       }));
-      // DrawingNode adds internal padding (strokeWidth + 6) around the path
-      // via an SVG translate. Offset the node position so the visible stroke
-      // lands exactly where the user drew it.
+
       const padding = strokeWidth + 6;
       addCustomNode(
         "drawing",
@@ -124,7 +122,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
-            // set active tool for UI only; placement happens on canvas clicks
             setActiveTool(type);
           }}
         />
@@ -199,6 +196,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           minZoom={0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
+          reconnectRadius={50}
         >
           <MiniMap
             style={{
