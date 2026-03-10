@@ -12,7 +12,7 @@ export function ImageNode({
     data?.fileName ?? null,
   );
   const [isDragging, setIsDragging] = useState(false);
-  const [isHoveringPreview, setIsHoveringPreview] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setNodes } = useReactFlow();
 
@@ -65,107 +65,45 @@ export function ImageNode({
 
   return (
     <BaseNode title="Image" titleColor="#34d399" indicatorColor="#059669">
-      <div style={{ minWidth: 220, width: "100%" }}>
+      <div className="w-full min-w-[220px] p-0">
         <input
           ref={inputRef}
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          style={{ display: "none" }}
+          className="hidden"
         />
 
         {preview ? (
-          // ── Preview State ──────────────────────────────────────────
           <div
-            style={{
-              position: "relative",
-              borderRadius: 8,
-              overflow: "hidden",
-            }}
-            onMouseEnter={() => setIsHoveringPreview(true)}
-            onMouseLeave={() => setIsHoveringPreview(false)}
+            className="relative rounded-lg overflow-hidden"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview}
               alt=""
-              style={{
-                width: "100%",
-                maxHeight: 200,
-                objectFit: "cover",
-                display: "block",
-                borderRadius: 8,
-                border: "1px solid #1f1f1f",
-                transition: "filter 0.25s ease",
-                filter: isHoveringPreview
-                  ? "brightness(0.45)"
-                  : "brightness(1)",
-              }}
+              className="w-full max-h-[200px] object-cover block rounded-lg border border-[#1f1f1f]"
             />
 
-            {/* Hover overlay actions */}
+            {/* Top-right buttons */}
             <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                opacity: isHoveringPreview ? 1 : 0,
-                transition: "opacity 0.25s ease",
-                pointerEvents: isHoveringPreview ? "all" : "none",
-              }}
+              className={`absolute top-1.5 right-1.5 flex flex-row gap-1 transition-opacity duration-200 ${
+                isHovering
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
             >
-              {/* Replace button */}
               <button
                 onClick={() => inputRef.current?.click()}
-                style={{
-                  background: "#0e0e0f",
-                  border: "1px solid #34d39955",
-                  color: "#34d399",
-                  fontSize: 10.5,
-                  fontFamily: "monospace",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  padding: "5px 14px",
-                  borderRadius: 5,
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#34d39915")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#0e0e0f")
-                }
+                className="bg-[#0e0e0fcc] backdrop-blur-md border border-[#34d39940] text-[#34d399] text-[10px] font-mono tracking-wider uppercase px-2.5 py-1 rounded cursor-pointer hover:bg-[#34d39915] transition-colors"
               >
                 Replace
               </button>
-
-              {/* Remove button */}
               <button
                 onClick={handleRemove}
-                style={{
-                  background: "#0e0e0f",
-                  border: "1px solid #ef444455",
-                  color: "#ef4444",
-                  fontSize: 10.5,
-                  fontFamily: "monospace",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  padding: "5px 14px",
-                  borderRadius: 5,
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#ef444415")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#0e0e0f")
-                }
+                className="bg-[#0e0e0fcc] backdrop-blur-md border border-[#ef444440] text-[#ef4444] text-[10px] font-mono tracking-wider uppercase px-2.5 py-1 rounded cursor-pointer hover:bg-[#ef444415] transition-colors"
               >
                 Remove
               </button>
@@ -173,29 +111,12 @@ export function ImageNode({
 
             {/* Filename badge */}
             {fileName && (
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: "4px 8px",
-                  background: "linear-gradient(to top, #000000cc, transparent)",
-                  fontSize: 9.5,
-                  color: "#6b7280",
-                  fontFamily: "monospace",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  pointerEvents: "none",
-                }}
-              >
+              <div className="absolute bottom-0 left-0 right-0 px-2 py-1 bg-gradient-to-t from-black/80 to-transparent text-[9.5px] text-[#6b7280] font-mono truncate pointer-events-none">
                 {fileName}
               </div>
             )}
           </div>
         ) : (
-          // ── Upload / Drop Zone ─────────────────────────────────────
           <div
             onClick={() => inputRef.current?.click()}
             onDragOver={(e) => {
@@ -204,22 +125,12 @@ export function ImageNode({
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            style={{
-              position: "relative",
-              borderRadius: 8,
-              border: `1.5px dashed ${isDragging ? "#34d399" : "#2a2a2a"}`,
-              background: isDragging ? "#34d39908" : "#0c0c0d",
-              padding: "28px 16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              cursor: "pointer",
-              transition: "border-color 0.2s ease, background 0.2s ease",
-            }}
+            className={`relative rounded-lg border-[1.5px] border-dashed flex flex-col items-center justify-center gap-2 py-7 px-4 cursor-pointer transition-all duration-200 ${
+              isDragging
+                ? "border-[#34d399] bg-[#34d39908]"
+                : "border-[#2a2a2a] bg-[#0c0c0d] hover:border-[#3a3a3a]"
+            }`}
           >
-            {/* Upload icon */}
             <svg
               width="28"
               height="28"
@@ -229,39 +140,20 @@ export function ImageNode({
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ transition: "stroke 0.2s" }}
+              className="transition-all duration-200"
             >
               <rect x="3" y="3" width="18" height="18" rx="3" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
 
-            <div
-              style={{
-                textAlign: "center",
-                fontFamily: "monospace",
-              }}
-            >
+            <div className="text-center font-mono">
               <p
-                style={{
-                  fontSize: 11,
-                  color: isDragging ? "#34d399" : "#4a4a4a",
-                  margin: 0,
-                  transition: "color 0.2s",
-                  letterSpacing: "0.04em",
-                }}
+                className={`text-[11px] m-0 tracking-[0.04em] transition-colors duration-200 ${isDragging ? "text-[#34d399]" : "text-[#4a4a4a]"}`}
               >
                 {isDragging ? "Drop it!" : "Click or drag to upload"}
               </p>
-              <p
-                style={{
-                  fontSize: 9.5,
-                  color: "#2e2e2e",
-                  margin: "3px 0 0",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                }}
-              >
+              <p className="text-[9.5px] text-[#2e2e2e] mt-0.5 tracking-[0.06em] uppercase">
                 PNG · JPG · GIF · WEBP
               </p>
             </div>

@@ -350,8 +350,17 @@ export function Sidebar() {
                 type="button"
                 onClick={async () => {
                   const id = workflowToDelete.id;
+                  const wasActive = id === activeWorkflowId;
                   setWorkflowToDelete(null);
                   await deleteWorkflow(id);
+                  if (wasActive) {
+                    const remaining = workflows.filter((w) => w.id !== id);
+                    if (remaining.length > 0) {
+                      router.replace(`/canvas/${remaining[0].id}`);
+                    } else {
+                      router.replace("/canvas");
+                    }
+                  }
                 }}
                 className="text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer px-4 py-1.5 rounded"
               >

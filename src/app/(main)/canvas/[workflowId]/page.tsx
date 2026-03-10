@@ -47,6 +47,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   const [zoom, setZoom] = useState<number>(0.1);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const isConnectingRef = useRef(false);
+  const connectEndTimeRef = useRef(0);
+  const hasFittedRef = useRef(false);
 
   const handleDrawingComplete = useCallback(
     (
@@ -148,6 +150,17 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
               const v = (instance as any).getViewport?.();
               if (typeof v?.zoom === "number") setZoom(v.zoom);
             } catch (e) {}
+            // One-time fitView only if there are pre-existing nodes
+            if (!hasFittedRef.current && nodes.length > 0) {
+              hasFittedRef.current = true;
+              setTimeout(() => {
+                instance.fitView({ minZoom: 0.3, maxZoom: 1.5, padding: 0.2 });
+                try {
+                  const v = (instance as any).getViewport?.();
+                  if (typeof v?.zoom === "number") setZoom(v.zoom);
+                } catch (e) {}
+              }, 50);
+            }
           }}
           onMove={(_e: any, viewport?: any) => {
             const z = viewport?.zoom ?? _e?.viewport?.zoom;
@@ -161,9 +174,10 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             isConnectingRef.current = true;
           }}
           onConnectEnd={() => {
+            connectEndTimeRef.current = Date.now();
             setTimeout(() => {
               isConnectingRef.current = false;
-            }, 50);
+            }, 200);
           }}
           onConnect={(connection) => {
             isConnectingRef.current = false;
@@ -171,6 +185,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           }}
           onPaneClick={(event: any) => {
             if (isConnectingRef.current) return;
+            if (Date.now() - connectEndTimeRef.current < 300) return;
             if (!rfInstance) return;
             if (
               !["text", "image", "video", "link", "file", "code"].includes(
@@ -191,11 +206,9 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          fitView
-          fitViewOptions={{ minZoom: 0.5, maxZoom: 1 }}
           minZoom={0.1}
-          maxZoom={2}
-          defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
+          maxZoom={5}
+          defaultViewport={{ x: 0, y: 0, zoom: 1 }}
           reconnectRadius={50}
         >
           <MiniMap
