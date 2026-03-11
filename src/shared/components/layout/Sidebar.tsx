@@ -8,10 +8,8 @@ import type { Workflow } from "@/modules/dashboard/types";
 import { Loader } from "../ui/Loader";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { FaRegPenToSquare, FaRegTrashCan } from "react-icons/fa6";
-import { HiBars3 } from "react-icons/hi2";
-import { BsLayoutSidebar } from "react-icons/bs";
-import { IoClose } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
+import { BsConeStriped, BsEjectFill } from "react-icons/bs";
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
@@ -29,7 +27,12 @@ function getAutoTitle(workflows: Workflow[]): string {
   return `${base} ${i}`;
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -42,8 +45,6 @@ export function Sidebar() {
     updateWorkflow,
     deleteWorkflow,
   } = useWorkflows();
-
-  const [isOpen, setIsOpen] = useState(true);
 
   const [inlineTitle, setInlineTitle] = useState<string | null>(null);
   const inlineInputRef = useRef<HTMLInputElement>(null);
@@ -134,52 +135,40 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic  ${
-        isOpen ? "w-64 " : "w-10 "
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic overflow-hidden ${
+        isOpen ? "w-56" : "w-0 border-r-0"
       }`}
     >
-      <div className="mb-4 flex items-center justify-between p-3 border-b border-[#1f1f1f]">
-        {isOpen && (
-          <div className="text-sm font-semibold text-white/80">Alyflow</div>
-        )}
+      <div className="mb-4 flex items-center justify-between px-3 py-2  border-b border-[#1f1f1f]">
+        <div className="text-[17px] font-semibold text-[#D9D9D9] flex items-center gap-2">
+          <BsEjectFill className="bg-[#D9D9D9] text-[#0D0D0D] text-[17px] p-px rounded-xs" />
+          Alyflow
+        </div>
+      </div>
+
+      <div className="mb-3 px-3">
         <button
-          onClick={() => setIsOpen((prev) => !prev)}
-          className="text-white/70 hover:text-white transition-colors cursor-po"
+          type="button"
+          className="text-black cursor-pointer rounded-xs hover:text-black/80 transition-colors bg-[#D9D9D9] w-full py-0.5 flex items-center justify-center gap-2 "
+          onClick={handleStartCreate}
+          disabled={isCreating}
         >
-          {isOpen ? (
-            <BsLayoutSidebar size={14} />
-          ) : (
-            <BsLayoutSidebar size={14} />
-          )}
+          create new
+          <FaRegPenToSquare size={13} />
         </button>
       </div>
 
-      {/* Create button */}
-      {isOpen && (
-        <div className="mb-3 px-3">
-          <button
-            type="button"
-            className="text-black cursor-pointer rounded-sm hover:text-black/80 transition-colors bg-white/70 w-full py-1 flex items-center justify-center gap-2 "
-            onClick={handleStartCreate}
-            disabled={isCreating}
-          >
-            create new
-            <FaRegPenToSquare size={13} />
-          </button>
-        </div>
-      )}
-
       {/* Inline create input */}
-      {isOpen && inlineTitle !== null && (
+      {inlineTitle !== null && (
         <div className="px-3">
-          <div className=" rounded border border-[#3a3a3a] bg-[#1a1a1a] px-2 py-1 ">
+          <div className=" rounded  bg-[#1a1a1a] px-2 py-1 ">
             <input
               ref={inlineInputRef}
               value={inlineTitle}
               onChange={(e) => setInlineTitle(e.target.value)}
               onBlur={handleInlineSubmit}
               onKeyDown={handleInlineKeyDown}
-              className="w-full bg-transparent  text-xs text-white outline-none placeholder:text-white/30  "
+              className="w-full  text-xs text-white outline-none placeholder:text-white/30  "
               placeholder="Untitled"
             />
           </div>
@@ -188,7 +177,7 @@ export function Sidebar() {
 
       {/* Workflow list */}
       <div className="flex-1 overflow-hidden p-3 ">
-        {!isOpen ? null : error ? (
+        {error ? (
           <div className="mb-3 rounded border border-red-900 bg-red-950 px-2 py-1 text-xs text-red-400">
             {getErrorMessage(error)}
           </div>
@@ -207,10 +196,8 @@ export function Sidebar() {
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded border px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
-                    isActive
-                      ? "border-[#2e2e2e] bg-[#1f1f1f]"
-                      : "border-transparent hover:border-[#2e2e2e] hover:bg-[#161616]"
+                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
+                    isActive ? " bg-[#191919]" : "hover:bg-[#191919]"
                   }`}
                 >
                   {isEditing ? (
@@ -253,12 +240,10 @@ export function Sidebar() {
                           e.stopPropagation();
                           setWorkflowToDelete(workflow);
                         }}
-                        className={`text-red-400/0 hover:text-red-400! transition-colors p-1 -mr-1 rounded hover:bg-red-400/10 group-hover:text-red-400/50 ${
-                          isActive ? "text-red-400/50" : ""
-                        }`}
+                        className="opacity-0 group-hover:opacity-100 text-red-400/50 hover:text-red-400 transition-all p-1 -mr-1 rounded hover:bg-red-400/10"
                         title="Delete workflow"
                       >
-                        <FaRegTrashCan size={12} />
+                        <FaRegTrashCan size={11} />
                       </button>
                     </>
                   )}
@@ -270,59 +255,38 @@ export function Sidebar() {
       </div>
 
       {/* Bottom user section */}
-      {isOpen && (
-        <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex items-center gap-2 p-3">
-          <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt="avatar"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
-                {initials}
-              </div>
-            )}
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-xs font-medium text-white/80">
-              {user?.name ?? "Username"}
+      <div className="mt-4 pt-3 flex items-center gap-2 p-3">
+        <div className="w-7 h-7  rounded-xs overflow-hidden shrink-0">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
+              {initials}
             </div>
-            <div className="truncate text-xs text-white/40">
-              {user?.email ?? "user@email.com"}
-            </div>
+          )}
+        </div>
+        <div className="min-w-0">
+          <div className="truncate text-xs font-medium text-white/80">
+            {user?.name ?? "Username"}
           </div>
-          <div className="ml-auto">
-            <button
-              type="button"
-              onClick={() => setShowLogoutConfirm(true)}
-              className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
-            >
-              <IoIosLogOut size={22} />
-            </button>
+          <div className="truncate text-xs text-white/40">
+            {user?.email ?? "user@email.com"}
           </div>
         </div>
-      )}
-
-      {/* Collapsed — just avatar */}
-      {!isOpen && (
-        <div className="mt-4 pt-3 border-t border-[#1f1f1f] flex justify-center">
-          <div className="w-4 h-4 p-3 rounded-full overflow-hidden">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt="avatar"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
-                {initials}
-              </div>
-            )}
-          </div>
+        <div className="ml-auto">
+          <button
+            type="button"
+            onClick={() => setShowLogoutConfirm(true)}
+            className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
+          >
+            <IoIosLogOut size={17} />
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Delete Confirmation Modal */}
       {workflowToDelete && (
