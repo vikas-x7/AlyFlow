@@ -201,7 +201,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   }`}
                 >
                   {isEditing ? (
-                    // Inline edit input on double click
                     <input
                       ref={editInputRef}
                       value={editingTitle}
@@ -212,7 +211,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     />
                   ) : (
                     <>
-                      {/* Single click = navigate, Double click = edit */}
                       <Link
                         href={`/canvas/${workflow.id}`}
                         className="flex-1 min-w-0"
@@ -232,7 +230,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                         </div>
                       </Link>
 
-                      {/* Delete button (shows on hover) */}
                       <button
                         type="button"
                         onClick={(e) => {
@@ -254,7 +251,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         )}
       </div>
 
-      {/* Bottom user section */}
       <div className="mt-4 pt-3 flex items-center gap-2 p-3">
         <div className="w-7 h-7  rounded-xs overflow-hidden shrink-0">
           {avatarUrl ? (

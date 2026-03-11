@@ -18,8 +18,35 @@ export function useWorkflows() {
       const res = await workflowService.create(input);
       return res.data.workflow as Workflow;
     },
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["workflows"] });
+    onMutate: async (input) => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await qc.cancelQueries({ queryKey: ["workflows"] });
+
+      const previous = qc.getQueryData<Workflow[]>(["workflows"]);
+
+      // Optimistically add the new workflow at the top
+      const optimistic: Workflow = {
+        id: `temp-${Date.now()}`,
+        name: input.name,
+        description: input.description ?? "",
+      };
+
+      qc.setQueryData<Workflow[]>(["workflows"], (old) => [
+        optimistic,
+        ...(old ?? []),
+      ]);
+
+      return { previous };
+    },
+    onError: (_err, _input, context) => {
+      // Rollback on error
+      if (context?.previous) {
+        qc.setQueryData(["workflows"], context.previous);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after to sync with server
+      qc.invalidateQueries({ queryKey: ["workflows"] });
     },
   });
 
@@ -55,11 +82,12 @@ export function useWorkflows() {
     refetch: workflowsQuery.refetch,
     createWorkflow: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
-    updateWorkflow: (id: string, input: { name: string; description?: string }) =>
-      updateMutation.mutateAsync({ id, input }),
+    updateWorkflow: (
+      id: string,
+      input: { name: string; description?: string },
+    ) => updateMutation.mutateAsync({ id, input }),
     isUpdating: updateMutation.isPending,
     deleteWorkflow: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,
   };
 }
-
