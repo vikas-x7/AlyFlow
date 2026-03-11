@@ -56,7 +56,7 @@ export const IntelligenceSection = () => {
   ];
 
   return (
-    <section className="relative bg-black text-white py-16 md:py-24">
+    <section className="relative bg-black text-white py-16 md:py-24 px-6">
       <div className="relative px-2 mx-auto ">
         <div className="h-50 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 border border-white/10 ">
           {cards.map((card, idx) => (
@@ -89,6 +89,28 @@ export const IntelligenceSection = () => {
               START BUILDING
             </button>
           </div>
+        </div>
+
+        <div className="min-h-[80vh] flex flex-col justify-between mt-50 relative overflow-hidden font-gothic">
+          {/* TOP LEFT */}
+          <h1 className="text-5xl md:text-7xl lg:text-6xl font-light  tracking-tight">
+            Craft exceptional
+          </h1>
+
+          {/* CENTER IMAGE */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[30vw] min-w-[260px] min-h-[160px]">
+            {/* APNI IMAGE YAHAN DAALO */}
+            <img
+              src="https://i.pinimg.com/originals/78/a5/ff/78a5ff90131c88c3e0fa328c54451c3e.gif"
+              alt=""
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          {/* BOTTOM RIGHT */}
+          <h1 className="text-5xl md:text-7xl lg:text-7xl font-light  tracking-tight self-end text-right">
+            API experiences
+          </h1>
         </div>
       </div>
     </section>
