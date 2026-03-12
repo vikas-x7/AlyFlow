@@ -5,14 +5,6 @@ import Link from "next/link";
 export const Hero = () => {
   return (
     <section className="relative bg-black text-white overflow-hidden font-gothic">
-      {/* <div className="absolute right-1/4 md:right-[32%] top-12 md:top-20 lg:top-30 opacity-60 md:opacity-80 pointer-events-none w-64 md:w-96 lg:w-125">
-        <img
-          src="https://i.pinimg.com/originals/78/a5/ff/78a5ff90131c88c3e0fa328c54451c3e.gif"
-          alt="Abstract Shape"
-          className="w-108"
-        />
-      </div> */}
-
       <div className="px-4 md:px-6 py-16 md:py-24 lg:py-32 mt-8 md:mt-20  flex flex-col items-center text-center">
         <div className="flex flex-col items-center gap-8 md:gap-12">
           <div className="flex-1 text-[#E5E5E5]">

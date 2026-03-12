@@ -23,13 +23,15 @@ function readNodeId(node: unknown) {
 export async function GET(req: NextRequest, { params }: Params) {
   const { workflowId } = await params;
   const payload = getAuthPayload(req);
-  if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!payload)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const workflow = await prisma.workflow.findFirst({
     where: { id: workflowId, ownerId: payload.userId },
     select: { id: true },
   });
-  if (!workflow) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!workflow)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const canvas = await prisma.canvas.findUnique({
     where: { workflowId },
@@ -45,13 +47,15 @@ export async function GET(req: NextRequest, { params }: Params) {
 export async function POST(req: NextRequest, { params }: Params) {
   const { workflowId } = await params;
   const payload = getAuthPayload(req);
-  if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!payload)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const workflow = await prisma.workflow.findFirst({
     where: { id: workflowId, ownerId: payload.userId },
     select: { id: true },
   });
-  if (!workflow) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!workflow)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const json = await req.json().catch(() => null);
   const parsed = canvasSaveSchema.safeParse(json);
@@ -62,60 +66,71 @@ export async function POST(req: NextRequest, { params }: Params) {
     );
   }
 
-  let nextNodes: unknown[] = [];
-  let nextEdges: unknown[] = [];
+  try {
+    let nextNodes: unknown[] = [];
+    let nextEdges: unknown[] = [];
 
-  if ("nodes" in parsed.data) {
-    nextNodes = parsed.data.nodes;
-    nextEdges = parsed.data.edges;
-  } else {
-    const existingCanvas = await prisma.canvas.findUnique({
+    if ("nodes" in parsed.data) {
+      nextNodes = parsed.data.nodes;
+      nextEdges = parsed.data.edges;
+    } else {
+      const existingCanvas = await prisma.canvas.findUnique({
+        where: { workflowId },
+        select: { nodes: true, edges: true },
+      });
+
+      const existingNodes = asArray(existingCanvas?.nodes);
+      const existingEdges = asArray(existingCanvas?.edges);
+      const removedIds = new Set(parsed.data.removedNodeIds);
+      const mergedById = new Map<string, unknown>();
+      const withoutId: unknown[] = [];
+
+      for (const node of existingNodes) {
+        const nodeId = readNodeId(node);
+        if (!nodeId) {
+          withoutId.push(node);
+          continue;
+        }
+        if (removedIds.has(nodeId)) continue;
+        mergedById.set(nodeId, node);
+      }
+
+      for (const node of parsed.data.dirtyNodes) {
+        const nodeId = readNodeId(node);
+        if (!nodeId) {
+          withoutId.push(node);
+          continue;
+        }
+        mergedById.set(nodeId, node);
+      }
+
+      nextNodes = [...mergedById.values(), ...withoutId];
+      nextEdges = parsed.data.edges ?? existingEdges;
+    }
+
+    const updated = await prisma.canvas.upsert({
       where: { workflowId },
-      select: { nodes: true, edges: true },
+      create: {
+        workflowId,
+        nodes: nextNodes as Prisma.InputJsonValue,
+        edges: nextEdges as Prisma.InputJsonValue,
+      },
+      update: {
+        nodes: nextNodes as Prisma.InputJsonValue,
+        edges: nextEdges as Prisma.InputJsonValue,
+      },
+      select: { updatedAt: true },
     });
 
-    const existingNodes = asArray(existingCanvas?.nodes);
-    const existingEdges = asArray(existingCanvas?.edges);
-    const removedIds = new Set(parsed.data.removedNodeIds);
-    const mergedById = new Map<string, unknown>();
-    const withoutId: unknown[] = [];
-
-    for (const node of existingNodes) {
-      const nodeId = readNodeId(node);
-      if (!nodeId) {
-        withoutId.push(node);
-        continue;
-      }
-      if (removedIds.has(nodeId)) continue;
-      mergedById.set(nodeId, node);
-    }
-
-    for (const node of parsed.data.dirtyNodes) {
-      const nodeId = readNodeId(node);
-      if (!nodeId) {
-        withoutId.push(node);
-        continue;
-      }
-      mergedById.set(nodeId, node);
-    }
-
-    nextNodes = [...mergedById.values(), ...withoutId];
-    nextEdges = parsed.data.edges ?? existingEdges;
+    return NextResponse.json(
+      { ok: true, updatedAt: updated.updatedAt },
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error("[canvas/save]", err);
+    return NextResponse.json(
+      { error: "Failed to save canvas" },
+      { status: 500 },
+    );
   }
-
-  const updated = await prisma.canvas.upsert({
-    where: { workflowId },
-    create: {
-      workflowId,
-      nodes: nextNodes as Prisma.InputJsonValue,
-      edges: nextEdges as Prisma.InputJsonValue,
-    },
-    update: {
-      nodes: nextNodes as Prisma.InputJsonValue,
-      edges: nextEdges as Prisma.InputJsonValue,
-    },
-    select: { updatedAt: true },
-  });
-
-  return NextResponse.json({ ok: true, updatedAt: updated.updatedAt }, { status: 200 });
 }

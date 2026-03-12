@@ -171,6 +171,11 @@ export function useAutoSave({
     if (!workflowId || !enabled || !ready) return;
 
     const sendKeepalive = () => {
+      // Skip if an autosave is already in-flight — it will handle
+      // the pending changes and avoids two concurrent POSTs that
+      // can overwrite each other on the server.
+      if (isSavingRef.current) return;
+
       try {
         const payload = getPendingAutosavePayload();
         if (!payload) return;
