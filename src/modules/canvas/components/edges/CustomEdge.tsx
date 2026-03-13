@@ -35,7 +35,7 @@ export function CustomEdge({
       id={id}
       path={path}
       markerEnd={markerEnd}
-      style={{ stroke: "#ec4899", strokeWidth: 2 }}
+      style={{ stroke: "#D9D9D9", strokeWidth: 2 }}
       interactionWidth={20}
     />
   );

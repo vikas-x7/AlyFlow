@@ -142,7 +142,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     >
       <div className="mb-4 flex items-center justify-between px-3 py-2  border-b border-[#1f1f1f]">
         <div className="text-[17px] font-semibold text-[#D9D9D9] flex items-center gap-2">
-          {/* <BsEjectFill className="bg-[#D9D9D9] text-[#0D0D0D] text-[17px] p-px rounded-xs" /> */}
           <GiCrownedExplosion className="bg-[#D9D9D9] text-[#0D0D0D] text-[17px] p-px rounded-xs" />
           Alyflow
         </div>
@@ -316,7 +315,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     }
                   }
                 }}
-                className="text-xs font-medium text-black/50 bg-white/80 transition-colors cursor-pointer px-4 py-1.5 rounded"
+                className="text-xs font-medium text-black/90 bg-white/80 transition-colors cursor-pointer px-4 py-1.5 rounded"
               >
                 Delete
               </button>

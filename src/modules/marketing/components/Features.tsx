@@ -1,10 +1,10 @@
 export function Features() {
   return (
-    <section className="py-12">
+    <section className="">
       <img
-        src="https://res.cloudinary.com/dyv9kenuj/image/upload/v1773200563/Screenshot_from_2026-03-11_09-11-10_smu4zk.png"
+        src="https://res.cloudinary.com/dyv9kenuj/image/upload/v1773367551/Screenshot_from_2026-03-13_07-33-24_puglsk.png"
         alt=""
-        className="w-full px-6 mb-50"
+        className="w-full px-6"
       />
     </section>
   );

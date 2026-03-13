@@ -109,14 +109,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           <div className="rounded border border-red-400 bg-red-50 px-3 py-1 text-xs text-red-700">
             Autosave failed. Retrying...
           </div>
-        ) : autosave.isSaving ? (
-          <div className="rounded border border-amber-300 bg-amber-50 px-3 py-1 text-xs text-amber-800">
-            Saving...
-          </div>
-        ) : autosave.lastSavedAt ? (
-          <div className="rounded border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs text-emerald-800">
-            Saved {autosave.lastSavedAt.toLocaleTimeString()}
-          </div>
         ) : null}
       </div>
 
