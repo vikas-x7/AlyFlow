@@ -23,20 +23,16 @@ const faqs: FAQItem[] = [
     answer:
       "Click 'create new' in the sidebar or open the Canvas. You can add nodes, drag to connect them, rename items, and save your project. Workflows are automatically stored in your account.",
   },
-  {
-    question: "Can I share or export my workflows?",
-    answer:
-      "Yes — you can export workflows for reporting or share a link with collaborators (coming soon). Export options include common image and JSON formats for handoff or backup.",
-  },
+
   {
     question: "Is my data saved and private?",
     answer:
-      "Workflows are saved to your account and only accessible to you and collaborators you explicitly share with. We recommend using a secure account and keeping your credentials private.",
+      "Workflows are saved to your account and only accessible to you , We recommend using a secure account and keeping your credentials private.",
   },
   {
     question: "Is Alyflow free to use?",
     answer:
-      "The core canvas experience is free to start. Advanced features, team collaboration, and additional export options may be offered under paid plans in the future.",
+      "The core canvas experience is free to start. Advanced features,options may be offered under paid plans in the future.",
   },
 ];
 
@@ -48,31 +44,18 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="min-h-screen px-6 py-20 sm:px-10 font-gothic">
-      {/* Two-column layout */}
+    <section id="faq" className="min-h-screen px-6 py-20 sm:px-6 font-gothic">
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 ">
-        {/* LEFT COLUMN — Sticky heading + description */}
         <div className="lg:w-[38%] lg:sticky lg:top-20 lg:self-start">
-          <h1 className="text-white/80 text-5xl mb-3  ">
-            Any questions? <span className="block">We got you.</span>
+          <h1 className="text-[#E5E5E5] md:text-3xl mb-3  ">
+            Any questions? <span className="block">We got you</span>
           </h1>
 
-          <p className="text-[#888] text-[clamp(0.875rem,1.4vw,1rem)] leading-[1.75] font-normal mb-8 max-w-xs">
-            Everything you need to know about Alyflow. Can't find the answer
-            you're looking for? Reach out to our team.
+          <p className="text-[#626262] text-[13px] leading-[1.75] font-normal mb-8 max-w-xs">
+            Everything you need to know about Alyflow.
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 text-[#6b7cff] text-sm font-medium hover:gap-3 transition-all duration-200 group"
-          >
-            More FAQs
-            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
-              →
-            </span>
-          </a>
         </div>
 
-        {/* RIGHT COLUMN — Accordion */}
         <div className="lg:w-[62%]">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
@@ -87,7 +70,7 @@ export default function FAQ() {
                   className="w-full flex items-center justify-between py-6 sm:py-7 text-left group transition-all duration-200 cursor-pointer"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-white pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[clamp(0.95rem,1.8vw,1.05rem)] font-normal tracking-[0.01em]">
+                  <span className="text-white pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[14px] font-normal tracking-[0.01em]">
                     {faq.question}
                   </span>
 
@@ -104,7 +87,7 @@ export default function FAQ() {
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? "400px" : "0px" }}
                 >
-                  <p className="text-[#888] pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
+                  <p className="text-[#626262] pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
                     {faq.answer}
                   </p>
                 </div>

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-black fixed w-full z-90 py-1 text-white font-gothic border-b border-white/10">
+    <header className="bg-[#0D0D0D] w-full z-90 py-1 text-white font-gothic ">
       <div className="px-4 md:px-6 py-3 md:py-1 flex items-center justify-between">
         <div className="hidden md:flex gap-6 text-xs md:text-sm lg:text-[12px] font-light tracking-wider">
           <Link
@@ -32,7 +33,7 @@ function Navbar() {
 
         <Link
           href="/"
-          className="flex items-center justify-center text-lg md:text-xl font-bold tracking-tight hover:opacity-80 transition absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-[#FAFAF9]"
+          className="flex text-[17px] items-center justify-center  md:text-xl font-bold tracking-tight hover:opacity-80 transition absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-[#FAFAF9]"
         >
           Alyflow
         </Link>
@@ -42,15 +43,7 @@ function Navbar() {
           className="md:hidden flex flex-col gap-1.5 z-50"
           aria-label="Toggle menu"
         >
-          <span
-            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-          ></span>
-          <span
-            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`}
-          ></span>
-          <span
-            className={`w-6 h-0.5 bg-white/50 transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-          ></span>
+          <RxHamburgerMenu />
         </button>
 
         <nav className="hidden md:flex items-center gap-3 text-xs md:text-sm  tracking-wider">
@@ -73,32 +66,32 @@ function Navbar() {
         <div className="md:hidden bg-black border-t border-white/5 px-4 py-4 flex flex-col gap-4 animate-in fade-in duration-200">
           <Link
             href="/#home"
-            className="text-sm hover:text-white/60 transition cursor-pointer"
+            className="text-[10px] text-[#626262] hover:text-white/60 transition cursor-pointer"
           >
             HOME
           </Link>
           <Link
             href="/#about"
-            className="text-sm hover:text-white/60 transition cursor-pointer"
+            className="text-[10px] text-[#626262] hover:text-white/60 transition cursor-pointer"
           >
             ABOUT
           </Link>
           <Link
             href="/#faq"
-            className="text-sm hover:text-white/60 transition cursor-pointer"
+            className="text-[10px] text-[#626262] hover:text-white/60 transition cursor-pointer"
           >
             FAQ
           </Link>
           <div className="border-t border-white/5 pt-4 flex flex-col gap-2">
             <Link
               href="/login"
-              className="bg-white/5 hover:bg-white/10 text-white/80 px-3 py-2 rounded-sm transition text-sm"
+              className="bg-white/5 hover:bg-white/10 text-white/80 px-3 py-2 rounded-xs transition text-[10px]"
             >
               LOGIN
             </Link>
             <Link
-              href="/signup"
-              className="bg-white hover:bg-white/10 text-white/80 px-3 py-2 rounded-sm transition text-sm"
+              href="/register"
+              className="bg-white/5 hover:bg-white/10 text-white/80 px-3 py-2 rounded-xs transition text-[10px]"
             >
               SIGN UP
             </Link>
