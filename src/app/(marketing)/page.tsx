@@ -27,7 +27,7 @@ export default function LandingPage() {
   return (
     <main id="home" className="w-full min-h-screen">
       <div className="fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-[80%] mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Navbar />
         </div>
       </div>
