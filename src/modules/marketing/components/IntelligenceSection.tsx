@@ -62,21 +62,6 @@ export const IntelligenceSection = () => {
           </div>
         </div>
       </div>
-
-      <div className="mb-20 mt-24 md:mt-40 relative font-gothic ">
-        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div className="w-full md:w-[70%] flex flex-col gap-5">
-            <p className="text-sm md:text-[22px] text-[#626262] leading-8">
-              Drop any content text, images, code, or sketches onto an infinite
-              canvas and connect them into living systems. No rigid templates,
-              no limits. Just the way your mind actually works. every node
-              remembers its place. Every edge tells a story. Build workflows
-              that evolve with your ideas and never lose a single thought along
-              the way.
-            </p>
-          </div>
-        </div>
-      </div>
     </section>
   );
 };

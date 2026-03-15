@@ -6,7 +6,7 @@ import { useReactFlow } from "reactflow";
 export function ImageNode({
   id,
   data,
-}: NodeProps<{ url?: string; fileName?: string }>) {
+}: NodeProps<{ url?: string; fileName?: string; bgColor?: string }>) {
   const [preview, setPreview] = useState<string | null>(data?.url ?? null);
   const [fileName, setFileName] = useState<string | null>(
     data?.fileName ?? null,
@@ -64,7 +64,7 @@ export function ImageNode({
   };
 
   return (
-    <BaseNode title="Image" titleColor="#34d399" indicatorColor="#059669">
+    <BaseNode title="Image" titleColor="#34d399" indicatorColor="#059669" bgColor={data?.bgColor}>
       <div className="w-full min-w-[220px] p-0">
         <input
           ref={inputRef}
@@ -89,11 +89,10 @@ export function ImageNode({
 
             {/* Top-right buttons */}
             <div
-              className={`absolute top-1.5 right-1.5 flex flex-row gap-1 transition-opacity duration-200 ${
-                isHovering
-                  ? "opacity-100 pointer-events-auto"
-                  : "opacity-0 pointer-events-none"
-              }`}
+              className={`absolute top-1.5 right-1.5 flex flex-row gap-1 transition-opacity duration-200 ${isHovering
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+                }`}
             >
               <button
                 onClick={() => inputRef.current?.click()}
@@ -125,11 +124,10 @@ export function ImageNode({
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`relative rounded-lg border-[1.5px] border-dashed flex flex-col items-center justify-center gap-2 py-7 px-4 cursor-pointer transition-all duration-200 ${
-              isDragging
-                ? "border-[#34d399] bg-[#34d39908]"
-                : "border-[#2a2a2a] bg-[#0c0c0d] hover:border-[#3a3a3a]"
-            }`}
+            className={`relative rounded-lg border-[1.5px] border-dashed flex flex-col items-center justify-center gap-2 py-7 px-4 cursor-pointer transition-all duration-200 ${isDragging
+              ? "border-[#34d399] bg-[#34d39908]"
+              : "border-[#2a2a2a] bg-[#0c0c0d] hover:border-[#3a3a3a]"
+              }`}
           >
             <svg
               width="28"

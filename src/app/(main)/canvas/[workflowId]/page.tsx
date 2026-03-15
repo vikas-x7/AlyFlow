@@ -3,15 +3,14 @@
 import { use } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, {
-  Background,
-  BackgroundVariant,
   MiniMap,
   ReactFlowInstance,
 } from "reactflow";
+import type { Edge } from "reactflow";
 import { useState, useRef, useCallback } from "react";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
-import { DrawingOverlay } from "@/modules/canvas/components/DrawingOverlay";
+import { NodeFormatPanel } from "@/modules/canvas/components/toolbar/NodeFormatPanel";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
 import { Loader } from "@/shared/components/ui/Loader";
@@ -38,45 +37,16 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
     onNodesChange,
     onEdgesChange,
     onConnect,
+    onReconnect,
     addNodeOfType,
-    addCustomNode,
   } = useCanvas(workflowId);
 
   const [activeTool, setActiveTool] = useState<string>("cursor");
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
   const [zoom, setZoom] = useState<number>(0.1);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const isConnectingRef = useRef(false);
-  const connectEndTimeRef = useRef(0);
   const hasFittedRef = useRef(false);
-
-  const handleDrawingComplete = useCallback(
-    (
-      flowPoints: { x: number; y: number }[],
-      color: string,
-      strokeWidth: number,
-    ) => {
-      if (flowPoints.length < 2) return;
-      const xs = flowPoints.map((p) => p.x);
-      const ys = flowPoints.map((p) => p.y);
-      const minX = Math.min(...xs);
-      const minY = Math.min(...ys);
-      const width = Math.max(Math.max(...xs) - minX, 1);
-      const height = Math.max(Math.max(...ys) - minY, 1);
-      const relPoints = flowPoints.map((p) => ({
-        x: p.x - minX,
-        y: p.y - minY,
-      }));
-
-      const padding = strokeWidth + 6;
-      addCustomNode(
-        "drawing",
-        { points: relPoints, color, strokeWidth, width, height },
-        { x: minX - padding, y: minY - padding },
-      );
-    },
-    [addCustomNode],
-  );
+  const edgeReconnectSuccessful = useRef(true);
 
   const autosave = useAutoSave({
     workflowId,
@@ -122,14 +92,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
       </div>
 
       <div className="flex-1 bg-[#101011] relative" ref={containerRef}>
-        <DrawingOverlay
-          active={activeTool === "pen"}
-          rfInstance={rfInstance}
-          containerRef={containerRef}
-          color="#e05555"
-          strokeWidth={3}
-          onDrawingComplete={handleDrawingComplete}
-        />
         <div className="absolute bottom-0  z-50">
           <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-[100px] text-[15px] text-white font-gothic">
             {Math.round(zoom * 100)}%
@@ -141,8 +103,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             try {
               const v = (instance as any).getViewport?.();
               if (typeof v?.zoom === "number") setZoom(v.zoom);
-            } catch (e) {}
-            // One-time fitView only if there are pre-existing nodes
+            } catch (e) { }
             if (!hasFittedRef.current && nodes.length > 0) {
               hasFittedRef.current = true;
               setTimeout(() => {
@@ -150,7 +111,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
                 try {
                   const v = (instance as any).getViewport?.();
                   if (typeof v?.zoom === "number") setZoom(v.zoom);
-                } catch (e) {}
+                } catch (e) { }
               }, 50);
             }
           }}
@@ -162,35 +123,29 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             const z = viewport?.zoom ?? _e?.viewport?.zoom;
             if (typeof z === "number") setZoom(z);
           }}
-          onConnectStart={() => {
-            isConnectingRef.current = true;
-          }}
-          onConnectEnd={() => {
-            connectEndTimeRef.current = Date.now();
-            setTimeout(() => {
-              isConnectingRef.current = false;
-            }, 200);
-          }}
-          onConnect={(connection) => {
-            isConnectingRef.current = false;
-            onConnect(connection);
-          }}
+          onConnect={onConnect}
           onPaneClick={(event: any) => {
-            if (isConnectingRef.current) return;
-            if (Date.now() - connectEndTimeRef.current < 300) return;
             if (!rfInstance) return;
-            if (
-              !["text", "image", "video", "link", "file", "code"].includes(
-                activeTool,
-              )
-            )
-              return;
+            if (activeTool !== "text") return;
             const rect = containerRef.current?.getBoundingClientRect();
             if (!rect) return;
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             const pos = rfInstance.project({ x, y });
-            addNodeOfType(activeTool as any, pos);
+            addNodeOfType("text", pos);
+          }}
+          onReconnect={(oldEdge, newConnection) => {
+            edgeReconnectSuccessful.current = true;
+            onReconnect(oldEdge, newConnection);
+          }}
+          onReconnectStart={() => {
+            edgeReconnectSuccessful.current = false;
+          }}
+          onReconnectEnd={(_, edge) => {
+            if (!edgeReconnectSuccessful.current) {
+              onEdgesChange([{ id: (edge as Edge).id, type: "remove" }]);
+            }
+            edgeReconnectSuccessful.current = true;
           }}
           nodes={nodes}
           edges={edges}
@@ -212,6 +167,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             pannable
             zoomable
           />
+          {/* NodeFormatPanel must be inside ReactFlow to access zustand store */}
+          <NodeFormatPanel />
         </ReactFlow>
       </div>
     </div>

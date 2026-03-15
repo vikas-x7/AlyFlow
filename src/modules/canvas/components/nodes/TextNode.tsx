@@ -1,12 +1,29 @@
+// TextNode.tsx
 import { BaseNode } from "./BaseNode";
 import type { NodeProps } from "reactflow";
 import { useState, useRef, useEffect } from "react";
 import { useReactFlow } from "reactflow";
 
-export function TextNode({ id, data }: NodeProps<{ text?: string }>) {
+export function TextNode({
+  id,
+  data,
+}: NodeProps<{
+  text?: string;
+  bgColor?: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+}>) {
   const [value, setValue] = useState(data?.text ?? "");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setNodes } = useReactFlow();
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [value]);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
@@ -18,15 +35,20 @@ export function TextNode({ id, data }: NodeProps<{ text?: string }>) {
   }
 
   return (
-    <BaseNode title="Text" titleColor="#c084fc" indicatorColor="#9333ea">
+    <BaseNode bgColor={data?.bgColor}>
       <textarea
         ref={textareaRef}
         value={value}
         onChange={handleChange}
-        placeholder="Start typing..."
-        className="w-full h-24 bg-transparent text-xs text-[#9a9a9a] outline-none resize both border border-[#2e2e2e] rounded p-1.5 placeholder:text-white/20 min-h-15 min-w-40 no-scrollbar"
-        style={{ resize: "both" }}
+        rows={1}
+        className="border-none outline-none resize-none overflow-hidden w-full text-[16px] text-black font-gothic bg-transparent"
+        style={{
+          fontWeight: data?.bold ? "bold" : "normal",
+          fontStyle: data?.italic ? "italic" : "normal",
+          textDecoration: data?.underline ? "underline" : "none",
+        }}
       />
     </BaseNode>
   );
 }
+

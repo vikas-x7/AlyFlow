@@ -1,28 +1,12 @@
 import { TfiText } from "react-icons/tfi";
-import { CiImageOn } from "react-icons/ci";
-import { CiVideoOn } from "react-icons/ci";
-import { HiMiniLink } from "react-icons/hi2";
-import { IoDocumentTextOutline } from "react-icons/io5";
-import { IoCodeSlashOutline } from "react-icons/io5";
-import { PiCursorLight, PiPencilSimple } from "react-icons/pi";
+import { PiCursorLight } from "react-icons/pi";
 import { LiaHandPaperSolid } from "react-icons/lia";
 
 export function NodeTypeSwitcher({
   onAdd,
   active,
 }: {
-  onAdd: (
-    type:
-      | "text"
-      | "image"
-      | "video"
-      | "link"
-      | "file"
-      | "code"
-      | "cursor"
-      | "hand"
-      | "pen",
-  ) => void;
+  onAdd: (type: "text" | "cursor" | "hand") => void;
   active?: string;
 }) {
   return (
@@ -47,17 +31,6 @@ export function NodeTypeSwitcher({
       >
         <LiaHandPaperSolid />
       </button>
-      <button
-        type="button"
-        className={
-          "px-2 py-1 " +
-          (active === "pen" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("pen")}
-        title="Pen (draw)"
-      >
-        <PiPencilSimple />
-      </button>
 
       {/* divider */}
       <span className="w-px bg-[#28272F] self-stretch" />
@@ -71,56 +44,6 @@ export function NodeTypeSwitcher({
         onClick={() => onAdd("text")}
       >
         <TfiText />
-      </button>
-      <button
-        type="button"
-        className={
-          "  px-2 py-1 " +
-          (active === "image" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("image")}
-      >
-        <CiImageOn />
-      </button>
-      <button
-        type="button"
-        className={
-          " px-2 py-1 " +
-          (active === "video" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("video")}
-      >
-        <CiVideoOn />
-      </button>
-      <button
-        type="button"
-        className={
-          "  px-2 py-1 " +
-          (active === "link" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("link")}
-      >
-        <HiMiniLink />
-      </button>
-      <button
-        type="button"
-        className={
-          " px-2 py-1 " +
-          (active === "file" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("file")}
-      >
-        <IoDocumentTextOutline />
-      </button>
-      <button
-        type="button"
-        className={
-          " px-2 py-1 " +
-          (active === "code" ? "bg-white/10 text-white rounded" : "")
-        }
-        onClick={() => onAdd("code")}
-      >
-        <IoCodeSlashOutline />
       </button>
     </div>
   );

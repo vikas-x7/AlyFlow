@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Connection, Edge, EdgeChange, Node, NodeChange } from "reactflow";
-import { addEdge, applyEdgeChanges, applyNodeChanges } from "reactflow";
+import {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  reconnectEdge,
+} from "reactflow";
 import { canvasService } from "../services/canvas.service";
 import { useCanvasStore } from "../store/canvas.store";
 import { TextNode } from "../components/nodes/TextNode";
-import { ImageNode } from "../components/nodes/ImageNode";
-import { VideoNode } from "../components/nodes/VideoNode";
-import { LinkNode } from "../components/nodes/LinkNode";
-import { FileNode } from "../components/nodes/FileNode";
-import { CodeNode } from "../components/nodes/CodeNode";
 import { CustomEdge } from "../components/edges/CustomEdge";
-import { DrawingNode } from "../components/nodes/DrawingNode";
-
-type CanvasNodeType = "text" | "image" | "video" | "link" | "file" | "code";
 
 function makeId(prefix: string) {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto)
@@ -111,8 +108,15 @@ export function useCanvas(workflowId: string) {
     [setEdges],
   );
 
+  const onReconnect = useCallback(
+    (oldEdge: Edge, newConnection: Connection) => {
+      setEdges((prev) => reconnectEdge(oldEdge, newConnection, prev));
+    },
+    [setEdges],
+  );
+
   const addNodeOfType = useCallback(
-    (type: CanvasNodeType, position?: { x: number; y: number }) => {
+    (type: "text", position?: { x: number; y: number }) => {
       const id = makeId(type);
       const base: Node = {
         id,
@@ -121,28 +125,10 @@ export function useCanvas(workflowId: string) {
           x: 80 + Math.random() * 320,
           y: 80 + Math.random() * 220,
         },
-        data: {},
+        data: { text: "New text" },
       };
 
-      const dataByType: Record<CanvasNodeType, any> = {
-        text: { text: "New text" },
-        image: { url: "" },
-        video: { url: "" },
-        link: { url: "https://", label: "" },
-        file: { filename: "file", url: "" },
-        code: { language: "ts", code: "// code..." },
-      };
-
-      setNodes((prev) => prev.concat({ ...base, data: dataByType[type] }));
-      return id;
-    },
-    [setNodes],
-  );
-
-  const addCustomNode = useCallback(
-    (type: string, data: any, position: { x: number; y: number }) => {
-      const id = makeId(type);
-      setNodes((prev) => prev.concat({ id, type, position, data }));
+      setNodes((prev) => prev.concat(base));
       return id;
     },
     [setNodes],
@@ -151,12 +137,6 @@ export function useCanvas(workflowId: string) {
   const nodeTypes = useMemo(
     () => ({
       text: TextNode,
-      image: ImageNode,
-      video: VideoNode,
-      link: LinkNode,
-      file: FileNode,
-      code: CodeNode,
-      drawing: DrawingNode,
     }),
     [],
   );
@@ -173,7 +153,7 @@ export function useCanvas(workflowId: string) {
     onNodesChange,
     onEdgesChange,
     onConnect,
+    onReconnect,
     addNodeOfType,
-    addCustomNode,
   };
 }
