@@ -5,17 +5,23 @@ import { useReactFlow, useOnSelectionChange } from "reactflow";
 import type { Node, Edge } from "reactflow";
 
 const PRESET_COLORS = [
-  "#61A3BA",
-  "#91C788",
-  "#B983FF",
-  "#FFA447",
-  "#E05555",
-  "#F5F5F5",
-  "#D9D9D9",
-  "#FFFFFF",
-  "#F5F5F5",
-];
+  "#FF6B6B", // red
+  "#FF9F43", // orange
+  "#FFEAA7", // yellow
+  "#6BCB77", // green
+  "#91C788", // sage green
+  "#4D96FF", // blue
+  "#00D2D3", // teal
+  "#C77DFF", // purple
+  "#B983FF", // lavender
+  "#F8A5C2", // pink
+  "#FFA447", // amber
+  "#A8865C", // brown
+  "#D9D9D9", // gray
+  "#E8E8E8", // off-white
 
+  "#4A4A6A", // slate
+];
 const EDGE_TYPES = [
   { value: "default", label: "Bezier" },
   { value: "straight", label: "Straight" },
@@ -97,7 +103,7 @@ export function NodeFormatPanel() {
   return (
     <>
       {showToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-[#1a1a1a] border border-white/10 text-white/70 text-[12px] font-mono px-4 py-2 rounded-[5px] shadow-lg">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-100 bg-[#1a1a1a] border border-white/10 text-white/70 text-[9px] font-mono px-4 py-2 rounded-[5px] shadow-lg">
           Please select a node first
         </div>
       )}
@@ -202,7 +208,7 @@ export function NodeFormatPanel() {
                 key={size}
                 type="button"
                 onClick={() => updateEdge("strokeWidth", size)}
-                className={`w-8 h-8 flex items-center justify-center rounded-[4px] border cursor-pointer transition-all ${
+                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${
                   currentThickness === size
                     ? "bg-white/15 border-white/30"
                     : "bg-transparent border-white/10 hover:bg-white/5"
