@@ -41,7 +41,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         {/* Floating sidebar toggle button on canvas */}
         <button
           onClick={() => setSidebarOpen((p) => !p)}
-          className="absolute top-3 left-3 z-50 p-1.5 rounded-md   text-white/70 hover:text-white hover:bg-[#252525] transition-all cursor-pointer backdrop-blur-sm"
+          className="absolute top-3 left-3 z-10 p-1.5 rounded-md   text-white/70 hover:text-white hover:bg-[#252525] transition-all cursor-pointer backdrop-blur-sm"
           title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
           <BsLayoutSidebar size={14} />

@@ -49,7 +49,7 @@ export default function CanvasEntryPage() {
 
   if (activeError) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#101011]">
+      <div className="flex h-screen items-center justify-center bg-[#0D0D0D]">
         <div className="space-y-3 text-center">
           <div className="rounded border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
             {activeError}

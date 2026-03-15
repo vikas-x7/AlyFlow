@@ -2,10 +2,7 @@
 
 import { use } from "react";
 import "reactflow/dist/style.css";
-import ReactFlow, {
-  MiniMap,
-  ReactFlowInstance,
-} from "reactflow";
+import ReactFlow, { MiniMap, ReactFlowInstance } from "reactflow";
 import type { Edge } from "reactflow";
 import { useState, useRef, useCallback } from "react";
 
@@ -82,7 +79,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         ) : null}
       </div>
 
-      <div className="absolute bottom-4 z-90 right-130">
+      <div className="absolute bottom-4 z-10 right-130">
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
@@ -91,8 +88,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         />
       </div>
 
-      <div className="flex-1 bg-[#101011] relative" ref={containerRef}>
-        <div className="absolute bottom-0  z-50">
+      <div className="flex-1 bg-[#0D0D0D] relative" ref={containerRef}>
+        <div className="absolute bottom-0  z-10">
           <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-[100px] text-[15px] text-white font-gothic">
             {Math.round(zoom * 100)}%
           </div>
@@ -103,7 +100,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             try {
               const v = (instance as any).getViewport?.();
               if (typeof v?.zoom === "number") setZoom(v.zoom);
-            } catch (e) { }
+            } catch (e) {}
             if (!hasFittedRef.current && nodes.length > 0) {
               hasFittedRef.current = true;
               setTimeout(() => {
@@ -111,7 +108,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
                 try {
                   const v = (instance as any).getViewport?.();
                   if (typeof v?.zoom === "number") setZoom(v.zoom);
-                } catch (e) { }
+                } catch (e) {}
               }, 50);
             }
           }}
