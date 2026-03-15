@@ -1,4 +1,3 @@
-// BaseNode.tsx
 import type { ReactNode } from "react";
 import { Handle, Position } from "reactflow";
 import { useState } from "react";
@@ -11,7 +10,13 @@ interface BaseNodeProps {
   indicatorColor?: string;
 }
 
-export function BaseNode({ children, bgColor, title, titleColor, indicatorColor }: BaseNodeProps) {
+export function BaseNode({
+  children,
+  bgColor,
+  title,
+  titleColor,
+  indicatorColor,
+}: BaseNodeProps) {
   const [hovered, setHovered] = useState(false);
 
   const handleStyle = {

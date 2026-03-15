@@ -1,11 +1,10 @@
-import type { EdgeProps, Connection } from "reactflow";
+import type { EdgeProps } from "reactflow";
 import {
   BaseEdge,
   getBezierPath,
-  useReactFlow,
-  reconnectEdge,
+  getStraightPath,
+  getSmoothStepPath,
 } from "reactflow";
-import { useRef } from "react";
 
 export function CustomEdge({
   id,
@@ -18,24 +17,35 @@ export function CustomEdge({
   markerEnd,
   data,
 }: EdgeProps) {
-  const { setEdges } = useReactFlow();
-  const edgeReconnectSuccessful = useRef(true);
-
-  const [path] = getBezierPath({
+  const pathParams = {
     sourceX,
     sourceY,
     sourcePosition,
     targetX,
     targetY,
     targetPosition,
-  });
+  };
+
+  const [path] =
+    data?.edgeType === "straight"
+      ? getStraightPath(pathParams)
+      : data?.edgeType === "step" || data?.edgeType === "smoothstep"
+        ? getSmoothStepPath({
+            ...pathParams,
+            borderRadius: data?.edgeType === "smoothstep" ? 10 : 0,
+          })
+        : getBezierPath(pathParams);
 
   return (
     <BaseEdge
       id={id}
       path={path}
       markerEnd={markerEnd}
-      style={{ stroke: "#E3DBBB", strokeWidth: 1.5 }}
+      style={{
+        stroke: "#E3DBBB",
+        strokeWidth: data?.strokeWidth ?? 1.5,
+        strokeDasharray: data?.edgeType === "animated" ? "6 3" : undefined,
+      }}
       interactionWidth={50}
     />
   );

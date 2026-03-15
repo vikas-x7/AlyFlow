@@ -79,7 +79,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         ) : null}
       </div>
 
-      <div className="absolute bottom-4 z-10 right-130">
+      <div className="absolute bottom-4 z-10 right-1/2 translate-x-1/2">
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
@@ -88,9 +88,9 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         />
       </div>
 
-      <div className="flex-1 bg-[#0D0D0D] relative" ref={containerRef}>
+      <div className="flex-1 bg-[#101011] relative" ref={containerRef}>
         <div className="absolute bottom-0  z-10">
-          <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-[100px] text-[15px] text-white font-gothic">
+          <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-25 text-[15px] text-white font-gothic">
             {Math.round(zoom * 100)}%
           </div>
         </div>
@@ -160,6 +160,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
               width: 120,
               height: 80,
               background: "#0D0D0D",
+              position: "fixed",
             }}
             pannable
             zoomable

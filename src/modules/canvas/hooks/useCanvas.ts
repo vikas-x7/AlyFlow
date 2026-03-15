@@ -125,7 +125,7 @@ export function useCanvas(workflowId: string) {
           x: 80 + Math.random() * 320,
           y: 80 + Math.random() * 220,
         },
-        data: { text: "New text" },
+        data: { text: "" },
       };
 
       setNodes((prev) => prev.concat(base));

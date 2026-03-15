@@ -41,7 +41,7 @@ export function TextNode({
         value={value}
         onChange={handleChange}
         rows={1}
-        className="border-none outline-none resize-none overflow-hidden w-full text-[16px] text-black font-gothic bg-transparent"
+        className="border-none outline-none resize-none overflow-hidden w-full text-[20px] text-center text-black font-gothic bg-transparent"
         style={{
           fontWeight: data?.bold ? "bold" : "normal",
           fontStyle: data?.italic ? "italic" : "normal",
@@ -51,4 +51,3 @@ export function TextNode({
     </BaseNode>
   );
 }
-
