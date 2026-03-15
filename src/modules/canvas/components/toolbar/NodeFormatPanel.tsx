@@ -21,6 +21,7 @@ const PRESET_COLORS = [
   "#E8E8E8", // off-white
 
   "#4A4A6A", // slate
+  "#CA2A30",
 ];
 const EDGE_TYPES = [
   { value: "default", label: "Bezier" },
