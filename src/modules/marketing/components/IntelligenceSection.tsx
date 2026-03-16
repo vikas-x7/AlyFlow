@@ -18,9 +18,9 @@ export const IntelligenceSection = () => {
   ];
 
   return (
-    <section className="relative  py-12 md:py-24 px-6 ">
-      <div className="mx-auto mt-40">
-        <div className="grid grid-cols-1 md:grid-cols-3 border border-white/5 divide-y md:divide-y-0 md:divide-x divide-white/10">
+    <section className="relative  py-12 md:py-24  ">
+      <div className="mx-auto mt-40 w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 border border-x border-white/5 divide-y md:divide-y-0 md:divide-x divide-white/10">
           {cards.map((card, idx) => (
             <div key={idx} className="p-6 md:p-8">
               <h2 className="text-xl md:text-2xl lg:text-2xl font-light tracking-tight text-white mb-3 font-gothic">
@@ -34,7 +34,7 @@ export const IntelligenceSection = () => {
                 <img
                   src={card.img}
                   alt=""
-                  className="rounded-[5px] opacity-50 w-full h-full object-cover"
+                  className="rounded-[5px]  w-full h-full object-cover"
                 />
               </div>
             </div>

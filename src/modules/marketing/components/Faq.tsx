@@ -44,14 +44,17 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="min-h-screen px-6 py-20 sm:px-6 font-gothic">
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 ">
+    <section
+      id="faq"
+      className="min-h-screen w px-6 py-20 sm:px-6 font-gothic flex items-center justify-between "
+    >
+      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 w-7xl">
         <div className="lg:w-[38%] lg:sticky lg:top-20 lg:self-start">
-          <h1 className="text-[#E5E5E5] md:text-3xl mb-3  ">
+          <h1 className=" md:text-3xl mb-3  ">
             Any questions? <span className="block">We got you</span>
           </h1>
 
-          <p className="text-[#626262] text-[13px] leading-[1.75] font-normal mb-8 max-w-xs">
+          <p className=" text-[13px] leading-[1.75] font-normal mb-8 max-w-xs">
             Everything you need to know about Alyflow.
           </p>
         </div>
@@ -70,12 +73,12 @@ export default function FAQ() {
                   className="w-full flex items-center justify-between py-6 sm:py-7 text-left group transition-all duration-200 cursor-pointer"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-white pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[14px] font-normal tracking-[0.01em]">
+                  <span className=" pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[14px] font-normal tracking-[0.01em]">
                     {faq.question}
                   </span>
 
                   <span
-                    className={`shrink-0 text-white text-[clamp(1.2rem,2.5vw,1.4rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
+                    className={`shrink-0  text-[clamp(1.2rem,2.5vw,1.4rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
                       isOpen ? "rotate-45" : "rotate-0"
                     }`}
                   >
@@ -87,7 +90,7 @@ export default function FAQ() {
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? "400px" : "0px" }}
                 >
-                  <p className="text-[#626262] pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
+                  <p className=" pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
                     {faq.answer}
                   </p>
                 </div>
