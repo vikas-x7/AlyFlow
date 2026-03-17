@@ -2,15 +2,14 @@
 
 import { use } from "react";
 import "reactflow/dist/style.css";
-import ReactFlow, { MiniMap, ReactFlowInstance } from "reactflow";
-import type { Edge } from "reactflow";
+import ReactFlow, { MiniMap, ReactFlowInstance, getConnectedEdges } from "reactflow";
+import type { Edge, NodeChange, EdgeChange } from "reactflow";
 import { useState, useRef, useCallback } from "react";
 
 import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSwitcher";
 import { NodeFormatPanel } from "@/modules/canvas/components/toolbar/NodeFormatPanel";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
-import { ThemeToggle } from "@/shared/components/ui/ThemeToggle";
 import { Loader } from "@/shared/components/ui/Loader";
 import { useTheme } from "next-themes";
 
@@ -75,7 +74,6 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   return (
     <div className="h-[calc(100vh-0px)] flex flex-col bg-background">
       <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
-        <ThemeToggle />
         {autosave.error ? (
           <div className="rounded border border-red-400 bg-red-50 px-3 py-1 text-xs text-red-700">
             Autosave failed. Retrying...
@@ -87,6 +85,23 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
+            if (type === "delete") {
+              const selectedNodes = nodes.filter((n) => n.selected);
+              const selectedEdges = edges.filter((e) => e.selected);
+
+              const connectedEdges = getConnectedEdges(selectedNodes, edges);
+              const edgesToRemoveIds = new Set([
+                ...selectedEdges.map((e) => e.id),
+                ...connectedEdges.map((e) => e.id),
+              ]);
+
+              const nodesToRemove = selectedNodes.map((n) => ({ id: n.id, type: "remove" as const } as NodeChange));
+              const edgesToRemove = Array.from(edgesToRemoveIds).map((id) => ({ id, type: "remove" as const } as EdgeChange));
+
+              if (nodesToRemove.length > 0) onNodesChange(nodesToRemove);
+              if (edgesToRemove.length > 0) onEdgesChange(edgesToRemove);
+              return;
+            }
             setActiveTool(type);
           }}
         />
@@ -154,6 +169,9 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
           edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          panOnDrag={activeTool === "hand"}
+          selectionOnDrag={activeTool === "cursor"}
+          elementsSelectable={activeTool === "cursor" || activeTool === "text"}
           minZoom={0.1}
           maxZoom={5}
           defaultViewport={{ x: 0, y: 0, zoom: 1 }}
