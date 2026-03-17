@@ -104,20 +104,20 @@ export function NodeFormatPanel() {
   return (
     <>
       {showToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-100 bg-[#1a1a1a] border border-white/10 text-white/70 text-[9px] font-mono px-4 py-2 rounded-[5px] shadow-lg">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-100 bg-panel border border-border text-foreground/70 text-[9px] font-mono px-4 py-2 rounded-[5px] shadow-lg">
           Please select a node first
         </div>
       )}
 
-      <div className="fixed top-2 right-1 z-50 w-37.5 bg-[#0D0D0D] border border-white/5 rounded-[5px] p-3 flex flex-col gap-3">
+      <div className="fixed top-2 right-1 z-50 w-37.5 bg-panel border border-border rounded-[5px] p-3 flex flex-col gap-3">
         {/* Header */}
-        <div className="text-[11px] text-white/40 font-mono uppercase tracking-wider">
+        <div className="text-[11px] text-foreground/50 font-mono uppercase tracking-wider">
           Node Style
         </div>
 
         {/* Background */}
         <div className="flex flex-col">
-          <div className="text-[10px] text-white/30 font-mono uppercase tracking-wider mb-3">
+          <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider mb-3">
             Background
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -131,19 +131,19 @@ export function NodeFormatPanel() {
                   backgroundColor: color,
                   borderColor:
                     (bgColor || "#61A3BA") === color
-                      ? "#ffffff"
-                      : "rgba(255,255,255,0.1)",
+                      ? "var(--foreground)"
+                      : "var(--border-color)",
                 }}
               />
             ))}
           </div>
         </div>
 
-        <div className="w-full h-px bg-[#28272F]" />
+        <div className="w-full h-px bg-border" />
 
         {/* Text Format */}
         <div className="flex flex-col gap-2">
-          <div className="text-[10px] text-white/30 font-mono uppercase tracking-wider">
+          <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider">
             Text Format
           </div>
           <div className="flex gap-1.5">
@@ -160,11 +160,10 @@ export function NodeFormatPanel() {
                   onClick={() =>
                     updateNodeData(key, !selectedNode?.data?.[key])
                   }
-                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${
-                    active
-                      ? "bg-white/15 text-white border-white/30"
-                      : "bg-transparent text-white/50 border-white/10 hover:bg-white/5"
-                  }`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${active
+                      ? "bg-foreground/15 text-foreground border-foreground/30"
+                      : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                    }`}
                 >
                   {label}
                 </button>
@@ -173,11 +172,11 @@ export function NodeFormatPanel() {
           </div>
         </div>
 
-        <div className="w-full h-px bg-[#28272F]" />
+        <div className="w-full h-px bg-border" />
 
         {/* Edge Style */}
         <div className="flex flex-col gap-2">
-          <div className="text-[10px] text-white/30 font-mono uppercase tracking-wider">
+          <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider">
             Edge Type
           </div>
           <div className="grid grid-cols-2 gap-1">
@@ -186,12 +185,11 @@ export function NodeFormatPanel() {
                 key={value}
                 type="button"
                 onClick={() => updateEdge("type", value)}
-                className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${
-                  currentEdgeType === value ||
-                  (value === "animated" && selectedEdge?.animated)
-                    ? "bg-white/15 text-white border-white/30"
-                    : "bg-transparent text-white/40 border-white/10 hover:bg-white/5"
-                }`}
+                className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${currentEdgeType === value ||
+                    (value === "animated" && selectedEdge?.animated)
+                    ? "bg-foreground/15 text-foreground border-foreground/30"
+                    : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                  }`}
               >
                 {label}
               </button>
@@ -200,7 +198,7 @@ export function NodeFormatPanel() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="text-[10px] text-white/30 font-mono uppercase tracking-wider">
+          <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider">
             Edge Thickness
           </div>
           <div className="flex gap-1.5 items-center">
@@ -209,14 +207,13 @@ export function NodeFormatPanel() {
                 key={size}
                 type="button"
                 onClick={() => updateEdge("strokeWidth", size)}
-                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${
-                  currentThickness === size
-                    ? "bg-white/15 border-white/30"
-                    : "bg-transparent border-white/10 hover:bg-white/5"
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${currentThickness === size
+                    ? "bg-foreground/15 border-foreground/30"
+                    : "bg-transparent border-border hover:bg-foreground/5"
+                  }`}
               >
                 <div
-                  className="w-4 bg-white/70 rounded-full"
+                  className="w-4 bg-foreground/70 rounded-full"
                   style={{ height: `${size}px` }}
                 />
               </button>

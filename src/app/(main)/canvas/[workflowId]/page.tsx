@@ -10,7 +10,9 @@ import { NodeTypeSwitcher } from "@/modules/canvas/components/toolbar/NodeTypeSw
 import { NodeFormatPanel } from "@/modules/canvas/components/toolbar/NodeFormatPanel";
 import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
+import { ThemeToggle } from "@/shared/components/ui/ThemeToggle";
 import { Loader } from "@/shared/components/ui/Loader";
+import { useTheme } from "next-themes";
 
 interface CanvasPageProps {
   params: Promise<{
@@ -44,6 +46,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hasFittedRef = useRef(false);
   const edgeReconnectSuccessful = useRef(true);
+  const { resolvedTheme } = useTheme();
 
   const autosave = useAutoSave({
     workflowId,
@@ -53,7 +56,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#101011]">
+      <div className="flex h-screen items-center justify-center bg-background">
         <Loader />
       </div>
     );
@@ -61,7 +64,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
   if (loadError) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#101011]">
+      <div className="flex h-screen items-center justify-center bg-background text-foreground">
         <div className="rounded border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
           {loadError}
         </div>
@@ -70,8 +73,9 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   }
 
   return (
-    <div className="h-[calc(100vh-0px)] flex flex-col">
-      <div className="absolute top-4 right-4 z-50">
+    <div className="h-[calc(100vh-0px)] flex flex-col bg-background">
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+        <ThemeToggle />
         {autosave.error ? (
           <div className="rounded border border-red-400 bg-red-50 px-3 py-1 text-xs text-red-700">
             Autosave failed. Retrying...
@@ -88,9 +92,9 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         />
       </div>
 
-      <div className="flex-1 bg-[#101011] relative" ref={containerRef}>
-        <div className="absolute bottom-0  z-10">
-          <div className="rounded-r-[5px]  border  border-white/5 py-2  text-center w-25 text-[15px] text-white font-gothic">
+      <div className="flex-1 relative" ref={containerRef}>
+        <div className="absolute bottom-0 z-10">
+          <div className="rounded-r-[5px] border border-border bg-panel py-2 text-center w-25 text-[15px] text-foreground font-gothic shadow-sm">
             {Math.round(zoom * 100)}%
           </div>
         </div>
@@ -100,7 +104,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             try {
               const v = (instance as any).getViewport?.();
               if (typeof v?.zoom === "number") setZoom(v.zoom);
-            } catch (e) {}
+            } catch (e) { }
             if (!hasFittedRef.current && nodes.length > 0) {
               hasFittedRef.current = true;
               setTimeout(() => {
@@ -108,7 +112,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
                 try {
                   const v = (instance as any).getViewport?.();
                   if (typeof v?.zoom === "number") setZoom(v.zoom);
-                } catch (e) {}
+                } catch (e) { }
               }, 50);
             }
           }}
@@ -159,9 +163,11 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             style={{
               width: 120,
               height: 80,
-              background: "#0D0D0D",
               position: "fixed",
             }}
+            className="!bg-panel border border-border !rounded-md overflow-hidden"
+            maskColor={resolvedTheme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)'}
+            nodeColor={resolvedTheme === 'dark' ? '#333' : '#e0e0e0'}
             pannable
             zoomable
           />

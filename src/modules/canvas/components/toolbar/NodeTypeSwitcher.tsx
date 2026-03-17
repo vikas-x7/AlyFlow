@@ -48,12 +48,12 @@ export function NodeTypeSwitcher({
 }) {
   const btnClass = (type: string) =>
     "px-2 py-1 rounded transition-colors cursor-pointer " +
-    (active === type ? "bg-[#D9D9D9] text-black" : "");
+    (active === type ? "bg-foreground text-background" : "hover:bg-foreground/10");
 
-  const Divider = () => <span className="w-px bg-[#28272F] self-stretch" />;
+  const Divider = () => <span className="w-px bg-border self-stretch" />;
 
   return (
-    <div className="flex gap-2 border border-[#151515] px-3  py-2.5 text-[19px] text-white/70  bg-[#0D0D0D] rounded-[5px]">
+    <div className="flex gap-2 border border-border px-3 py-2.5 text-[19px] text-foreground/70 bg-panel rounded-[5px] shadow-sm">
       {TOOLS.map(({ type, icon }) => (
         <button
           key={type}

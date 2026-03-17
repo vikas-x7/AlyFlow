@@ -136,13 +136,12 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-[#0D0D0D] border-[#1f1f1f] font-gothic overflow-hidden ${
-        isOpen ? "w-56" : "w-0 border-r-0"
-      }`}
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${isOpen ? "w-56" : "w-0 border-r-0"
+        }`}
     >
-      <div className="mb-4 flex items-center justify-between px-3 py-2  border-b border-[#1f1f1f]">
-        <div className="text-[17px] font-semibold text-[#D9D9D9] flex items-center gap-2">
-          <GiCrownedExplosion className="bg-[#D9D9D9] text-[#0D0D0D] text-[17px] p-px rounded-xs" />
+      <div className="mb-4 flex items-center justify-between px-3 py-2 border-b border-border">
+        <div className="text-[17px] font-semibold text-foreground flex items-center gap-2">
+          <GiCrownedExplosion className="bg-foreground text-background text-[17px] p-px rounded-xs" />
           Alyflow
         </div>
       </div>
@@ -150,7 +149,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
       <div className="mb-3 px-3">
         <button
           type="button"
-          className="text-black cursor-pointer rounded-xs hover:text-black/80 transition-colors bg-[#D9D9D9] w-full py-0.5 flex items-center justify-center gap-2 "
+          className="text-background cursor-pointer rounded-xs hover:text-background/80 transition-colors bg-foreground w-full py-0.5 flex items-center justify-center gap-2 "
           onClick={handleStartCreate}
           disabled={isCreating}
         >
@@ -162,14 +161,14 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
       {/* Inline create input */}
       {inlineTitle !== null && (
         <div className="px-3">
-          <div className=" rounded  bg-[#1a1a1a] px-2 py-1 ">
+          <div className="rounded bg-foreground/5 px-2 py-1">
             <input
               ref={inlineInputRef}
               value={inlineTitle}
               onChange={(e) => setInlineTitle(e.target.value)}
               onBlur={handleInlineSubmit}
               onKeyDown={handleInlineKeyDown}
-              className="w-full  text-xs text-white outline-none placeholder:text-white/30  "
+              className="w-full text-xs text-foreground outline-none placeholder:text-foreground/30"
               placeholder="Untitled"
             />
           </div>
@@ -185,7 +184,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         ) : isLoading ? (
           <Loader />
         ) : workflows.length === 0 && inlineTitle === null ? (
-          <div className="rounded border border-[#2a2a2a] p-3 text-xs text-white/30">
+          <div className="rounded border border-border p-3 text-xs text-foreground/30">
             No workflows yet.
           </div>
         ) : (
@@ -197,9 +196,8 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
-                    isActive ? " bg-[#191919]" : "hover:bg-[#191919]"
-                  }`}
+                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive ? " bg-foreground/10" : "hover:bg-foreground/10"
+                    }`}
                 >
                   {isEditing ? (
                     <input
@@ -208,7 +206,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                       onChange={(e) => setEditingTitle(e.target.value)}
                       onBlur={() => handleEditSubmit(workflow)}
                       onKeyDown={(e) => handleEditKeyDown(e, workflow)}
-                      className="w-full bg-transparent text-xs text-white outline-none  py-0.5"
+                      className="w-full bg-transparent text-xs text-foreground outline-none py-0.5"
                     />
                   ) : (
                     <>
@@ -221,11 +219,10 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                         }}
                       >
                         <div
-                          className={`truncate text-xs font-medium select-none ${
-                            isActive
-                              ? "text-white"
-                              : "text-white/60 group-hover:text-white/80"
-                          }`}
+                          className={`truncate text-xs font-medium select-none ${isActive
+                              ? "text-foreground"
+                              : "text-foreground/60 group-hover:text-foreground/80"
+                            }`}
                         >
                           {workflow.name}
                         </div>
@@ -254,15 +251,15 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
       <div className="mt-4 pt-3 flex items-center gap-2 p-3">
         <div className="w-7 h-7 rounded-xs overflow-hidden shrink-0">
-          <div className="w-full h-full bg-[#2e2e2e] flex items-center justify-center text-white/90 text-xs font-semibold">
+          <div className="w-full h-full bg-foreground/10 flex items-center justify-center text-foreground/90 text-xs font-semibold">
             {initials}
           </div>
         </div>
         <div className="min-w-0">
-          <div className="truncate text-[12px] font-medium text-white/80">
+          <div className="truncate text-[12px] font-medium text-foreground/80">
             {user?.name ?? "Username"}
           </div>
-          <div className="truncate text-[11px] text-white/40">
+          <div className="truncate text-[11px] text-foreground/40">
             {user?.email ?? "user@email.com"}
           </div>
         </div>
@@ -270,7 +267,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           <button
             type="button"
             onClick={() => setShowLogoutConfirm(true)}
-            className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
+            className="text-xs font-medium text-foreground/60 hover:text-foreground transition-colors cursor-pointer"
           >
             <IoIosLogOut size={17} />
           </button>
@@ -280,13 +277,13 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
       {/* Delete Confirmation Modal */}
       {workflowToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-[#1a1a1a] rounded-lg p-5 w-80 shadow-xl font-gothic text-left">
-            <h3 className="text-white font-medium text-base mb-2">
+          <div className="bg-panel rounded-lg p-5 w-80 shadow-xl font-gothic text-left border border-border">
+            <h3 className="text-foreground font-medium text-base mb-2">
               Delete Workflow
             </h3>
-            <p className="text-white/60 text-sm mb-5 leading-relaxed">
+            <p className="text-foreground/60 text-sm mb-5 leading-relaxed">
               Are you sure you want to delete{" "}
-              <span className="font-semibold text-white/80">
+              <span className="font-semibold text-foreground/80">
                 "{workflowToDelete.name}"
               </span>
               ? This action cannot be undone.
@@ -295,7 +292,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               <button
                 type="button"
                 onClick={() => setWorkflowToDelete(null)}
-                className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+                className="text-xs font-medium text-foreground/60 hover:text-foreground transition-colors cursor-pointer px-3 py-1.5"
               >
                 Cancel
               </button>
@@ -315,7 +312,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     }
                   }
                 }}
-                className="text-xs font-medium text-black/90 bg-white/80 transition-colors cursor-pointer px-4 py-1.5 rounded"
+                className="text-xs font-medium text-background bg-foreground transition-colors cursor-pointer px-4 py-1.5 rounded"
               >
                 Delete
               </button>
@@ -326,11 +323,11 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-[#1a1a1a]  rounded-lg p-5 w-80 shadow-xl font-gothic text-left">
-            <h3 className="text-white font-medium text-base mb-2">
+          <div className="bg-panel rounded-lg p-5 w-80 shadow-xl font-gothic text-left border border-border">
+            <h3 className="text-foreground font-medium text-base mb-2">
               Confirm Logout
             </h3>
-            <p className="text-white/60 text-sm mb-5 leading-relaxed">
+            <p className="text-foreground/60 text-sm mb-5 leading-relaxed">
               Are you sure you want to log out? You will need to sign in again
               to access your canvases.
             </p>
@@ -338,7 +335,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               <button
                 type="button"
                 onClick={() => setShowLogoutConfirm(false)}
-                className="text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+                className="text-xs font-medium text-foreground/60 hover:text-foreground transition-colors cursor-pointer px-3 py-1.5"
               >
                 Cancel
               </button>
@@ -348,10 +345,10 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   setShowLogoutConfirm(false);
                   try {
                     await logout();
-                  } catch (e) {}
+                  } catch (e) { }
                   router.replace("/");
                 }}
-                className="text-xs font-medium text-black/90 bg-white/80  transition-colors cursor-pointer px-4 py-1.5 rounded"
+                className="text-xs font-medium text-background bg-foreground transition-colors cursor-pointer px-4 py-1.5 rounded"
               >
                 Logout
               </button>

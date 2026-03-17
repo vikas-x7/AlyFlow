@@ -5,6 +5,7 @@ import {
   getStraightPath,
   getSmoothStepPath,
 } from "reactflow";
+import { useTheme } from "next-themes";
 
 export function CustomEdge({
   id,
@@ -17,6 +18,8 @@ export function CustomEdge({
   markerEnd,
   data,
 }: EdgeProps) {
+  const { resolvedTheme } = useTheme();
+
   const pathParams = {
     sourceX,
     sourceY,
@@ -31,9 +34,9 @@ export function CustomEdge({
       ? getStraightPath(pathParams)
       : data?.edgeType === "step" || data?.edgeType === "smoothstep"
         ? getSmoothStepPath({
-            ...pathParams,
-            borderRadius: data?.edgeType === "smoothstep" ? 10 : 0,
-          })
+          ...pathParams,
+          borderRadius: data?.edgeType === "smoothstep" ? 10 : 0,
+        })
         : getBezierPath(pathParams);
 
   return (
@@ -42,7 +45,7 @@ export function CustomEdge({
       path={path}
       markerEnd={markerEnd}
       style={{
-        stroke: "#E3DBBB",
+        stroke: resolvedTheme === 'dark' ? "#E3DBBB" : "#6b7280", // lighter beige in dark, gray-500 in light
         strokeWidth: data?.strokeWidth ?? 1.5,
         strokeDasharray: data?.edgeType === "animated" ? "6 3" : undefined,
       }}

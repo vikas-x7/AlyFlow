@@ -17,7 +17,7 @@ const mono = JetBrains_Mono({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${gothic.variable} ${mono.variable}`}>
+    <html lang="en" className={`${gothic.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>

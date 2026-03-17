@@ -3,8 +3,29 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-border: var(--border-color);
+  --color-panel: var(--panel-bg);
   --font-gothic: var(--font-vilo-gothic);
   --font-volimono: var(--font-vilo-mono);
+}
+
+:root {
+  --background: #f8f9fa;
+  --foreground: #101011;
+  --panel-bg: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --background: #101011;
+  --foreground: #f8f9fa;
+  --panel-bg: #1a1a1a;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .react-flow__attribution {
