@@ -2,12 +2,9 @@ import { TfiText } from "react-icons/tfi";
 import { PiCursorLight } from "react-icons/pi";
 import { LiaHandPaperSolid } from "react-icons/lia";
 import { BsStars } from "react-icons/bs";
-import { MdOutlineFullscreen } from "react-icons/md";
 import { LuUndo2, LuRedo2, LuTrash2 } from "react-icons/lu";
-import { PiExportLight } from "react-icons/pi";
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md";
 import { LuMousePointer2 } from "react-icons/lu";
-import { CiImport } from "react-icons/ci";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -25,9 +22,7 @@ const UTILITY_TOOLS = [
   { type: "delete", icon: <LuTrash2 /> },
   { type: "undo", icon: <LuUndo2 /> },
   { type: "redo", icon: <LuRedo2 /> },
-
   { type: "theme", icon: <MdOutlineLightMode /> },
-  { type: "fullscreen", icon: <MdOutlineFullscreen /> },
 ] as const;
 
 type ToolType =
@@ -40,8 +35,7 @@ type ToolType =
   | "import"
   | "export"
   | "theme"
-  | "delete"
-  | "fullscreen";
+  | "delete";
 
 export function NodeTypeSwitcher({
   onAdd,
@@ -57,7 +51,9 @@ export function NodeTypeSwitcher({
 
   const btnClass = (type: string) =>
     "px-2 py-1 rounded transition-colors cursor-pointer " +
-    (active === type ? "bg-foreground text-background" : "hover:bg-foreground/10");
+    (active === type
+      ? "bg-foreground text-background"
+      : "hover:bg-foreground/10");
 
   const Divider = () => <span className="w-px bg-border self-stretch" />;
 
@@ -87,17 +83,29 @@ export function NodeTypeSwitcher({
         </button>
       ))}
 
+      <Divider />
+
       {UTILITY_TOOLS.map(({ type, icon }) => {
         if (type === "theme") {
           return (
             <button
               key={type}
               type="button"
-              className={btnClass(type).replace(active === type ? "bg-foreground text-background" : "hover:bg-foreground/10", "hover:bg-foreground/10")}
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="px-2 py-1 rounded transition-colors cursor-pointer hover:bg-foreground/10"
+              onClick={() =>
+                setTheme(resolvedTheme === "dark" ? "light" : "dark")
+              }
               title="Toggle theme"
             >
-              {mounted ? (resolvedTheme === "dark" ? <MdOutlineLightMode /> : <MdOutlineDarkMode />) : <MdOutlineLightMode />}
+              {mounted ? (
+                resolvedTheme === "dark" ? (
+                  <MdOutlineLightMode />
+                ) : (
+                  <MdOutlineDarkMode />
+                )
+              ) : (
+                <MdOutlineLightMode />
+              )}
             </button>
           );
         }

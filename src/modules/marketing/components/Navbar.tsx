@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,101 +18,117 @@ function Navbar() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full py-1 text-black font-gothic flex justify-center transition-all duration-300 ${
-        scrolled ? "bg-white shadow-sm" : "bg-transparent"
-      }`}
-    >
-      <div className="px-4 md:px-6 py-3 md:py-1 flex items-center justify-between w-7xl">
-        <Link
-          href="/"
-          className="flex text-[17px] items-center justify-center md:text-xl font-bold tracking-tight hover:opacity-80 transition absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-black"
-        >
-          Alyflow
-        </Link>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 w-full text-black font-gothic transition-all duration-300 ${
+          scrolled ? "bg-white shadow-sm" : "bg-transparent"
+        }`}
+      >
+        <div className="px-4 md:px-6 py-3 md:py-2 flex items-center justify-between max-w-7xl mx-auto relative">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="text-[17px] md:text-xl font-bold tracking-tight hover:opacity-80 transition text-black absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+          >
+            Alyflow
+          </Link>
 
-        <div className="hidden md:flex gap-6 text-xs md:text-sm lg:text-[12px]">
-          <Link
-            href="/#home"
-            className="text-black hover:opacity-60 transition cursor-pointer"
-          >
-            HOME
-          </Link>
-          <Link
-            href="/#about"
-            className="text-black hover:opacity-60 transition cursor-pointer"
-          >
-            ABOUT
-          </Link>
-          <Link
-            href="/#faq"
-            className="text-black hover:opacity-60 transition cursor-pointer"
-          >
-            FAQ
-          </Link>
+          {/* Center Nav Links */}
+          <div className="hidden md:flex gap-6 text-[12px] absolute left-1/2 -translate-x-1/2 font-bold">
+            <Link
+              href="/#home"
+              className="text-black hover:opacity-60 transition"
+            >
+              HOME
+            </Link>
+            <Link
+              href="/#about"
+              className="text-black hover:opacity-60 transition"
+            >
+              ABOUT
+            </Link>
+            <Link
+              href="/#faq"
+              className="text-black hover:opacity-60 transition"
+            >
+              FAQ
+            </Link>
+          </div>
+
+          {/* Mobile: Left spacer to balance hamburger */}
+          <div className="md:hidden w-6" />
+
+          {/* Right: Auth buttons (desktop) + Hamburger (mobile) */}
+          <div className="flex items-center gap-3 ml-auto">
+            <nav className="hidden md:flex items-center gap-3 ">
+              <Link
+                href="/login"
+                className="bg-black text-white rounded-sm px-4 py-1.5 text-[11px] transition hover:bg-black/80"
+              >
+                LOGIN
+              </Link>
+              <Link
+                href="/register"
+                className="bg-white border border-black/10 text-black rounded-sm px-4 py-1.5 text-[11px]"
+              >
+                SIGN UP
+              </Link>
+            </nav>
+
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden z-50 p-1 text-xl"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <IoClose /> : <RxHamburgerMenu />}
+            </button>
+          </div>
         </div>
+      </header>
 
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden flex flex-col gap-1.5 z-50"
-          aria-label="Toggle menu"
-        >
-          <RxHamburgerMenu />
-        </button>
-
-        <nav className="hidden md:flex items-center gap-3 text-xs md:text-sm tracking-wider">
-          <Link
-            href="/login"
-            className="bg-black text-white rounded-xs px-3 md:px-4 py-1.5 md:py-2 transition text-xs md:text-[11px]"
-          >
-            LOGIN
-          </Link>
-          <Link
-            href="/register"
-            className="bg-white hover:bg-white rounded-xs text-black px-2 md:px-4 py-1.5 md:py-1.5 transition text-xs md:text-[11px] flex items-center justify-center border border-black/10"
-          >
-            SIGN UP
-          </Link>
-        </nav>
-      </div>
-
+      {/* Mobile Fullscreen Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-black/5 px-4 py-4 flex flex-col gap-4 animate-in fade-in duration-200 w-full">
+        <div className="fixed inset-0 z-40 bg-white flex flex-col px-6 pt-24 pb-10 gap-6 md:hidden">
           <Link
             href="/#home"
-            className="text-[10px] text-[#626262] hover:text-black transition cursor-pointer"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-sm font-medium text-[#626262] hover:text-black transition border-b border-black/5 pb-4"
           >
             HOME
           </Link>
           <Link
             href="/#about"
-            className="text-[10px] text-[#626262] hover:text-black transition cursor-pointer"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-sm font-medium text-[#626262] hover:text-black transition border-b border-black/5 pb-4"
           >
             ABOUT
           </Link>
           <Link
             href="/#faq"
-            className="text-[10px] text-[#626262] hover:text-black transition cursor-pointer"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-sm font-medium text-[#626262] hover:text-black transition border-b border-black/5 pb-4"
           >
             FAQ
           </Link>
-          <div className="border-t border-black/5 pt-4 flex flex-col gap-2">
+          <div className="mt-4 flex flex-col gap-3">
             <Link
               href="/login"
-              className="bg-black text-white px-3 py-2 rounded-xs transition text-[10px]"
+              onClick={() => setIsMenuOpen(false)}
+              className="bg-black text-white px-4 py-3 rounded-sm text-sm text-center transition"
             >
               LOGIN
             </Link>
             <Link
               href="/register"
-              className="bg-white border border-black/10 text-black px-3 py-2 rounded-xs transition text-[10px]"
+              onClick={() => setIsMenuOpen(false)}
+              className="bg-white border border-black/10 text-black px-4 py-3 rounded-sm text-sm text-center transition"
             >
               SIGN UP
             </Link>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
 

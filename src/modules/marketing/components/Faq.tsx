@@ -46,9 +46,9 @@ export default function FAQ() {
   return (
     <section
       id="faq"
-      className="min-h-screen w px-6 py-20 sm:px-6 font-gothic flex items-center justify-between "
+      className="min-h-screen w px-6 py-20 sm:px-5 font-gothic flex items-center justify-center"
     >
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 w-7xl">
+      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 w-7xl px-6">
         <div className="lg:w-[38%] lg:sticky lg:top-20 lg:self-start">
           <h1 className=" md:text-3xl mb-3  ">
             Any questions? <span className="block">We got you</span>

@@ -26,15 +26,9 @@ export default function LandingPage() {
 
   return (
     <main id="home" className="w-full min-h-screen">
-      {/* <div className="fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-full mx-auto flex items-center justify-center border-b border-dashed border-white/20">
-          <div className="w-7xl"></div>
-        </div>
-      </div> */}
-
       <div className="">
         <Hero />
-        <Features />
+
         <IntelligenceSection />
         <FAQ />
       </div>

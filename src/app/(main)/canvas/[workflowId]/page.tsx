@@ -107,7 +107,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         />
       </div>
 
-      <div className="flex-1 relative" ref={containerRef}>
+      <div className="flex-1 relative" ref={containerRef} data-active-tool={activeTool}>
         <div className="absolute bottom-0 z-10">
           <div className="rounded-r-[5px] border border-border bg-panel py-2 text-center w-25 text-[15px] text-foreground font-gothic shadow-sm">
             {Math.round(zoom * 100)}%
