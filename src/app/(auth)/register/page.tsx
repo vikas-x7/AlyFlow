@@ -2,27 +2,25 @@
 
 import Link from "next/link";
 import { RegisterForm } from "@/modules/auth/components/RegisterForm";
-import { FaSquareGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoGithub } from "react-icons/io5";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex font-gothic">
+    <div className="min-h-screen bg-white text-black flex font-gothic">
       <div className="hidden lg:block lg:w-1/2 relative">
         <img
-          src="https://i.pinimg.com/736x/7c/8f/69/7c8f69693516d50499cb56fa0d2b41e0.jpg"
+          src="https://i.pinimg.com/736x/f0/0e/54/f00e544446c28b629a1defa290d7928f.jpg"
           alt="auth visual"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
 
         <div className="absolute left-6 top-6 text-white">
-          <p className="text-[30px] text-white/70">Alyflow</p>
+          <p className="text-[30px] text-white">Alyflow</p>
         </div>
 
         <div className="absolute left-6 bottom-8 max-w-xs text-white">
-          <h3 className="text-2xl  leading-tight">
+          <h3 className="text-2xl leading-tight">
             A simple Excel-style canvas to quickly draw and organize workflows.
           </h3>
           <p className="mt-2 text-sm text-white/70">
@@ -34,10 +32,10 @@ export default function RegisterPage() {
 
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          <div className="rounded-2xlpx-6 py-8 shadow-xl backdrop-blur">
-            <div className="mb-6 text-start">
+          <div className="rounded-2xl px-6 py-8 backdrop-blur text-center">
+            <div className="mb-6">
               <h2 className="text-2xl font-semibold">Create your account</h2>
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm">
                 Use your work email to get started.
               </p>
             </div>
@@ -45,7 +43,7 @@ export default function RegisterPage() {
             <div className="mb-6 space-y-3">
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+                className="flex w-full items-center justify-center gap-2 rounded-[3px] bg-black text-white px-3 py-2 text-sm font-medium hover:border-white/30"
               >
                 <span className="text-lg">
                   <FcGoogle />
@@ -55,7 +53,7 @@ export default function RegisterPage() {
 
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+                className="flex w-full items-center justify-center gap-2 rounded-[3px] text-white bg-black px-3 py-2 text-sm font-medium hover:border-white/30"
               >
                 <span className="text-lg">
                   <IoLogoGithub />
@@ -72,11 +70,11 @@ export default function RegisterPage() {
 
             <RegisterForm showTitle={false} />
 
-            <p className="mt-4 text-center text-xs text-gray-400">
+            <p className="mt-4 text-center text-xs text-black">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-medium text-white hover:underline"
+                className="font-medium text-blue-600 hover:underline"
               >
                 Sign in instead
               </Link>

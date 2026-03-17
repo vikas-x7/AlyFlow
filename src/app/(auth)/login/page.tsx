@@ -3,22 +3,21 @@
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { LoginForm } from "@/modules/auth/components/LoginForm";
-import { FaSquareGithub } from "react-icons/fa6";
+
 import { IoLogoGithub } from "react-icons/io5";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex font-gothic">
+    <div className="min-h-screen bg-white text-black flex font-gothic">
       <div className="hidden lg:block lg:w-1/2 relative">
         <img
-          src="https://i.pinimg.com/736x/7c/8f/69/7c8f69693516d50499cb56fa0d2b41e0.jpg"
+          src="https://i.pinimg.com/736x/f0/0e/54/f00e544446c28b629a1defa290d7928f.jpg"
           alt="auth visual"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover "
         />
-        <div className="absolute inset-0 bg-black/40" />
 
         <div className="absolute left-6 top-6 text-white">
-          <p className="text-[30px] text-white/70">Alyflow</p>
+          <p className="text-[30px] text-white">Alyflow</p>
         </div>
 
         <div className="absolute left-6 bottom-8 max-w-xs text-white">
@@ -34,10 +33,10 @@ export default function LoginPage() {
 
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          <div className="rounded-2xl   px-6 py-8  backdrop-blur text-start">
+          <div className="rounded-2xl   px-6 py-8  backdrop-blur text-center">
             <div className="mb-6 ">
               <h2 className="text-2xl font-semibold">Welcome back</h2>
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm ">
                 Please enter your details to sign in.
               </p>
             </div>
@@ -45,7 +44,7 @@ export default function LoginPage() {
             <div className="mb-6 space-y-3">
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+                className="flex w-full items-center justify-center gap-2 rounded-[3px]  bg-black text-white px-3 py-2 text-sm font-medium hover:border-white/30"
               >
                 <span className="text-lg">
                   <FcGoogle />
@@ -55,7 +54,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm font-medium hover:border-white/30"
+                className="flex w-full items-center justify-center gap-2 rounded-[3px] text-white bg-black px-3 py-2 text-sm font-medium hover:border-white/30"
               >
                 <span className="text-lg">
                   <IoLogoGithub />
@@ -72,11 +71,11 @@ export default function LoginPage() {
 
             <LoginForm showTitle={false} />
 
-            <p className="mt-4 text-center text-xs text-gray-400">
+            <p className="mt-4 text-center text-xs text-black">
               Not signed up yet?{" "}
               <Link
                 href="/register"
-                className="font-medium text-white hover:underline"
+                className="font-medium text-blue-600 hover:underline"
               >
                 Register now
               </Link>

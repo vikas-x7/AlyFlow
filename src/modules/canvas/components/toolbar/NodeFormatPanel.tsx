@@ -27,7 +27,7 @@ const PRESET_COLORS = [
 const EDGE_TYPES = [
   { value: "default", label: "Bezier" },
   { value: "straight", label: "Straight" },
-  { value: "step", label: "Step" },
+
   { value: "smoothstep", label: "Smooth" },
   { value: "animated", label: "Animated" },
 ] as const;
@@ -85,8 +85,13 @@ export function NodeFormatPanel() {
       setEdges((eds) =>
         eds.map((e) =>
           key === "type"
-            ? { ...e, type: "custom", animated: value === "animated", data: { ...e.data, edgeType: value } }
-            : { ...e, type: "custom", data: { ...e.data, [key]: value } }
+            ? {
+                ...e,
+                type: "custom",
+                animated: value === "animated",
+                data: { ...e.data, edgeType: value },
+              }
+            : { ...e, type: "custom", data: { ...e.data, [key]: value } },
         ),
       );
 
@@ -94,13 +99,28 @@ export function NodeFormatPanel() {
         setSelectedEdge((prev) =>
           prev
             ? key === "type"
-              ? { ...prev, type: "custom", animated: value === "animated", data: { ...prev.data, edgeType: value } }
-              : { ...prev, type: "custom", data: { ...prev.data, [key]: value } }
+              ? {
+                  ...prev,
+                  type: "custom",
+                  animated: value === "animated",
+                  data: { ...prev.data, edgeType: value },
+                }
+              : {
+                  ...prev,
+                  type: "custom",
+                  data: { ...prev.data, [key]: value },
+                }
             : prev,
         );
       }
     },
-    [setEdges, globalEdgeType, globalEdgeThickness, setGlobalEdgePrefs, selectedEdge],
+    [
+      setEdges,
+      globalEdgeType,
+      globalEdgeThickness,
+      setGlobalEdgePrefs,
+      selectedEdge,
+    ],
   );
 
   const { bgColor, bold, italic, underline } = selectedNode?.data || {};
@@ -166,10 +186,11 @@ export function NodeFormatPanel() {
                   onClick={() =>
                     updateNodeData(key, !selectedNode?.data?.[key])
                   }
-                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${active
-                    ? "bg-foreground/15 text-foreground border-foreground/30"
-                    : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
-                    }`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${
+                    active
+                      ? "bg-foreground/15 text-foreground border-foreground/30"
+                      : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                  }`}
                 >
                   {label}
                 </button>
@@ -191,11 +212,12 @@ export function NodeFormatPanel() {
                 key={value}
                 type="button"
                 onClick={() => updateEdge("type", value)}
-                className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${currentEdgeType === value ||
+                className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${
+                  currentEdgeType === value ||
                   (value === "animated" && selectedEdge?.animated)
-                  ? "bg-foreground/15 text-foreground border-foreground/30"
-                  : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
-                  }`}
+                    ? "bg-foreground/15 text-foreground border-foreground/30"
+                    : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                }`}
               >
                 {label}
               </button>
@@ -213,10 +235,11 @@ export function NodeFormatPanel() {
                 key={size}
                 type="button"
                 onClick={() => updateEdge("strokeWidth", size)}
-                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${currentThickness === size
-                  ? "bg-foreground/15 border-foreground/30"
-                  : "bg-transparent border-border hover:bg-foreground/5"
-                  }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${
+                  currentThickness === size
+                    ? "bg-foreground/15 border-foreground/30"
+                    : "bg-transparent border-border hover:bg-foreground/5"
+                }`}
               >
                 <div
                   className="w-4 bg-foreground/70 rounded-full"

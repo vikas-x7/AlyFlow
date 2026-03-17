@@ -18,7 +18,11 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
     e.preventDefault();
     setError(null);
 
-    const parsed = registerSchema.safeParse({ name: name.trim(), email: email.trim(), password });
+    const parsed = registerSchema.safeParse({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+    });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
@@ -29,7 +33,11 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
       await register(parsed.data);
       router.push("/canvas");
     } catch (err: any) {
-      setError(typeof err?.response?.data?.error === "string" ? err.response.data.error : "Registration failed");
+      setError(
+        typeof err?.response?.data?.error === "string"
+          ? err.response.data.error
+          : "Registration failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -40,7 +48,9 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
       {showTitle ? (
         <div className="text-center">
           <h1 className="text-2xl font-semibold text-white">Create account</h1>
-          <p className="text-sm text-gray-400">Start by creating your workspace profile.</p>
+          <p className="text-sm text-gray-400">
+            Start by creating your workspace profile.
+          </p>
         </div>
       ) : null}
 
@@ -51,10 +61,12 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
       ) : null}
 
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-gray-300">Full name</label>
+        <label className="block text-xs font-medium text-black text-start">
+          Full name
+        </label>
         <input
           type="text"
-          className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-white/40 focus:outline-none"
+          className="w-full rounded-[3px] border border-black/50 px-3 py-2 text-sm text-black placeholder:text-gray-500 focus:outline-none"
           placeholder="Alex Doe"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -63,10 +75,12 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
       </div>
 
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-gray-300">Work email</label>
+        <label className="block text-xs font-medium text-black text-start">
+          Email
+        </label>
         <input
           type="email"
-          className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-white/40 focus:outline-none"
+          className="w-full rounded-[3px] border border-black/50 px-3 py-2 text-sm text-black placeholder:text-gray-500 focus:outline-none"
           placeholder="you@company.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -75,11 +89,13 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
       </div>
 
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-gray-300">Password</label>
+        <label className="block text-xs text-start font-medium text-black">
+          Password
+        </label>
         <input
           type="password"
-          className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-white/40 focus:outline-none"
-          placeholder="Create a strong password"
+          className="w-full rounded-[3px] border border-black/50 px-3 py-2 text-sm text-black placeholder:text-gray-500 focus:outline-none"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
@@ -88,7 +104,7 @@ export function RegisterForm({ showTitle = true }: { showTitle?: boolean }) {
 
       <button
         type="submit"
-        className="w-full rounded-md bg-white py-2 text-sm font-medium text-black disabled:opacity-60"
+        className="w-full rounded-[3px] bg-black py-2 text-sm font-medium text-white cursor-pointer disabled:opacity-60"
         disabled={loading}
       >
         {loading ? "Creating account..." : "Create account"}

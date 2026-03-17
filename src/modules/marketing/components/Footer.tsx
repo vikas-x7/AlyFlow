@@ -1,27 +1,67 @@
-import { FaCuttlefish } from "react-icons/fa6";
-import { IoFishOutline } from "react-icons/io5";
-import { PiFlowArrowThin } from "react-icons/pi";
+import { FaXTwitter, FaGithub, FaDiscord, FaLinkedin } from "react-icons/fa6";
+import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className=" text-white px-6 py-16 border-t border-white/10 font-gothic">
-      <div className=" flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-        <div className="max-w-md">
-          <div className="flex items-center gap-2 mb-4">
-            <div className=" flex items-center justify-center rounded-sm"></div>
-            <span className="text-xl  tracking-wide">Aly flow</span>
-          </div>
+    <footer className="bg-white text-black px-6 py-16 border-t border-black/10 font-gothic">
+      <div className="max-w-4xl mx-auto flex flex-col items-center gap-10">
+        {/* Logo */}
+        <span className="text-3xl font-semibold tracking-wide text-black">
+          Alyflow
+        </span>
 
-          <p className="text-[#626262] leading-relaxed text-sm">
-            Design, draw, and organize everything in one flexible workspace
-          </p>
-        </div>
+        {/* Nav Links */}
+        <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-black/60">
+          <Link
+            href="#features"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Features
+          </Link>
+          <Link
+            href="#pricing"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Pricing
+          </Link>
+          <Link
+            href="/changelog"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Changelog
+          </Link>
+          <Link
+            href="/docs"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Documentation
+          </Link>
+          <Link
+            href="/blog"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Blog
+          </Link>
+          <Link
+            href="/privacy"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href="/terms"
+            className="hover:text-black transition-colors duration-200"
+          >
+            Terms of Service
+          </Link>
+        </nav>
 
-        <div className="w-full md:w-auto"></div>
-      </div>
+        {/* Social Icons */}
 
-      <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-[#626262]">
-        © {new Date().getFullYear()} Alyflow. All rights reserved.
+        {/* Copyright */}
+        <p className="text-sm text-black/40">
+          © {new Date().getFullYear()} Alyflow. All rights reserved.
+        </p>
       </div>
     </footer>
   );

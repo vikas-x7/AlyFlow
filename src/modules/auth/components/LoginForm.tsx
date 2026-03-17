@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "../schemas/auth.schema";
 import { useAuth } from "../hooks/useAuth";
 
+import { Eye, EyeOff } from "lucide-react";
+
 export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
   const router = useRouter();
   const { login } = useAuth();
@@ -12,6 +14,7 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,7 +31,11 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
       await login(parsed.data);
       router.push("/canvas");
     } catch (err: any) {
-      setError(typeof err?.response?.data?.error === "string" ? err.response.data.error : "Login failed");
+      setError(
+        typeof err?.response?.data?.error === "string"
+          ? err.response.data.error
+          : "Login failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -50,10 +57,12 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
       ) : null}
 
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-gray-300">Email</label>
+        <label className="block text-xs font-medium text-black text-start">
+          Email
+        </label>
         <input
           type="email"
-          className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-white/40 focus:outline-none"
+          className="w-full rounded-[3px] border border-black/50 px-3 py-2 text-sm text-black placeholder:text-gray-500 focus:outline-none [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_white] [&:-webkit-autofill]:[-webkit-text-fill-color:#000]"
           placeholder="you@company.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -62,23 +71,32 @@ export function LoginForm({ showTitle = true }: { showTitle?: boolean }) {
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <label className="font-medium text-gray-300">Password</label>
-          <button type="button" className="text-gray-400 hover:text-gray-200">
+          <label className="font-medium text-black">Password</label>
+          <button type="button" className="text-gray-400 hover:text-gray-600">
             Forgot password?
           </button>
         </div>
-        <input
-          type="password"
-          className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-white/40 focus:outline-none"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            className="w-full rounded-[3px] border border-black/50 px-3 py-2 pr-10 text-sm text-black placeholder:text-black/70 focus:outline-none [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_white] [&:-webkit-autofill]:[-webkit-text-fill-color:#000]"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
       </div>
       <button
         type="submit"
-        className="w-full rounded-md bg-white py-2 text-sm font-medium text-black disabled:opacity-60"
+        className="w-full rounded-[3px] bg-black py-2 text-sm font-medium text-white cursor-pointer disabled:opacity-60"
         disabled={loading}
       >
         {loading ? "Signing in..." : "Sign in"}

@@ -20,7 +20,7 @@ function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 w-full text-black font-gothic transition-all duration-300 ${
+        className={`fixed top-0  left-0 right-0 z-50 w-full text-black font-gothic transition-all duration-300 ${
           scrolled ? "bg-white shadow-sm" : "bg-transparent"
         }`}
       >
@@ -63,13 +63,13 @@ function Navbar() {
             <nav className="hidden md:flex items-center gap-3 ">
               <Link
                 href="/login"
-                className="bg-black text-white rounded-sm px-4 py-1.5 text-[11px] transition hover:bg-black/80"
+                className="bg-black text-white px-4 py-1.5 text-[11px] transition hover:bg-black/80"
               >
                 LOGIN
               </Link>
               <Link
                 href="/register"
-                className="bg-white border border-black/10 text-black rounded-sm px-4 py-1.5 text-[11px]"
+                className="bg-white border border-black/10 text-black  px-4 py-1.5 text-[11px]"
               >
                 SIGN UP
               </Link>

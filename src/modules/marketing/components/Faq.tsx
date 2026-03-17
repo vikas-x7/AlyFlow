@@ -2,101 +2,98 @@
 
 import { useState } from "react";
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqs: FAQItem[] = [
+const faqs = [
   {
     question: "What is Alyflow?",
     answer:
-      "Alyflow is a lightweight, Excel-style canvas for visually drawing workflows and diagrams. It's built for fast sketching - drag nodes, connect them, add labels, and organize ideas into reusable workflows.",
+      "Alyflow is a powerful, Canva-like unlimited canvas built specifically for creating mind maps. It's designed for seamless brainstorming just drop nodes, change colors, and connect your ideas.",
   },
   {
-    question: "Is it like Excel?",
+    question: "What makes it different?",
     answer:
-      "While inspired by the grid and simplicity of spreadsheets, Alyflow focuses on visual workflows rather than cells and formulas. Think of it as a drawing canvas with spreadsheet-like speed and familiarity.",
+      "Unlike traditional tools, Alyflow focuses purely on unlimited visual mind mapping. You get an infinite canvas, auto-saving, seamless link sharing, and the ability to import/export your maps effortlessly.",
   },
   {
-    question: "How do I start a new workflow?",
+    question: "How do I start a new mind map?",
     answer:
-      "Click 'create new' in the sidebar or open the Canvas. You can add nodes, drag to connect them, rename items, and save your project. Workflows are automatically stored in your account.",
+      "Click 'create new' in the sidebar or open the Canvas. You can add nodes, customize colors, drag to connect them, and your mind map is automatically saved in the background.",
   },
-
   {
-    question: "Is my data saved and private?",
+    question: "How does sharing and saving work?",
     answer:
-      "Workflows are saved to your account and only accessible to you , We recommend using a secure account and keeping your credentials private.",
+      "Every change you make is auto-saved instantly. You can keep your mind maps private, or generate a link to share them with others. You can also import or export your maps at any time.",
   },
   {
     question: "Is Alyflow free to use?",
     answer:
-      "The core canvas experience is free to start. Advanced features,options may be offered under paid plans in the future.",
+      "The core unlimited mind mapping experience is free to start. You can create, color, share, and export your mind maps right away.",
   },
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const toggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section
-      id="faq"
-      className="min-h-screen w px-6 py-20 sm:px-5 font-gothic flex items-center justify-center"
-    >
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 w-7xl px-6">
-        <div className="lg:w-[38%] lg:sticky lg:top-20 lg:self-start">
-          <h1 className=" md:text-3xl mb-3  ">
-            Any questions? <span className="block">We got you</span>
-          </h1>
-
-          <p className=" text-[13px] leading-[1.75] font-normal mb-8 max-w-xs">
+    <section className="w-full py-16 px-4 font-gothic">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+        {/* LEFT */}
+        <div className="flex flex-col gap-1">
+          <p className="text-[20px] uppercase text-gray-950 font-semibold mb-3">
+            FAQ
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-[34px] font-light text-gray-900 mb-2">
+            Any questions? We got you.
+          </h2>
+          <p className="text-gray-500 max-w-sm mb-4">
             Everything you need to know about Alyflow.
           </p>
-        </div>
 
-        <div className="lg:w-[62%]">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-
-            return (
+          {/* Accordion */}
+          <div className="border-t border-gray-200 mt-2">
+            {faqs.map((f, i) => (
               <div
-                key={index}
-                className="border-t border-[#2e2e2e] last:border-b"
+                key={i}
+                className="border-b border-gray-200 cursor-pointer"
+                onClick={() => setActiveIndex(activeIndex === i ? null : i)}
               >
-                <button
-                  onClick={() => toggle(index)}
-                  className="w-full flex items-center justify-between py-6 sm:py-7 text-left group transition-all duration-200 cursor-pointer"
-                  aria-expanded={isOpen}
-                >
-                  <span className=" pr-6 transition-opacity duration-200 group-hover:opacity-70 text-[14px] font-normal tracking-[0.01em]">
-                    {faq.question}
-                  </span>
-
+                <div className="flex items-center justify-between py-4">
                   <span
-                    className={`shrink-0  text-[clamp(1.2rem,2.5vw,1.4rem)] font-extralight leading-none inline-block transition-transform duration-300 ease-in-out ${
-                      isOpen ? "rotate-45" : "rotate-0"
+                    className={`font-medium text-base transition-colors duration-200 ${
+                      activeIndex === i ? "text-black" : "text-gray-900"
+                    }`}
+                  >
+                    {f.question}
+                  </span>
+                  <span
+                    className={`text-gray-400 text-lg transition-transform duration-300 ${
+                      activeIndex === i ? "rotate-45" : "rotate-0"
                     }`}
                   >
                     +
                   </span>
-                </button>
+                </div>
 
                 <div
-                  className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                  style={{ maxHeight: isOpen ? "400px" : "0px" }}
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    activeIndex === i ? "max-h-40 pb-4" : "max-h-0"
+                  }`}
                 >
-                  <p className=" pb-7 pr-10 text-[clamp(0.875rem,1.4vw,0.95rem)] font-normal leading-[1.75] tracking-[0.01em]">
-                    {faq.answer}
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    {f.answer}
                   </p>
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT - same image */}
+        <div className="relative rounded-[5px] overflow-hidden h-[520px]">
+          <img
+            src="https://cdn.prod.website-files.com/6812d02840d393aa2c663370/68f7be903d5e939249ef4dab_6ad532de28b288f9a07b16c9b42376ce_hyperline-pattern.svg"
+            alt="Alyflow canvas preview"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
       </div>
     </section>
