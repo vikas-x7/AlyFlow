@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { useReactFlow, useOnSelectionChange } from "reactflow";
 import type { Node, Edge } from "reactflow";
+import { useCanvasStore } from "../../store/canvas.store";
 
 const PRESET_COLORS = [
   "#FF6B6B", // red
@@ -39,6 +40,10 @@ export function NodeFormatPanel() {
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [showToast, setShowToast] = useState(false);
 
+  const globalEdgeType = useCanvasStore((s) => s.globalEdgeType);
+  const globalEdgeThickness = useCanvasStore((s) => s.globalEdgeThickness);
+  const setGlobalEdgePrefs = useCanvasStore((s) => s.setGlobalEdgePrefs);
+
   useOnSelectionChange({
     onChange: ({ nodes, edges }) => {
       setSelectedNode(nodes.length === 1 ? nodes[0] : null);
@@ -73,33 +78,34 @@ export function NodeFormatPanel() {
 
   const updateEdge = useCallback(
     (key: string, value: any) => {
-      if (!selectedEdge) {
-        showSelectToast();
-        return;
-      }
+      const newType = key === "type" ? value : globalEdgeType;
+      const newThickness = key === "strokeWidth" ? value : globalEdgeThickness;
+      setGlobalEdgePrefs(newType, newThickness);
+
       setEdges((eds) =>
         eds.map((e) =>
-          e.id === selectedEdge.id
-            ? key === "type"
-              ? { ...e, type: value, animated: value === "animated" }
-              : { ...e, data: { ...e.data, [key]: value } }
-            : e,
+          key === "type"
+            ? { ...e, type: "custom", animated: value === "animated", data: { ...e.data, edgeType: value } }
+            : { ...e, type: "custom", data: { ...e.data, [key]: value } }
         ),
       );
-      setSelectedEdge((prev) =>
-        prev
-          ? key === "type"
-            ? { ...prev, type: value, animated: value === "animated" }
-            : { ...prev, data: { ...prev.data, [key]: value } }
-          : prev,
-      );
+
+      if (selectedEdge) {
+        setSelectedEdge((prev) =>
+          prev
+            ? key === "type"
+              ? { ...prev, type: "custom", animated: value === "animated", data: { ...prev.data, edgeType: value } }
+              : { ...prev, type: "custom", data: { ...prev.data, [key]: value } }
+            : prev,
+        );
+      }
     },
-    [selectedEdge, setEdges],
+    [setEdges, globalEdgeType, globalEdgeThickness, setGlobalEdgePrefs, selectedEdge],
   );
 
   const { bgColor, bold, italic, underline } = selectedNode?.data || {};
-  const currentEdgeType = selectedEdge?.type ?? "default";
-  const currentThickness = selectedEdge?.data?.strokeWidth ?? 1.5;
+  const currentEdgeType = globalEdgeType;
+  const currentThickness = globalEdgeThickness;
 
   return (
     <>
@@ -161,8 +167,8 @@ export function NodeFormatPanel() {
                     updateNodeData(key, !selectedNode?.data?.[key])
                   }
                   className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${active
-                      ? "bg-foreground/15 text-foreground border-foreground/30"
-                      : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                    ? "bg-foreground/15 text-foreground border-foreground/30"
+                    : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
                     }`}
                 >
                   {label}
@@ -186,9 +192,9 @@ export function NodeFormatPanel() {
                 type="button"
                 onClick={() => updateEdge("type", value)}
                 className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${currentEdgeType === value ||
-                    (value === "animated" && selectedEdge?.animated)
-                    ? "bg-foreground/15 text-foreground border-foreground/30"
-                    : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
+                  (value === "animated" && selectedEdge?.animated)
+                  ? "bg-foreground/15 text-foreground border-foreground/30"
+                  : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
                   }`}
               >
                 {label}
@@ -208,8 +214,8 @@ export function NodeFormatPanel() {
                 type="button"
                 onClick={() => updateEdge("strokeWidth", size)}
                 className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${currentThickness === size
-                    ? "bg-foreground/15 border-foreground/30"
-                    : "bg-transparent border-border hover:bg-foreground/5"
+                  ? "bg-foreground/15 border-foreground/30"
+                  : "bg-transparent border-border hover:bg-foreground/5"
                   }`}
               >
                 <div

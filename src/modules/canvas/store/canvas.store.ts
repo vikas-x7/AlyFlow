@@ -16,6 +16,9 @@ interface CanvasState {
   removedNodeIds: string[];
   isEdgesDirty: boolean;
   lastMutationAt: number;
+  globalEdgeType: string;
+  globalEdgeThickness: number;
+  setGlobalEdgePrefs: (type: string, thickness: number) => void;
   setCanvasSnapshot: (payload: { nodes: Node[]; edges: Edge[] }) => void;
   setNodes: (next: Updater<CanvasNode[]>, options?: SetOptions) => void;
   setEdges: (next: Updater<Edge[]>, options?: SetOptions) => void;
@@ -97,6 +100,9 @@ export const useCanvasStore = create<CanvasState>((set) => ({
   removedNodeIds: [],
   isEdgesDirty: false,
   lastMutationAt: 0,
+  globalEdgeType: "default",
+  globalEdgeThickness: 1.5,
+  setGlobalEdgePrefs: (type, thickness) => set({ globalEdgeType: type, globalEdgeThickness: thickness }),
   setCanvasSnapshot: ({ nodes, edges }) =>
     set({
       nodes: nodes.map((node) => ({ ...node, isDirty: false })),

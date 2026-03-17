@@ -94,12 +94,16 @@ export function useCanvas(workflowId: string) {
 
   const onConnect = useCallback(
     (connection: Connection) => {
+      const type = useCanvasStore.getState().globalEdgeType;
+      const strokeWidth = useCanvasStore.getState().globalEdgeThickness;
+
       setEdges((prev) =>
         addEdge(
           {
             ...connection,
             type: "custom",
-            animated: false,
+            animated: type === "animated",
+            data: { edgeType: type, strokeWidth }
           },
           prev,
         ),
