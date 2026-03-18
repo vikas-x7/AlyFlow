@@ -12,6 +12,7 @@ import { useCanvas } from "@/modules/canvas/hooks/useCanvas";
 import { useAutoSave } from "@/modules/canvas/hooks/useAutoSave";
 import { Loader } from "@/shared/components/ui/Loader";
 import { useTheme } from "next-themes";
+import { ChevronDown } from "lucide-react";
 
 interface CanvasPageProps {
   params: Promise<{
@@ -108,9 +109,35 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
       </div>
 
       <div className="flex-1 relative" ref={containerRef} data-active-tool={activeTool}>
-        <div className="absolute bottom-0 z-10">
-          <div className="rounded-r-[5px] border border-border bg-panel py-2 text-center w-25 text-[15px] text-foreground font-gothic shadow-sm">
-            {Math.round(zoom * 100)}%
+        <div className="absolute bottom-4 left-4 z-10">
+          <div className="flex items-center rounded-md border border-border bg-panel shadow-sm overflow-hidden h-10">
+            <div className="relative flex items-center h-full hover:bg-muted transition-colors">
+              <select
+                className="w-[84px] pl-2 pr-6 bg-transparent text-center text-[14px] text-foreground font-gothic cursor-pointer h-full appearance-none outline-none font-medium z-10 relative"
+                value={Math.round(zoom * 100)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "fit") {
+                    rfInstance?.fitView({ padding: 0.2, duration: 800 });
+                  } else {
+                    rfInstance?.zoomTo(Number(val) / 100, { duration: 300 });
+                  }
+                }}
+                title="Zoom level"
+              >
+                <option value={Math.round(zoom * 100)} hidden className="bg-panel text-foreground">{Math.round(zoom * 100)}%</option>
+                <option value="25" className="bg-panel text-foreground">25%</option>
+                <option value="50" className="bg-panel text-foreground">50%</option>
+                <option value="75" className="bg-panel text-foreground">75%</option>
+                <option value="100" className="bg-panel text-foreground">100%</option>
+                <option value="125" className="bg-panel text-foreground">125%</option>
+                <option value="150" className="bg-panel text-foreground">150%</option>
+                <option value="200" className="bg-panel text-foreground">200%</option>
+                <option value="300" className="bg-panel text-foreground">300%</option>
+                <option value="fit" className="bg-panel text-foreground">Fit View</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-2 text-foreground pointer-events-none opacity-50" />
+            </div>
           </div>
         </div>
         <ReactFlow

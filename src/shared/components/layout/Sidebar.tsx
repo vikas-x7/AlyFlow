@@ -136,8 +136,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${isOpen ? "w-56" : "w-0 border-r-0"
-        }`}
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${
+        isOpen ? "w-56" : "w-0 border-r-0"
+      }`}
     >
       <div className="mb-4 flex items-center justify-between px-3 py-2 border-b border-border">
         <div className="text-[17px] font-semibold text-foreground flex items-center gap-2">
@@ -196,8 +197,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive ? " bg-foreground/10" : "hover:bg-foreground/10"
-                    }`}
+                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
+                    isActive ? " bg-foreground/10" : "hover:bg-foreground/10"
+                  }`}
                 >
                   {isEditing ? (
                     <input
@@ -219,10 +221,11 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                         }}
                       >
                         <div
-                          className={`truncate text-xs font-medium select-none ${isActive
+                          className={`truncate text-[13px] font-medium select-none ${
+                            isActive
                               ? "text-foreground"
                               : "text-foreground/60 group-hover:text-foreground/80"
-                            }`}
+                          }`}
                         >
                           {workflow.name}
                         </div>
@@ -345,7 +348,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   setShowLogoutConfirm(false);
                   try {
                     await logout();
-                  } catch (e) { }
+                  } catch (e) {}
                   router.replace("/");
                 }}
                 className="text-xs font-medium text-background bg-foreground transition-colors cursor-pointer px-4 py-1.5 rounded"
