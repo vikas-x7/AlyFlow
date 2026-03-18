@@ -11,6 +11,11 @@ import { FaRegPenToSquare, FaRegTrashCan } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
 import { BsConeStriped, BsEjectFill } from "react-icons/bs";
 import { GiCrownedExplosion } from "react-icons/gi";
+import { LuUpload, LuDownload, LuImage, LuFileJson } from "react-icons/lu";
+import { useCanvasStore } from "@/modules/canvas/store/canvas.store";
+import { toPng } from "html-to-image";
+import { useTheme } from "next-themes";
+import { getNodesBounds, getViewportForBounds } from "reactflow";
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
@@ -58,6 +63,18 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     null,
   );
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+
+  const {
+    nodes: canvasNodes,
+    edges: canvasEdges,
+    setCanvasSnapshot,
+    setNodes,
+    setEdges,
+  } = useCanvasStore();
 
   const { logout, user } = useAuth();
   const avatarUrl = (user as any)?.avatar || (user as any)?.image || null;
@@ -79,6 +96,16 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const pathParts = pathname.split("/");
     return pathParts[1] === "canvas" ? (pathParts[2] ?? null) : null;
   }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target as Node)) {
+        setShowExportMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (inlineTitle !== null)
@@ -134,11 +161,130 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     if (e.key === "Escape") setEditingId(null);
   }
 
+  const handleExportJson = () => {
+    setShowExportMenu(false);
+    if (!activeWorkflowId) {
+      alert("Please open a canvas to export.");
+      return;
+    }
+    const dataStr = JSON.stringify({ nodes: canvasNodes, edges: canvasEdges }, null, 2);
+    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+    const exportFileDefaultName = `workflow-${activeWorkflowId}.json`;
+
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const handleExportPng = () => {
+    setShowExportMenu(false);
+    if (!activeWorkflowId) {
+      alert("Please open a canvas to export.");
+      return;
+    }
+
+    if (canvasNodes.length === 0) {
+      alert("Canvas is empty.");
+      return;
+    }
+
+    const reactFlowViewport = document.querySelector('.react-flow__viewport') as HTMLElement;
+    if (!reactFlowViewport) {
+      alert("Canvas element not found on the page.");
+      return;
+    }
+
+    const imageWidth = 1920;
+    const imageHeight = 1080;
+
+    // Calculate the bounding box for all nodes with a slight padding
+    const nodesBounds = getNodesBounds(canvasNodes);
+
+    // Calculate the transform needed to fit the bounds into our target dimensions
+    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2.0, 0.1);
+
+    const bgColor = resolvedTheme === 'dark' ? '#000000' : '#ffffff';
+
+    toPng(reactFlowViewport, {
+      backgroundColor: bgColor,
+      width: imageWidth,
+      height: imageHeight,
+      style: {
+        width: `${imageWidth}px`,
+        height: `${imageHeight}px`,
+        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+      },
+      filter: (node) => {
+        if (node.classList?.contains('react-flow__minimap') || node.classList?.contains('react-flow__controls')) {
+          return false;
+        }
+        return true;
+      }
+    })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `workflow-${activeWorkflowId}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error("Failed to export PNG", err);
+        alert("Failed to export PNG. Please try again.");
+      });
+  };
+
+  const handleImportClick = () => {
+    if (!activeWorkflowId) {
+      alert("Please open a canvas to import into.");
+      return;
+    }
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== "application/json" && !file.name.endsWith(".json")) {
+      alert("Only JSON files are supported for import.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const parsed = JSON.parse(content);
+
+        if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
+          alert("Invalid file format. Ensure it contains 'nodes' and 'edges' arrays from React Flow.");
+          return;
+        }
+
+        const newNodes = parsed.nodes.map((n: any) => ({ ...n, isDirty: true }));
+        const newEdges = parsed.edges;
+
+        setCanvasSnapshot({ nodes: newNodes, edges: newEdges });
+        setNodes(newNodes, { markDirty: true });
+        setEdges(newEdges, { markDirty: true });
+
+      } catch (err) {
+        alert("Failed to parse JSON file.");
+      }
+    };
+    reader.readAsText(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${
-        isOpen ? "w-56" : "w-0 border-r-0"
-      }`}
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${isOpen ? "w-56" : "w-0 border-r-0"
+        }`}
     >
       <div className="mb-4 flex items-center justify-between px-3 py-2 border-b border-border">
         <div className="text-[17px] font-semibold text-foreground flex items-center gap-2">
@@ -159,7 +305,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </button>
       </div>
 
-      {/* Inline create input */}
+
       {inlineTitle !== null && (
         <div className="px-3">
           <div className="rounded bg-foreground/5 px-2 py-1">
@@ -176,7 +322,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </div>
       )}
 
-      {/* Workflow list */}
+
       <div className="flex-1 overflow-hidden p-3 ">
         {error ? (
           <div className="mb-3 rounded border border-red-900 bg-red-950 px-2 py-1 text-xs text-red-400">
@@ -197,9 +343,8 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               return (
                 <div
                   key={workflow.id}
-                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${
-                    isActive ? " bg-foreground/10" : "hover:bg-foreground/10"
-                  }`}
+                  className={`group rounded-xs px-2 py-1.5 transition-colors relative flex items-center justify-between gap-2 ${isActive ? " bg-foreground/10" : "hover:bg-foreground/10"
+                    }`}
                 >
                   {isEditing ? (
                     <input
@@ -221,11 +366,10 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                         }}
                       >
                         <div
-                          className={`truncate text-[13px] font-medium select-none ${
-                            isActive
-                              ? "text-foreground"
-                              : "text-foreground/60 group-hover:text-foreground/80"
-                          }`}
+                          className={`truncate text-[13px] font-medium select-none ${isActive
+                            ? "text-foreground"
+                            : "text-foreground/60 group-hover:text-foreground/80"
+                            }`}
                         >
                           {workflow.name}
                         </div>
@@ -250,6 +394,52 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
             })}
           </nav>
         )}
+      </div>
+
+
+      <div className="px-3 flex gap-2 mb-2">
+        <input
+          type="file"
+          accept=".json,application/json"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+        <button
+          onClick={handleImportClick}
+          className="flex-1 text-[11px] font-medium py-1.5 border border-border/50 rounded-xs flex items-center justify-center gap-2 hover:bg-foreground/5 transition-colors cursor-pointer text-foreground/70 bg-foreground/5"
+        >
+          <LuUpload size={13} />
+          Import
+        </button>
+        <div className="relative flex-1" ref={exportMenuRef}>
+          <button
+            onClick={() => setShowExportMenu(!showExportMenu)}
+            className="w-full text-[11px] font-medium py-1.5 border border-border/50 rounded-xs flex items-center justify-center gap-2 hover:bg-foreground/5 transition-colors cursor-pointer text-foreground/70 bg-foreground/5"
+          >
+            <LuDownload size={13} />
+            Export
+          </button>
+
+          {showExportMenu && (
+            <div className="absolute bottom-full left-0 w-full mb-1 bg-panel border border-border rounded-xs shadow-lg overflow-hidden z-50 py-1">
+              <button
+                onClick={handleExportJson}
+                className="w-full text-left px-3 py-1.5 text-[10px] hover:bg-foreground/10 text-foreground transition-colors flex items-center gap-2"
+              >
+                <LuFileJson size={12} />
+                JSON
+              </button>
+              <button
+                onClick={handleExportPng}
+                className="w-full text-left px-3 py-1.5 text-[10px] hover:bg-foreground/10 text-foreground transition-colors flex items-center gap-2"
+              >
+                <LuImage size={12} />
+                PNG Image
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-4 pt-3 flex items-center gap-2 p-3">
@@ -277,7 +467,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+
       {workflowToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-panel rounded-lg p-5 w-80 shadow-xl font-gothic text-left border border-border">
@@ -348,7 +538,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   setShowLogoutConfirm(false);
                   try {
                     await logout();
-                  } catch (e) {}
+                  } catch (e) { }
                   router.replace("/");
                 }}
                 className="text-xs font-medium text-background bg-foreground transition-colors cursor-pointer px-4 py-1.5 rounded"

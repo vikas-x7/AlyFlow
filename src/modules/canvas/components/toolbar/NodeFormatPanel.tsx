@@ -24,12 +24,13 @@ const PRESET_COLORS = [
   "#4A4A6A", // slate
   "#CA2A30",
 ];
-const EDGE_TYPES = [
-  { value: "default", label: "Bezier" },
-  { value: "straight", label: "Straight" },
+import { Spline, TrendingUp, Minus, Activity } from "lucide-react";
 
-  { value: "smoothstep", label: "Smooth" },
-  { value: "animated", label: "Animated" },
+const EDGE_TYPES = [
+  { value: "default", label: "Bezier", icon: Spline },
+  { value: "straight", label: "Straight", icon: Minus },
+  { value: "smoothstep", label: "Smooth", icon: TrendingUp },
+  { value: "animated", label: "Animated", icon: Activity },
 ] as const;
 
 const EDGE_THICKNESS = [1, 2, 3, 5] as const;
@@ -86,11 +87,11 @@ export function NodeFormatPanel() {
         eds.map((e) =>
           key === "type"
             ? {
-                ...e,
-                type: "custom",
-                animated: value === "animated",
-                data: { ...e.data, edgeType: value },
-              }
+              ...e,
+              type: "custom",
+              animated: value === "animated",
+              data: { ...e.data, edgeType: value },
+            }
             : { ...e, type: "custom", data: { ...e.data, [key]: value } },
         ),
       );
@@ -100,16 +101,16 @@ export function NodeFormatPanel() {
           prev
             ? key === "type"
               ? {
-                  ...prev,
-                  type: "custom",
-                  animated: value === "animated",
-                  data: { ...prev.data, edgeType: value },
-                }
+                ...prev,
+                type: "custom",
+                animated: value === "animated",
+                data: { ...prev.data, edgeType: value },
+              }
               : {
-                  ...prev,
-                  type: "custom",
-                  data: { ...prev.data, [key]: value },
-                }
+                ...prev,
+                type: "custom",
+                data: { ...prev.data, [key]: value },
+              }
             : prev,
         );
       }
@@ -186,11 +187,10 @@ export function NodeFormatPanel() {
                   onClick={() =>
                     updateNodeData(key, !selectedNode?.data?.[key])
                   }
-                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${
-                    active
+                  className={`w-8 h-8 flex items-center justify-center rounded-[5px] text-[14px] cursor-pointer transition-all duration-150 border ${className} ${active
                       ? "bg-foreground/15 text-foreground border-foreground/30"
                       : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
-                  }`}
+                    }`}
                 >
                   {label}
                 </button>
@@ -206,47 +206,40 @@ export function NodeFormatPanel() {
           <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider">
             Edge Type
           </div>
-          <div className="grid grid-cols-2 gap-1">
-            {EDGE_TYPES.map(({ value, label }) => (
+          <div className="grid grid-cols-4 gap-1">
+            {EDGE_TYPES.map(({ value, label, icon: Icon }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => updateEdge("type", value)}
-                className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-all cursor-pointer ${
-                  currentEdgeType === value ||
-                  (value === "animated" && selectedEdge?.animated)
+                title={label}
+                className={`flex items-center justify-center p-2 rounded-[4px] border transition-all cursor-pointer ${currentEdgeType === value ||
+                    (value === "animated" && selectedEdge?.animated)
                     ? "bg-foreground/15 text-foreground border-foreground/30"
                     : "bg-transparent text-foreground/50 border-border hover:bg-foreground/5"
-                }`}
+                  }`}
               >
-                {label}
+                <Icon size={16} />
               </button>
             ))}
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="text-[10px] text-foreground/40 font-mono uppercase tracking-wider">
-            Edge Thickness
+          <div className="flex justify-between items-center text-[10px] text-foreground/40 font-mono uppercase tracking-wider mb-1">
+            <span>Edge Thickness</span>
+            <span className="text-foreground/60">{currentThickness}px</span>
           </div>
-          <div className="flex gap-1.5 items-center">
-            {EDGE_THICKNESS.map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => updateEdge("strokeWidth", size)}
-                className={`w-8 h-8 flex items-center justify-center rounded-[5px] border cursor-pointer transition-all ${
-                  currentThickness === size
-                    ? "bg-foreground/15 border-foreground/30"
-                    : "bg-transparent border-border hover:bg-foreground/5"
-                }`}
-              >
-                <div
-                  className="w-4 bg-foreground/70 rounded-full"
-                  style={{ height: `${size}px` }}
-                />
-              </button>
-            ))}
+          <div className="px-1">
+            <input
+              type="range"
+              min="1"
+              max="10"
+              step="1"
+              value={currentThickness}
+              onChange={(e) => updateEdge("strokeWidth", Number(e.target.value))}
+              className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-foreground"
+            />
           </div>
         </div>
       </div>
