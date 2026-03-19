@@ -55,21 +55,21 @@ function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile: Left spacer to balance hamburger */}
+        
           <div className="md:hidden w-6" />
 
-          {/* Right: Auth buttons (desktop) + Hamburger (mobile) */}
+        
           <div className="flex items-center gap-3 ml-auto">
             <nav className="hidden md:flex items-center gap-3 ">
               <Link
                 href="/login"
-                className="bg-black text-white px-4 py-1.5 text-[11px] transition hover:bg-black/80"
+                className="bg-black text-white px-4 py-1.5 text-[11px] transition hover:bg-black/80 rounded-[5px]"
               >
                 LOGIN
               </Link>
               <Link
                 href="/register"
-                className="bg-white border border-black/10 text-black  px-4 py-1.5 text-[11px]"
+                className="bg-white border border-black/10 text-black  px-4 py-1.5 text-[11px] rounded-[5px]"
               >
                 SIGN UP
               </Link>

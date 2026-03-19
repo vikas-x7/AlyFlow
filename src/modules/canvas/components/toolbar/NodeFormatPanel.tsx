@@ -136,7 +136,7 @@ export function NodeFormatPanel() {
         </div>
       )}
 
-      <div className="fixed top-2 right-1 z-50 w-37.5 bg-panel border border-border rounded-[5px] p-3 flex flex-col gap-3">
+      <div className="fixed top-2 right-1 z-50 w-37.5 bg-panel  rounded-[5px] p-3 flex flex-col gap-3">
         {/* Header */}
         <div className="text-[11px] text-foreground/50 font-mono uppercase tracking-wider">
           Node Style
