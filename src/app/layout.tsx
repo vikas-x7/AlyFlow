@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import "../styles/globals.css";
 import { Providers } from "./providers";
 
-import { Zen_Kaku_Gothic_New, JetBrains_Mono } from "next/font/google";
+import { Zen_Kaku_Gothic_New, JetBrains_Mono, Adamina } from "next/font/google";
 
 const gothic = Zen_Kaku_Gothic_New({
   subsets: ["latin"],
@@ -15,9 +15,19 @@ const mono = JetBrains_Mono({
   variable: "--font-vilo-mono",
 });
 
+const instrument = Adamina({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-instrument",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${gothic.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${gothic.variable} ${mono.variable} ${instrument.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <Providers>{children}</Providers>
       </body>

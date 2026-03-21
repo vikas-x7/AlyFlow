@@ -34,19 +34,13 @@ export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section className="w-full py-16 px-4 font-gothic">
+    <section className="w-full py-16 px-4 font-gothic mt-30">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
         {/* LEFT */}
         <div className="flex flex-col gap-1">
-          <p className="text-[20px] uppercase text-gray-950 font-semibold mb-3">
-            FAQ
-          </p>
-          <h2 className="text-4xl sm:text-5xl lg:text-[34px] font-light text-gray-900 mb-2">
-            Any questions? We got you.
+          <h2 className="text-4xl sm:text-5xl lg:text-[44px] text-black  font-instrument mb-10">
+            Frequently Asked Questions
           </h2>
-          <p className="text-gray-500 max-w-sm mb-4">
-            Everything you need to know about Alyflow.
-          </p>
 
           {/* Accordion */}
           <div className="border-t border-gray-200 mt-2">
@@ -58,8 +52,8 @@ export default function FAQ() {
               >
                 <div className="flex items-center justify-between py-4">
                   <span
-                    className={`font-medium text-base transition-colors duration-200 ${
-                      activeIndex === i ? "text-black" : "text-gray-900"
+                    className={`font-medium text-[18px] transition-colors duration-200 ${
+                      activeIndex === i ? "text-black" : "text-black/90"
                     }`}
                   >
                     {f.question}
@@ -88,7 +82,7 @@ export default function FAQ() {
         </div>
 
         {/* RIGHT - same image */}
-        <div className="relative rounded-[5px] overflow-hidden h-[520px]">
+        <div className="relative rounded-[5px] overflow-hidden h-130">
           <img
             src="https://cdn.prod.website-files.com/6812d02840d393aa2c663370/68f7be903d5e939249ef4dab_6ad532de28b288f9a07b16c9b42376ce_hyperline-pattern.svg"
             alt="Alyflow canvas preview"

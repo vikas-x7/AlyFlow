@@ -7,8 +7,9 @@ import FAQ from "@/modules/marketing/components/Faq";
 import { Features } from "@/modules/marketing/components/Features";
 import { Footer } from "@/modules/marketing/components/Footer";
 import { Hero } from "@/modules/marketing/components/Hero";
-import { IntelligenceSection } from "@/modules/marketing/components/IntelligenceSection";
+
 import Navbar from "@/modules/marketing/components/Navbar";
+import TrustedSection from "@/modules/marketing/components/TrustedSection";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -25,11 +26,10 @@ export default function LandingPage() {
   if (!mounted || token) return null;
 
   return (
-    <main id="home" className="w-full min-h-screen">
-      <div className="">
+    <main id="home" className="w-full min-h-screen flex flex-col items-center">
+      <div className="w-7xl">
         <Hero />
-
-        <IntelligenceSection />
+        <TrustedSection />
         <FAQ />
       </div>
       <Footer />

@@ -19,59 +19,53 @@ function Navbar() {
 
   return (
     <>
-      <header
-        className={`fixed top-0  left-0 right-0 z-50 w-full text-black font-gothic transition-all duration-300 ${
-          scrolled ? "bg-white shadow-sm" : "bg-transparent"
-        }`}
-      >
-        <div className="px-4 md:px-6 py-3 md:py-2 flex items-center justify-between max-w-7xl mx-auto relative">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full text-black font-gothic backdrop-blur-md bg-white/70">
+        <div className="px-4 md:px-6 py-3 md:py-5 flex items-center justify-between max-w-[80%] mx-auto relative">
           {/* Logo */}
           <Link
             href="/"
-            className="text-[17px] md:text-xl font-bold tracking-tight hover:opacity-80 transition text-black absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+            className="text-[17px] md:text-[26px] font-bold -tracking-[1px] hover:opacity-80 transition text-black absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
           >
             Alyflow
           </Link>
 
           {/* Center Nav Links */}
-          <div className="hidden md:flex gap-6 text-[12px] absolute left-1/2 -translate-x-1/2 font-bold">
+          <div className="hidden md:flex gap-6 text-[15px] absolute left-1/2 -translate-x-1/2 ">
             <Link
               href="/#home"
               className="text-black hover:opacity-60 transition"
             >
-              HOME
+              Home
             </Link>
             <Link
               href="/#about"
               className="text-black hover:opacity-60 transition"
             >
-              ABOUT
+              About
             </Link>
             <Link
               href="/#faq"
               className="text-black hover:opacity-60 transition"
             >
-              FAQ
+              Faq
             </Link>
           </div>
 
-        
           <div className="md:hidden w-6" />
 
-        
           <div className="flex items-center gap-3 ml-auto">
             <nav className="hidden md:flex items-center gap-3 ">
               <Link
                 href="/login"
-                className="bg-black text-white px-4 py-1.5 text-[11px] transition hover:bg-black/80 rounded-[5px]"
+                className="bg-black text-white px-4 py-1.5 text-[15px] transition hover:bg-black/80 rounded-[30px]"
               >
-                LOGIN
+                Log in
               </Link>
               <Link
                 href="/register"
-                className="bg-white border border-black/10 text-black  px-4 py-1.5 text-[11px] rounded-[5px]"
+                className="bg-white border border-black/10 text-black  px-4 py-1.5 text-[15px] rounded-[30px]"
               >
-                SIGN UP
+                Sing up
               </Link>
             </nav>
 
