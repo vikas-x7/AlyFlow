@@ -16,6 +16,7 @@ import { useCanvasStore } from "@/modules/canvas/store/canvas.store";
 import { toPng } from "html-to-image";
 import { useTheme } from "next-themes";
 import { getNodesBounds, getViewportForBounds } from "reactflow";
+import { SidebarLoader } from "../ui/SidebarLoader";
 
 function getErrorMessage(err: unknown) {
   const maybeError = err as { response?: { data?: { error?: unknown } } };
@@ -329,7 +330,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
             {getErrorMessage(error)}
           </div>
         ) : isLoading ? (
-          <Loader />
+          <SidebarLoader />
         ) : workflows.length === 0 && inlineTitle === null ? (
           <div className="rounded border border-border p-3 text-xs text-foreground/30">
             No workflows yet.

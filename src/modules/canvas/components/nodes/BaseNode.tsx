@@ -29,7 +29,7 @@ export function BaseNode({
   return (
     <div
       className="rounded-[5px] min-w-45 p-2 flex items-center justify-center relative"
-      style={{ backgroundColor: bgColor || "#61A3BA" }}
+      style={{ backgroundColor: bgColor || "#E8E8E8" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

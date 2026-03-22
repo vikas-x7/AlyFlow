@@ -18,9 +18,9 @@
 }
 
 .dark {
-  --background: #101011;
+  --background: black;
   --foreground: #f8f9fa;
-  --panel-bg: #1a1a1a;
+  --panel-bg: #0d0d0d;
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
