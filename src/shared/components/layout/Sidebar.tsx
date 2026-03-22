@@ -283,7 +283,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${isOpen ? "w-56" : "w-0 border-r-0"
+      className={`h-screen flex flex-col transition-all duration-300 border-r bg-panel border-border font-gothic overflow-hidden ${isOpen ? "w-64" : "w-0 border-r-0"
         }`}
     >
       <div className="mb-4 flex items-center justify-between px-3 py-2 border-b border-border">

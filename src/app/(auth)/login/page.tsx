@@ -35,7 +35,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="rounded-2xl   px-6 py-8  backdrop-blur text-center">
             <div className="mb-6 ">
-              <h2 className="text-2xl font-semibold">Welcome back</h2>
+              <h2 className="text-3xl font-instrument">Welcome back</h2>
               <p className="mt-1 text-sm ">
                 Please enter your details to sign in.
               </p>

@@ -34,7 +34,7 @@ export default function RegisterPage() {
         <div className="w-full max-w-md">
           <div className="rounded-2xl px-6 py-8 backdrop-blur text-center">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold">Create your account</h2>
+              <h2 className="text-3xl font-instrument">Create your account</h2>
               <p className="mt-1 text-sm">
                 Use your work email to get started.
               </p>
