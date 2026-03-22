@@ -26,7 +26,7 @@ export default function LandingPage() {
   if (!mounted || token) return null;
 
   return (
-    <main id="home" className="w-full min-h-screen flex flex-col items-center">
+    <main id="home" className=" min-h-screen flex flex-col items-center">
       <div className="w-7xl">
         <Hero />
         <TrustedSection />
