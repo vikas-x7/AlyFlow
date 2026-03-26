@@ -6,13 +6,13 @@ const stats = [
   { label: 'Flows created', value: '84K' },
   { label: 'Nodes connected', value: '2.1M' },
   { label: 'Hours saved', value: '40K' },
-  { label: 'Canvas size limit', value: '∞' },
+  { label: 'Canvas size limit', value: 'unlimited ' },
 ];
 
 const features = [
   {
     icon: <Box size={18} />,
-    title: 'Infinite canvas',
+    title: 'Unlimited canvas',
     desc: 'Build flows without boundaries. Alyflow gives you an unlimited canvas so your ideas never feel cramped zoom, pan, and place nodes anywhere.',
   },
   {
@@ -34,27 +34,18 @@ const features = [
 
 export default function TrustedSection() {
   return (
-    <section id="about" className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 font-gothic">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="rounded-[10px] p-3 sm:p-4 flex flex-col justify-between min-h-36 sm:min-h-44 md:min-h-55" style={{ backgroundColor: '#F2F2F2' }}>
-              <span className="text-[13px] sm:text-[15px] md:text-[17px] text-black font-medium tracking-wide">{stat.label}</span>
-              <span className="text-4xl sm:text-5xl md:text-6xl font-light text-black/80 mt-4 sm:mt-6">{stat.value}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-20 sm:mt-32 md:mt-60">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-medium text-black mb-8 sm:mb-12 font-instrument -tracking-[1px] sm:-tracking-[2px]">Why you should choose Alyflow</h2>
+    <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 font-gothic">
+      <div className="">
+        <div className="mt-20 sm:mt-32 md:mt-5">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-medium text-black mb-8 sm:mb-12 -tracking-[1px] sm:-tracking-[2px]">Why you should choose Alyflow</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-8 sm:gap-y-10 mt-10 sm:mt-16 md:mt-25">
             {features.map((f) => (
               <div key={f.title}>
-                <div className="flex items-center gap-2 text-black font-semibold text-[14px] sm:text-[15px] mb-2 sm:mb-3 font-instrument">
+                <div className="flex items-center gap-2 text-black  text-[14px] sm:text-[19px] mb-2 sm:mb-3 ">
                   {f.icon}
                   {f.title}
                 </div>
-                <p className="text-[14px] sm:text-[16px] font-semibold text-black/70 leading-relaxed">{f.desc}</p>
+                <p className="text-[14px] sm:text-[16px]  text-black/90 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>

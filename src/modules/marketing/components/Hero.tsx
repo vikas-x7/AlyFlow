@@ -10,9 +10,9 @@ export const Hero = () => {
       <section className="relative font-gothic min-h-screen flex flex-col ">
         <Navbar />
 
-        <div className="relative z-10 flex flex-col items-start text-start text-black flex-1 justify-center px-4 md:px-6 py-24 gap-7 mt-20">
+        <div className="relative z-10 flex flex-col items-start text-start text-black flex-1 justify-center px-4 sm:px-6 py-16 sm:py-20 md:py-24 gap-5 sm:gap-7 mt-16 sm:mt-20">
           <div className="flex flex-col items-start gap-4">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] max-w-5xl -tracking-[1px] sm:-tracking-[2px] md:-tracking-[4px] leading-tight md:leading-13 text-black/80">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] max-w-5xl -tracking-[1px] sm:-tracking-[2px] md:-tracking-[4px] leading-tight md:leading-13 text-black/90">
               Design connect and organize <br className="hidden sm:block" /> every idea in one mind
             </h1>
             <p className="text-xs sm:text-sm md:text-[16px] leading-6 text-[#171717] max-w-xs sm:max-w-sm md:max-w-lg">
@@ -39,7 +39,7 @@ export const Hero = () => {
             <MarqueeSection />
           </div>
 
-          <div id="app-preview" className="relative w-full max-w-7xl mx-auto mt-10 sm:mt-20 md:mt-10 border-black/20 border-31 rounded-[3px]">
+          <div id="app-preview" className="relative w-full max-w-7xl mx-auto mt-10 sm:mt-20 md:mt-10 border-black/20 border-8 sm:border-16 md:border-31 rounded-[3px]">
             <img
               src="https://res.cloudinary.com/dyv9kenuj/image/upload/v1774117017/Screenshot_from_2026-03-21_23-45-42_sewfdi.png"
               alt="App preview"
