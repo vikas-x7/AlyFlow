@@ -15,26 +15,16 @@ export default function RegisterPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        <div className="absolute left-6 top-6 text-white">
-          <p className="text-[30px] text-white">Alyflow</p>
-        </div>
+        
 
-        <div className="absolute left-6 bottom-8 max-w-xs text-white">
-          <h3 className="text-2xl leading-tight">
-            A simple Excel-style canvas to quickly draw and organize workflows.
-          </h3>
-          <p className="mt-2 text-sm text-white/70">
-            Sketch processes, connect nodes, and iterate fast sign in to
-            continue.
-          </p>
-        </div>
+     
       </div>
 
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           <div className="rounded-2xl px-6 py-8 backdrop-blur text-center">
             <div className="mb-6">
-              <h2 className="text-3xl font-instrument">Create your account</h2>
+              <h2 className="text-3xl ">Create your account</h2>
               <p className="mt-1 text-sm">
                 Use your work email to get started.
               </p>

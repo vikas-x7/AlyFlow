@@ -1,19 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Connection, Edge, EdgeChange, Node, NodeChange } from "reactflow";
-import {
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  reconnectEdge,
-} from "reactflow";
-import { canvasService } from "../services/canvas.service";
-import { useCanvasStore } from "../store/canvas.store";
-import { TextNode } from "../components/nodes/TextNode";
-import { CustomEdge } from "../components/edges/CustomEdge";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Connection, Edge, EdgeChange, Node, NodeChange, OnConnectStartParams } from 'reactflow';
+import { addEdge, applyEdgeChanges, applyNodeChanges, reconnectEdge } from 'reactflow';
+import { canvasService } from '../services/canvas.service';
+import { useCanvasStore } from '../store/canvas.store';
+import { TextNode } from '../components/nodes/TextNode';
+import { CustomEdge } from '../components/edges/CustomEdge';
 
 function makeId(prefix: string) {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto)
-    return `${prefix}_${crypto.randomUUID()}`;
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return `${prefix}_${crypto.randomUUID()}`;
   return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 
@@ -24,6 +18,9 @@ export function useCanvas(workflowId: string) {
   const setNodes = useCanvasStore((s) => s.setNodes);
   const setEdges = useCanvasStore((s) => s.setEdges);
 
+  // Track the source node/handle when user starts dragging an edge
+  const connectingRef = useRef<{ nodeId: string; handleId: string | null; handleType: string | null } | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -31,7 +28,7 @@ export function useCanvas(workflowId: string) {
     if (!workflowId) {
       setCanvasSnapshot({ nodes: [], edges: [] });
       setIsLoading(false);
-      setLoadError("Invalid workflow id");
+      setLoadError('Invalid workflow id');
       return;
     }
 
@@ -51,11 +48,7 @@ export function useCanvas(workflowId: string) {
       })
       .catch((e: any) => {
         if (cancelled) return;
-        setLoadError(
-          typeof e?.response?.data?.error === "string"
-            ? e.response.data.error
-            : "Failed to load canvas",
-        );
+        setLoadError(typeof e?.response?.data?.error === 'string' ? e.response.data.error : 'Failed to load canvas');
         setCanvasSnapshot({ nodes: [], edges: [] });
       })
       .finally(() => {
@@ -70,9 +63,7 @@ export function useCanvas(workflowId: string) {
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      const shouldMarkDirty = changes.some(
-        (change) => change.type !== "select",
-      );
+      const shouldMarkDirty = changes.some((change) => change.type !== 'select');
       setNodes((prev) => applyNodeChanges(changes, prev), {
         markDirty: shouldMarkDirty,
       });
@@ -82,9 +73,7 @@ export function useCanvas(workflowId: string) {
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      const shouldMarkDirty = changes.some(
-        (change) => change.type !== "select",
-      );
+      const shouldMarkDirty = changes.some((change) => change.type !== 'select');
       setEdges((prev) => applyEdgeChanges(changes, prev), {
         markDirty: shouldMarkDirty,
       });
@@ -101,9 +90,9 @@ export function useCanvas(workflowId: string) {
         addEdge(
           {
             ...connection,
-            type: "custom",
-            animated: type === "animated",
-            data: { edgeType: type, strokeWidth }
+            type: 'custom',
+            animated: type === 'animated',
+            data: { edgeType: type, strokeWidth },
           },
           prev,
         ),
@@ -120,7 +109,7 @@ export function useCanvas(workflowId: string) {
   );
 
   const addNodeOfType = useCallback(
-    (type: "text", position?: { x: number; y: number }) => {
+    (type: 'text', position?: { x: number; y: number }) => {
       const id = makeId(type);
       const base: Node = {
         id,
@@ -129,13 +118,81 @@ export function useCanvas(workflowId: string) {
           x: 80 + Math.random() * 320,
           y: 80 + Math.random() * 220,
         },
-        data: { text: "" },
+        data: { text: '' },
       };
 
       setNodes((prev) => prev.concat(base));
       return id;
     },
     [setNodes],
+  );
+
+  const onConnectStart = useCallback((_event: any, params: OnConnectStartParams) => {
+    connectingRef.current = {
+      nodeId: params.nodeId ?? '',
+      handleId: params.handleId ?? null,
+      handleType: params.handleType ?? null,
+    };
+  }, []);
+
+  const onConnectEnd = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      // Only create a node if the drop is on empty canvas (not on a handle)
+      const target = event.target as HTMLElement;
+      const isPane = target.classList.contains('react-flow__pane');
+      if (!isPane || !connectingRef.current) {
+        connectingRef.current = null;
+        return;
+      }
+
+      const source = connectingRef.current;
+      connectingRef.current = null;
+
+      // We need the rfInstance to project screen coords to flow coords
+      // It will be passed from the page component
+      const customEvent = event as any;
+      const rfInstance = customEvent.__rfInstance;
+      const containerRect = customEvent.__containerRect;
+      if (!rfInstance || !containerRect) return;
+
+      // Get the drop position in flow coordinates
+      const clientX = 'changedTouches' in event ? event.changedTouches[0].clientX : (event as MouseEvent).clientX;
+      const clientY = 'changedTouches' in event ? event.changedTouches[0].clientY : (event as MouseEvent).clientY;
+      const x = clientX - containerRect.left;
+      const y = clientY - containerRect.top;
+      const pos = rfInstance.project({ x, y });
+
+      // Create new node
+      const newNodeId = addNodeOfType('text', pos);
+
+      // Determine which handle to connect to on the new node
+      // Source handle → connect to nearest target handle on new node
+      const sourceHandleId = source.handleId;
+      let targetHandleId = 'top-target';
+      if (sourceHandleId?.includes('bottom')) targetHandleId = 'top-target';
+      else if (sourceHandleId?.includes('top')) targetHandleId = 'bottom-target';
+      else if (sourceHandleId?.includes('right')) targetHandleId = 'left-target';
+      else if (sourceHandleId?.includes('left')) targetHandleId = 'right-target';
+
+      // Create edge from source to new node
+      const type = useCanvasStore.getState().globalEdgeType;
+      const strokeWidth = useCanvasStore.getState().globalEdgeThickness;
+      setEdges((prev) =>
+        addEdge(
+          {
+            source: source.nodeId,
+            sourceHandle: sourceHandleId,
+            target: newNodeId,
+            targetHandle: targetHandleId,
+            type: 'custom',
+            animated: type === 'animated',
+            data: { edgeType: type, strokeWidth },
+          },
+          prev,
+        ),
+      );
+    },
+    [addNodeOfType, setEdges],
   );
 
   const nodeTypes = useMemo(
@@ -157,6 +214,8 @@ export function useCanvas(workflowId: string) {
     onNodesChange,
     onEdgesChange,
     onConnect,
+    onConnectStart,
+    onConnectEnd,
     onReconnect,
     addNodeOfType,
   };
