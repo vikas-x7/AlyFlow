@@ -5,9 +5,9 @@ import 'reactflow/dist/style.css';
 import ReactFlow, { MiniMap, ReactFlowInstance, getConnectedEdges } from 'reactflow';
 import type { Edge, NodeChange, EdgeChange } from 'reactflow';
 import { useState, useRef, useCallback } from 'react';
-
 import { NodeTypeSwitcher } from '@/modules/canvas/components/toolbar/NodeTypeSwitcher';
 import { NodeFormatPanel } from '@/modules/canvas/components/toolbar/NodeFormatPanel';
+import { DrawingOverlay } from '@/modules/canvas/components/DrawingOverlay';
 import { useCanvas } from '@/modules/canvas/hooks/useCanvas';
 import { useAutoSave } from '@/modules/canvas/hooks/useAutoSave';
 import { Loader } from '@/shared/components/ui/Loader';
@@ -139,6 +139,19 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             </div>
           </div>
         </div>
+        <DrawingOverlay
+          active={activeTool === 'pen'}
+          rfInstance={rfInstance}
+          containerRef={containerRef}
+          onDrawingComplete={(points: { x: number; y: number }[], color: string, strokeWidth: number) => {
+            if (!points || points.length < 2) return;
+            const minX = Math.min(...points.map((p) => p.x));
+            const minY = Math.min(...points.map((p) => p.y));
+            const relativePoints = points.map((p) => ({ x: p.x - minX, y: p.y - minY }));
+            addNodeOfType('drawing', { x: minX, y: minY }, { points: relativePoints, color, strokeWidth });
+            setActiveTool('pen');
+          }}
+        />
         <ReactFlow
           onInit={(instance) => {
             setRfInstance(instance);

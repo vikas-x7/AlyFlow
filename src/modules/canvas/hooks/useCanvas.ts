@@ -4,6 +4,7 @@ import { addEdge, applyEdgeChanges, applyNodeChanges, reconnectEdge } from 'reac
 import { canvasService } from '../services/canvas.service';
 import { useCanvasStore } from '../store/canvas.store';
 import { TextNode } from '../components/nodes/TextNode';
+import { DrawingNode } from '../components/nodes/DrawingNode';
 import { CustomEdge } from '../components/edges/CustomEdge';
 
 function makeId(prefix: string) {
@@ -109,7 +110,7 @@ export function useCanvas(workflowId: string) {
   );
 
   const addNodeOfType = useCallback(
-    (type: 'text', position?: { x: number; y: number }) => {
+    (type: 'text' | 'drawing', position?: { x: number; y: number }, data?: any) => {
       const id = makeId(type);
       const base: Node = {
         id,
@@ -118,7 +119,7 @@ export function useCanvas(workflowId: string) {
           x: 80 + Math.random() * 320,
           y: 80 + Math.random() * 220,
         },
-        data: { text: '' },
+        data: data ?? { text: '' },
       };
 
       setNodes((prev) => prev.concat(base));
@@ -198,6 +199,7 @@ export function useCanvas(workflowId: string) {
   const nodeTypes = useMemo(
     () => ({
       text: TextNode,
+      drawing: DrawingNode,
     }),
     [],
   );
