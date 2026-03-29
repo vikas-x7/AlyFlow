@@ -6,7 +6,13 @@ import { useReactFlow } from "reactflow";
 export function ImageNode({
   id,
   data,
-}: NodeProps<{ url?: string; fileName?: string; bgColor?: string }>) {
+  selected,
+}: NodeProps<{
+  url?: string;
+  fileName?: string;
+  bgColor?: string;
+  isUserResized?: boolean;
+}>) {
   const [preview, setPreview] = useState<string | null>(data?.url ?? null);
   const [fileName, setFileName] = useState<string | null>(
     data?.fileName ?? null,
@@ -65,12 +71,15 @@ export function ImageNode({
 
   return (
     <BaseNode
+      id={id}
+      selected={selected}
+      isUserResized={data?.isUserResized}
       title="Image"
       titleColor="#34d399"
       indicatorColor="#059669"
       bgColor={data?.bgColor}
     >
-      <div className="w-full min-w-55 p-0">
+      <div className={`w-full p-0 ${data?.isUserResized ? "" : "min-w-55"}`}>
         <input
           ref={inputRef}
           type="file"

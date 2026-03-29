@@ -19,7 +19,6 @@ export function useCanvas(workflowId: string) {
   const setNodes = useCanvasStore((s) => s.setNodes);
   const setEdges = useCanvasStore((s) => s.setEdges);
 
-  // Track the source node/handle when user starts dragging an edge
   const connectingRef = useRef<{ nodeId: string; handleId: string | null; handleType: string | null } | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -138,50 +137,42 @@ export function useCanvas(workflowId: string) {
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent) => {
-      // Only create a node if the drop is on empty canvas (not on a handle)
       const target = event.target as HTMLElement;
       const isPane = target.classList.contains('react-flow__pane');
-      if (!isPane || !connectingRef.current) {
-        connectingRef.current = null;
+
+      const wasConnecting = connectingRef.current;
+      connectingRef.current = null;
+
+      if (!isPane || !wasConnecting) {
         return;
       }
 
-      const source = connectingRef.current;
-      connectingRef.current = null;
-
-      // We need the rfInstance to project screen coords to flow coords
-      // It will be passed from the page component
       const customEvent = event as any;
       const rfInstance = customEvent.__rfInstance;
       const containerRect = customEvent.__containerRect;
       if (!rfInstance || !containerRect) return;
 
-      // Get the drop position in flow coordinates
       const clientX = 'changedTouches' in event ? event.changedTouches[0].clientX : (event as MouseEvent).clientX;
       const clientY = 'changedTouches' in event ? event.changedTouches[0].clientY : (event as MouseEvent).clientY;
       const x = clientX - containerRect.left;
       const y = clientY - containerRect.top;
       const pos = rfInstance.project({ x, y });
 
-      // Create new node
       const newNodeId = addNodeOfType('text', pos);
 
-      // Determine which handle to connect to on the new node
-      // Source handle → connect to nearest target handle on new node
-      const sourceHandleId = source.handleId;
+      const sourceHandleId = wasConnecting.handleId;
       let targetHandleId = 'top-target';
       if (sourceHandleId?.includes('bottom')) targetHandleId = 'top-target';
       else if (sourceHandleId?.includes('top')) targetHandleId = 'bottom-target';
       else if (sourceHandleId?.includes('right')) targetHandleId = 'left-target';
       else if (sourceHandleId?.includes('left')) targetHandleId = 'right-target';
 
-      // Create edge from source to new node
       const type = useCanvasStore.getState().globalEdgeType;
       const strokeWidth = useCanvasStore.getState().globalEdgeThickness;
       setEdges((prev) =>
         addEdge(
           {
-            source: source.nodeId,
+            source: wasConnecting.nodeId,
             sourceHandle: sourceHandleId,
             target: newNodeId,
             targetHandle: targetHandleId,

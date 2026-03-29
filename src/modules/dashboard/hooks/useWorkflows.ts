@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { workflowService } from "../services/workflow.service";
-import type { Workflow } from "../types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { workflowService } from '../services/workflow.service';
+import type { Workflow } from '../types';
 
 export function useWorkflows() {
   const qc = useQueryClient();
 
   const workflowsQuery = useQuery({
-    queryKey: ["workflows"],
+    queryKey: ['workflows'],
     queryFn: async () => {
       const res = await workflowService.list();
       return (res.data?.workflows ?? []) as Workflow[];
@@ -19,50 +19,37 @@ export function useWorkflows() {
       return res.data.workflow as Workflow;
     },
     onMutate: async (input) => {
-      // Cancel any outgoing refetches so they don't overwrite our optimistic update
-      await qc.cancelQueries({ queryKey: ["workflows"] });
+      await qc.cancelQueries({ queryKey: ['workflows'] });
 
-      const previous = qc.getQueryData<Workflow[]>(["workflows"]);
+      const previous = qc.getQueryData<Workflow[]>(['workflows']);
 
-      // Optimistically add the new workflow at the top
       const optimistic: Workflow = {
         id: `temp-${Date.now()}`,
         name: input.name,
-        description: input.description ?? "",
+        description: input.description ?? '',
       };
 
-      qc.setQueryData<Workflow[]>(["workflows"], (old) => [
-        optimistic,
-        ...(old ?? []),
-      ]);
+      qc.setQueryData<Workflow[]>(['workflows'], (old) => [optimistic, ...(old ?? [])]);
 
       return { previous };
     },
     onError: (_err, _input, context) => {
-      // Rollback on error
       if (context?.previous) {
-        qc.setQueryData(["workflows"], context.previous);
+        qc.setQueryData(['workflows'], context.previous);
       }
     },
     onSettled: () => {
-      // Always refetch after to sync with server
-      qc.invalidateQueries({ queryKey: ["workflows"] });
+      qc.invalidateQueries({ queryKey: ['workflows'] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: { name: string; description?: string };
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: { name: string; description?: string } }) => {
       const res = await workflowService.update(id, input);
       return res.data.workflow as Workflow;
     },
     onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["workflows"] });
+      await qc.invalidateQueries({ queryKey: ['workflows'] });
     },
   });
 
@@ -71,7 +58,7 @@ export function useWorkflows() {
       await workflowService.remove(id);
     },
     onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["workflows"] });
+      await qc.invalidateQueries({ queryKey: ['workflows'] });
     },
   });
 
@@ -82,10 +69,7 @@ export function useWorkflows() {
     refetch: workflowsQuery.refetch,
     createWorkflow: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
-    updateWorkflow: (
-      id: string,
-      input: { name: string; description?: string },
-    ) => updateMutation.mutateAsync({ id, input }),
+    updateWorkflow: (id: string, input: { name: string; description?: string }) => updateMutation.mutateAsync({ id, input }),
     isUpdating: updateMutation.isPending,
     deleteWorkflow: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,

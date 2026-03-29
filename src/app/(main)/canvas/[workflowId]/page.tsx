@@ -34,6 +34,7 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hasFittedRef = useRef(false);
   const edgeReconnectSuccessful = useRef(true);
+  const lastConnectEndTimeRef = useRef<number>(0);
   const { resolvedTheme } = useTheme();
 
   const autosave = useAutoSave({
@@ -186,10 +187,15 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             e.__rfInstance = rfInstance;
             e.__containerRect = containerRef.current?.getBoundingClientRect();
             onConnectEnd(event as any);
+            // Record when edge connection ended to prevent onPaneClick from creating duplicate node
+            lastConnectEndTimeRef.current = Date.now();
           }}
           onPaneClick={(event: any) => {
             if (!rfInstance) return;
             if (activeTool !== 'text') return;
+            // Skip pane click if it's too soon after an edge connection ended
+            // (prevents duplicate node creation)
+            if (Date.now() - lastConnectEndTimeRef.current < 100) return;
             const rect = containerRef.current?.getBoundingClientRect();
             if (!rect) return;
             const x = event.clientX - rect.left;

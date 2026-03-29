@@ -178,10 +178,8 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const imageWidth = 1920;
     const imageHeight = 1080;
 
-    // Calculate the bounding box for all nodes with a slight padding
     const nodesBounds = getNodesBounds(canvasNodes);
 
-    // Calculate the transform needed to fit the bounds into our target dimensions
     const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2.0, 0.1);
 
     const bgColor = resolvedTheme === 'dark' ? '#000000' : '#ffffff';
@@ -276,7 +274,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           onClick={handleStartCreate}
           disabled={isCreating}
         >
-          create new
+          Create new
           <FaRegPenToSquare size={13} />
         </button>
       </div>
