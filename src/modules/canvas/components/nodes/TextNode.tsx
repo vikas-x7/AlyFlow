@@ -79,6 +79,7 @@ export function TextNode({
         ref={textareaRef}
         value={value}
         onChange={handleChange}
+        onMouseDown={(e) => e.stopPropagation()}
         rows={1}
         className="border-none outline-none resize-none overflow-hidden w-full text-[20px] text-left text-black font-gothic bg-transparent"
         style={{

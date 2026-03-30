@@ -48,8 +48,24 @@ export function useWorkflows() {
       const res = await workflowService.update(id, input);
       return res.data.workflow as Workflow;
     },
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ['workflows'] });
+    onMutate: async ({ id, input }) => {
+      await qc.cancelQueries({ queryKey: ['workflows'] });
+      const previous = qc.getQueryData<Workflow[]>(['workflows']);
+
+      qc.setQueryData<Workflow[]>(['workflows'], (old) => {
+        if (!old) return [];
+        return old.map((workflow) => (workflow.id === id ? { ...workflow, name: input.name, description: input.description ?? workflow.description } : workflow));
+      });
+
+      return { previous };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previous) {
+        qc.setQueryData(['workflows'], context.previous);
+      }
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['workflows'] });
     },
   });
 

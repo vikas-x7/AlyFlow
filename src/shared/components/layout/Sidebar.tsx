@@ -58,6 +58,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const exportMenuRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
 
+  const submittingInlineRef = useRef(false);
+  const submittingEditRef = useRef<string | null>(null);
+
   const { nodes: canvasNodes, edges: canvasEdges, setCanvasSnapshot, setNodes, setEdges } = useCanvasStore();
 
   const { logout, user } = useAuth();
@@ -108,18 +111,30 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   }
 
   async function handleInlineSubmit() {
-    const finalTitle = inlineTitle?.trim() || getAutoTitle(workflows);
-    setInlineTitle(null);
-    const workflow = await createWorkflow({
-      name: finalTitle,
-      description: '',
-    });
-    router.push(`/canvas/${workflow.id}`);
+    if (submittingInlineRef.current || inlineTitle === null) return;
+    submittingInlineRef.current = true;
+    try {
+      const finalTitle = inlineTitle.trim() || getAutoTitle(workflows);
+      setInlineTitle(null);
+      const workflow = await createWorkflow({
+        name: finalTitle,
+        description: '',
+      });
+      router.push(`/canvas/${workflow.id}`);
+    } finally {
+      submittingInlineRef.current = false;
+    }
   }
+
+  const isCancelledRef = useRef(false);
 
   function handleInlineKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') handleInlineSubmit();
-    if (e.key === 'Escape') setInlineTitle(null);
+    if (e.key === 'Escape') {
+      isCancelledRef.current = true;
+      setInlineTitle(null);
+      setTimeout(() => (isCancelledRef.current = false), 100);
+    }
   }
 
   function handleDoubleClick(workflow: Workflow) {
@@ -128,17 +143,27 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   }
 
   async function handleEditSubmit(workflow: Workflow) {
-    const finalTitle = editingTitle.trim() || workflow.name;
-    setEditingId(null);
-    await updateWorkflow(workflow.id, {
-      name: finalTitle,
-      description: workflow.description,
-    });
+    if (submittingEditRef.current === workflow.id || isCancelledRef.current) return;
+    submittingEditRef.current = workflow.id;
+    try {
+      const finalTitle = editingTitle.trim() || workflow.name;
+      setEditingId(null);
+      await updateWorkflow(workflow.id, {
+        name: finalTitle,
+        description: workflow.description,
+      });
+    } finally {
+      submittingEditRef.current = null;
+    }
   }
 
   function handleEditKeyDown(e: React.KeyboardEvent<HTMLInputElement>, workflow: Workflow) {
     if (e.key === 'Enter') handleEditSubmit(workflow);
-    if (e.key === 'Escape') setEditingId(null);
+    if (e.key === 'Escape') {
+      isCancelledRef.current = true;
+      setEditingId(null);
+      setTimeout(() => (isCancelledRef.current = false), 100);
+    }
   }
 
   const handleExportJson = () => {
