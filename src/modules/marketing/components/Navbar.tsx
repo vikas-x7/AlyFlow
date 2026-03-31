@@ -36,11 +36,8 @@ function Navbar() {
 
           <div className="flex items-center gap-3 ml-auto">
             <nav className="hidden md:flex items-center gap-3">
-              <Link href="/login" className="bg-black text-white px-4 py-[3px] text-[15px] transition hover:bg-black/80 ">
-                Log in
-              </Link>
-              <Link href="/register" className="bg-white border border-black/10 text-black px-4 py-[3px] text-[15px] ">
-                Sign up
+              <Link href="/login" className="bg-[#171717] rounded-2xl text-white px-5 py-1.5 text-[15px] font-medium transition hover:bg-black/80">
+                Get started
               </Link>
             </nav>
 
@@ -63,11 +60,8 @@ function Navbar() {
             FAQ
           </Link>
           <div className="mt-4 flex flex-col gap-3">
-            <Link href="/login" onClick={() => setIsMenuOpen(false)} className="bg-black text-white px-4 py-3 rounded-sm text-sm text-center transition">
-              LOGIN
-            </Link>
-            <Link href="/register" onClick={() => setIsMenuOpen(false)} className="bg-white border border-black/10 text-black px-4 py-3 rounded-sm text-sm text-center transition">
-              SIGN UP
+            <Link href="/login" onClick={() => setIsMenuOpen(false)} className="bg-[#171717] rounded-2xl text-white px-4 py-3 text-sm text-center transition hover:bg-black/80">
+              GET STARTED
             </Link>
           </div>
         </div>
