@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useWorkflows } from '@/modules/dashboard/hooks/useWorkflows';
 import type { Workflow } from '@/modules/dashboard/types';
 import { Loader } from '../ui/Loader';
-import { useAuth } from '@/modules/auth/hooks/useAuth';
+import { useSession, signOut } from 'next-auth/react';
 import { FaRegPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { IoIosLogOut } from 'react-icons/io';
 import { BsConeStriped, BsEjectFill } from 'react-icons/bs';
@@ -63,8 +63,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
   const { nodes: canvasNodes, edges: canvasEdges, setCanvasSnapshot, setNodes, setEdges } = useCanvasStore();
 
-  const { logout, user } = useAuth();
-  const avatarUrl = (user as any)?.avatar || (user as any)?.image || null;
+  const { data: session } = useSession();
+  const user = session?.user;
+  const avatarUrl = user?.image || null;
   const initials = (() => {
     const name = user?.name?.trim();
     if (name)
@@ -478,10 +479,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 type="button"
                 onClick={async () => {
                   setShowLogoutConfirm(false);
-                  try {
-                    await logout();
-                  } catch (e) {}
-                  router.replace('/');
+                  await signOut({ callbackUrl: '/' });
                 }}
                 className="text-xs font-medium text-background bg-foreground transition-colors cursor-pointer px-4 py-1.5 rounded"
               >

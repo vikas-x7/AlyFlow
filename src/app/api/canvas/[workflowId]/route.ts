@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/shared/lib/db";
-import { getAuthPayload } from "@/shared/lib/auth";
-import { canvasSaveSchema } from "@/modules/canvas/schemas/canvas.schema";
-import type { Prisma } from "@/generated/prisma/client";
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/shared/lib/db';
+import { auth } from '@/shared/lib/auth';
+import { canvasSaveSchema } from '@/modules/canvas/schemas/canvas.schema';
+import type { Prisma } from '@/generated/prisma/client';
 
 interface Params {
   params: Promise<{
@@ -15,62 +15,52 @@ function asArray(value: unknown) {
 }
 
 function readNodeId(node: unknown) {
-  if (!node || typeof node !== "object") return null;
+  if (!node || typeof node !== 'object') return null;
   const id = (node as { id?: unknown }).id;
-  return typeof id === "string" ? id : null;
+  return typeof id === 'string' ? id : null;
 }
 
 export async function GET(req: NextRequest, { params }: Params) {
   const { workflowId } = await params;
-  const payload = getAuthPayload(req);
-  if (!payload)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const workflow = await prisma.workflow.findFirst({
-    where: { id: workflowId, ownerId: payload.userId },
+    where: { id: workflowId, ownerId: session.user.id },
     select: { id: true },
   });
-  if (!workflow)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!workflow) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   const canvas = await prisma.canvas.findUnique({
     where: { workflowId },
     select: { nodes: true, edges: true, updatedAt: true },
   });
 
-  return NextResponse.json(
-    { workflowId, canvas: canvas ?? { nodes: [], edges: [], updatedAt: null } },
-    { status: 200 },
-  );
+  return NextResponse.json({ workflowId, canvas: canvas ?? { nodes: [], edges: [], updatedAt: null } }, { status: 200 });
 }
 
 export async function POST(req: NextRequest, { params }: Params) {
   const { workflowId } = await params;
-  const payload = getAuthPayload(req);
-  if (!payload)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const workflow = await prisma.workflow.findFirst({
-    where: { id: workflowId, ownerId: payload.userId },
+    where: { id: workflowId, ownerId: session.user.id },
     select: { id: true },
   });
-  if (!workflow)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!workflow) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   const json = await req.json().catch(() => null);
   const parsed = canvasSaveSchema.safeParse(json);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid input", issues: parsed.error.issues },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Invalid input', issues: parsed.error.issues }, { status: 400 });
   }
 
   try {
     let nextNodes: unknown[] = [];
     let nextEdges: unknown[] = [];
 
-    if ("nodes" in parsed.data) {
+    if ('nodes' in parsed.data) {
       nextNodes = parsed.data.nodes;
       nextEdges = parsed.data.edges;
     } else {
@@ -122,15 +112,9 @@ export async function POST(req: NextRequest, { params }: Params) {
       select: { updatedAt: true },
     });
 
-    return NextResponse.json(
-      { ok: true, updatedAt: updated.updatedAt },
-      { status: 200 },
-    );
+    return NextResponse.json({ ok: true, updatedAt: updated.updatedAt }, { status: 200 });
   } catch (err) {
-    console.error("[canvas/save]", err);
-    return NextResponse.json(
-      { error: "Failed to save canvas" },
-      { status: 500 },
-    );
+    console.error('[canvas/save]', err);
+    return NextResponse.json({ error: 'Failed to save canvas' }, { status: 500 });
   }
 }

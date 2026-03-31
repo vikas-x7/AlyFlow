@@ -1,26 +1,21 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/modules/auth/store/auth.store";
+import type { ReactNode } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const token = useAuthStore((s) => s.token);
-  const [mounted, setMounted] = useState(false);
+  const { status } = useSession();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted && token) {
-      router.replace("/canvas");
+    if (status === 'authenticated') {
+      router.replace('/canvas');
     }
-  }, [mounted, token, router]);
+  }, [status, router]);
 
-  if (!mounted || token) return null;
+  if (status === 'loading' || status === 'authenticated') return null;
 
   return <>{children}</>;
 }

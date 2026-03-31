@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/modules/auth/store/auth.store';
+import { useSession } from 'next-auth/react';
 import FAQ from '@/modules/marketing/components/Faq';
 import { Features } from '@/modules/marketing/components/Features';
 import { Footer } from '@/modules/marketing/components/Footer';
@@ -13,17 +13,13 @@ import TrustedSection from '@/modules/marketing/components/TrustedSection';
 
 export default function LandingPage() {
   const router = useRouter();
-  const token = useAuthStore((s) => s.token);
-  const [mounted, setMounted] = useState(false);
+  const { status } = useSession();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-  useEffect(() => {
-    if (mounted && token) router.replace('/canvas');
-  }, [mounted, token, router]);
+    if (status === 'authenticated') router.replace('/canvas');
+  }, [status, router]);
 
-  if (!mounted || token) return null;
+  if (status === 'loading' || status === 'authenticated') return null;
 
   return (
     <main id="home" className="min-h-screen flex flex-col items-center overflow-x-hidden">

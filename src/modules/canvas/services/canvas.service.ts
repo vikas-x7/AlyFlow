@@ -1,11 +1,16 @@
-import axios from "@/shared/lib/axios";
-
 export const canvasService = {
   async get(workflowId: string) {
-    return axios.get(`/api/canvas/${workflowId}`);
+    const res = await fetch(`/api/canvas/${workflowId}`);
+    if (!res.ok) throw new Error('Failed to load canvas');
+    return { data: await res.json() };
   },
   async save(workflowId: string, data: unknown) {
-    return axios.post(`/api/canvas/${workflowId}`, data);
+    const res = await fetch(`/api/canvas/${workflowId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to save canvas');
+    return { data: await res.json() };
   },
 };
-
