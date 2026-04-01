@@ -10,6 +10,7 @@ import { NodeFormatPanel } from '@/modules/canvas/components/toolbar/NodeFormatP
 import { DrawingOverlay } from '@/modules/canvas/components/DrawingOverlay';
 import { useCanvas } from '@/modules/canvas/hooks/useCanvas';
 import { useAutoSave } from '@/modules/canvas/hooks/useAutoSave';
+import { useCanvasStore } from '@/modules/canvas/store/canvas.store';
 import { Loader } from '@/shared/components/ui/Loader';
 import { useTheme } from 'next-themes';
 import { ChevronDown } from 'lucide-react';
@@ -27,6 +28,9 @@ export default function CanvasPage({ params }: CanvasPageProps) {
 
 function CanvasClient({ workflowId }: { workflowId: string }) {
   const { nodes, edges, nodeTypes, edgeTypes, isLoading, loadError, onNodesChange, onEdgesChange, onConnect, onConnectStart, onConnectEnd, onReconnect, addNodeOfType } = useCanvas(workflowId);
+  const pushHistory = useCanvasStore((s) => s.pushHistory);
+  const undo = useCanvasStore((s) => s.undo);
+  const redo = useCanvasStore((s) => s.redo);
 
   const [activeTool, setActiveTool] = useState<string>('cursor');
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
@@ -69,6 +73,14 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
         <NodeTypeSwitcher
           active={activeTool}
           onAdd={(type) => {
+            if (type === 'undo') {
+              undo();
+              return;
+            }
+            if (type === 'redo') {
+              redo();
+              return;
+            }
             if (type === 'delete') {
               const selectedNodes = nodes.filter((n) => n.selected);
               const selectedEdges = edges.filter((e) => e.selected);
@@ -78,6 +90,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
 
               const nodesToRemove = selectedNodes.map((n) => ({ id: n.id, type: 'remove' as const }) as NodeChange);
               const edgesToRemove = Array.from(edgesToRemoveIds).map((id) => ({ id, type: 'remove' as const }) as EdgeChange);
+
+              if (nodesToRemove.length > 0 || edgesToRemove.length > 0) pushHistory();
 
               if (nodesToRemove.length > 0) onNodesChange(nodesToRemove);
               if (edgesToRemove.length > 0) onEdgesChange(edgesToRemove);
@@ -179,6 +193,8 @@ function CanvasClient({ workflowId }: { workflowId: string }) {
             const z = viewport?.zoom ?? _e?.viewport?.zoom;
             if (typeof z === 'number') setZoom(z);
           }}
+          onNodeDragStart={() => pushHistory()}
+          onSelectionDragStart={() => pushHistory()}
           onConnect={onConnect}
           onConnectStart={onConnectStart}
           onConnectEnd={(event) => {

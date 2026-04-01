@@ -86,6 +86,7 @@ export function useCanvas(workflowId: string) {
       const type = useCanvasStore.getState().globalEdgeType;
       const strokeWidth = useCanvasStore.getState().globalEdgeThickness;
 
+      useCanvasStore.getState().pushHistory();
       setEdges((prev) =>
         addEdge(
           {
@@ -103,6 +104,7 @@ export function useCanvas(workflowId: string) {
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
+      useCanvasStore.getState().pushHistory();
       setEdges((prev) => reconnectEdge(oldEdge, newConnection, prev));
     },
     [setEdges],
@@ -121,6 +123,7 @@ export function useCanvas(workflowId: string) {
         data: data ?? { text: '' },
       };
 
+      useCanvasStore.getState().pushHistory();
       setNodes((prev) => prev.concat(base));
       return id;
     },
@@ -169,6 +172,8 @@ export function useCanvas(workflowId: string) {
 
       const type = useCanvasStore.getState().globalEdgeType;
       const strokeWidth = useCanvasStore.getState().globalEdgeThickness;
+
+      useCanvasStore.getState().pushHistory();
       setEdges((prev) =>
         addEdge(
           {

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import type { Edge, Node } from "reactflow";
+import { create } from 'zustand';
+import type { Edge, Node } from 'reactflow';
 
 type Updater<T> = T | ((prev: T) => T);
 type SetOptions = {
@@ -18,15 +18,18 @@ interface CanvasState {
   lastMutationAt: number;
   globalEdgeType: string;
   globalEdgeThickness: number;
+  past: { nodes: CanvasNode[]; edges: Edge[] }[];
+  future: { nodes: CanvasNode[]; edges: Edge[] }[];
   setGlobalEdgePrefs: (type: string, thickness: number) => void;
   setCanvasSnapshot: (payload: { nodes: Node[]; edges: Edge[] }) => void;
   setNodes: (next: Updater<CanvasNode[]>, options?: SetOptions) => void;
   setEdges: (next: Updater<Edge[]>, options?: SetOptions) => void;
-  markSaved: (payload: {
-    savedNodes: Node[];
-    removedNodeIds: string[];
-    savedEdges?: Edge[];
-  }) => void;
+  markSaved: (payload: { savedNodes: Node[]; removedNodeIds: string[]; savedEdges?: Edge[] }) => void;
+  pushHistory: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 }
 
 type ComparableNode = CanvasNode & {
@@ -55,9 +58,7 @@ function isNodeSameContent(a: CanvasNode | Node, b: CanvasNode | Node) {
 function areEdgesSameContent(currentEdges: Edge[], nextEdges: Edge[]) {
   if (currentEdges.length !== nextEdges.length) return false;
 
-  const currentById = new Map(
-    currentEdges.map((edge) => [edge.id, JSON.stringify(stripTransientEdge(edge))]),
-  );
+  const currentById = new Map(currentEdges.map((edge) => [edge.id, JSON.stringify(stripTransientEdge(edge))]));
 
   for (const edge of nextEdges) {
     const current = currentById.get(edge.id);
@@ -94,14 +95,16 @@ function withDirtyFlags(prev: CanvasNode[], next: CanvasNode[], markDirty: boole
   });
 }
 
-export const useCanvasStore = create<CanvasState>((set) => ({
+export const useCanvasStore = create<CanvasState>((set, get) => ({
   nodes: [],
   edges: [],
   removedNodeIds: [],
   isEdgesDirty: false,
   lastMutationAt: 0,
-  globalEdgeType: "default",
+  globalEdgeType: 'default',
   globalEdgeThickness: 1.5,
+  past: [],
+  future: [],
   setGlobalEdgePrefs: (type, thickness) => set({ globalEdgeType: type, globalEdgeThickness: thickness }),
   setCanvasSnapshot: ({ nodes, edges }) =>
     set({
@@ -110,17 +113,17 @@ export const useCanvasStore = create<CanvasState>((set) => ({
       removedNodeIds: [],
       isEdgesDirty: false,
       lastMutationAt: 0,
+      past: [],
+      future: [],
     }),
   setNodes: (next, options) =>
     set((s) => {
       const markDirty = options?.markDirty ?? true;
-      const resolved = typeof next === "function" ? (next as (prev: CanvasNode[]) => CanvasNode[])(s.nodes) : next;
+      const resolved = typeof next === 'function' ? (next as (prev: CanvasNode[]) => CanvasNode[])(s.nodes) : next;
       const nodes = withDirtyFlags(s.nodes, resolved, markDirty);
 
       const nodeIds = new Set(nodes.map((node) => node.id));
-      const removedInThisUpdate = markDirty
-        ? s.nodes.filter((node) => !nodeIds.has(node.id)).map((node) => node.id)
-        : [];
+      const removedInThisUpdate = markDirty ? s.nodes.filter((node) => !nodeIds.has(node.id)).map((node) => node.id) : [];
       const keptRemovedNodeIds = s.removedNodeIds.filter((id) => !nodeIds.has(id));
       const removedNodeIds = Array.from(new Set([...keptRemovedNodeIds, ...removedInThisUpdate]));
 
@@ -133,7 +136,7 @@ export const useCanvasStore = create<CanvasState>((set) => ({
   setEdges: (next, options) =>
     set((s) => {
       const markDirty = options?.markDirty ?? true;
-      const edges = typeof next === "function" ? (next as (prev: Edge[]) => Edge[])(s.edges) : next;
+      const edges = typeof next === 'function' ? (next as (prev: Edge[]) => Edge[])(s.edges) : next;
       const changed = areEdgesSameContent(s.edges, edges) === false;
 
       return {
@@ -156,9 +159,7 @@ export const useCanvasStore = create<CanvasState>((set) => ({
         return { ...node, isDirty: false };
       });
 
-      const nextRemovedNodeIds = s.removedNodeIds.filter(
-        (id) => !(removedIds.has(id) && !currentNodeIds.has(id)),
-      );
+      const nextRemovedNodeIds = s.removedNodeIds.filter((id) => !(removedIds.has(id) && !currentNodeIds.has(id)));
 
       const isEdgesDirty = savedEdges ? !areEdgesSameContent(s.edges, savedEdges) : s.isEdgesDirty;
 
@@ -168,4 +169,62 @@ export const useCanvasStore = create<CanvasState>((set) => ({
         isEdgesDirty,
       };
     }),
+  pushHistory: () =>
+    set((s) => {
+      const currentSnapshot = {
+        nodes: s.nodes.map((n) => ({ ...n, dragging: false, selected: false })),
+        edges: s.edges.map((e) => ({ ...e, selected: false })),
+      };
+
+      const lastSnapshot = s.past[s.past.length - 1];
+      if (lastSnapshot) {
+        if (
+          isNodeSameContent({ id: 'dummy', position: { x: 0, y: 0 }, data: currentSnapshot.nodes } as any, { id: 'dummy', position: { x: 0, y: 0 }, data: lastSnapshot.nodes } as any) &&
+          areEdgesSameContent(currentSnapshot.edges, lastSnapshot.edges)
+        ) {
+          return s; // No change
+        }
+      }
+
+      const past = [...s.past, currentSnapshot].slice(-50);
+      return { past, future: [] };
+    }),
+  undo: () =>
+    set((s) => {
+      if (s.past.length === 0) return s;
+      const previous = s.past[s.past.length - 1];
+      const newPast = s.past.slice(0, -1);
+      const currentSnapshot = {
+        nodes: s.nodes.map((n) => ({ ...n, dragging: false, selected: false })),
+        edges: s.edges.map((e) => ({ ...e, selected: false })),
+      };
+      return {
+        past: newPast,
+        future: [currentSnapshot, ...s.future],
+        nodes: withDirtyFlags(s.nodes, previous.nodes, true),
+        edges: previous.edges,
+        isEdgesDirty: true,
+        lastMutationAt: Date.now(),
+      };
+    }),
+  redo: () =>
+    set((s) => {
+      if (s.future.length === 0) return s;
+      const nextState = s.future[0];
+      const newFuture = s.future.slice(1);
+      const currentSnapshot = {
+        nodes: s.nodes.map((n) => ({ ...n, dragging: false, selected: false })),
+        edges: s.edges.map((e) => ({ ...e, selected: false })),
+      };
+      return {
+        past: [...s.past, currentSnapshot],
+        future: newFuture,
+        nodes: withDirtyFlags(s.nodes, nextState.nodes, true),
+        edges: nextState.edges,
+        isEdgesDirty: true,
+        lastMutationAt: Date.now(),
+      };
+    }),
+  canUndo: () => get().past.length > 0,
+  canRedo: () => get().future.length > 0,
 }));

@@ -2,6 +2,7 @@ import { BaseNode } from './BaseNode';
 import type { NodeProps } from 'reactflow';
 import { useState, useRef, useEffect } from 'react';
 import { useReactFlow } from 'reactflow';
+import { useCanvasStore } from '@/modules/canvas/store/canvas.store';
 
 export function TextNode({
   id,
@@ -20,13 +21,14 @@ export function TextNode({
   const [value, setValue] = useState(data?.text ?? '');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setNodes, getNodes } = useReactFlow();
+  const pushHistory = useCanvasStore((s) => s.pushHistory);
   const minHeight = 44;
 
   useEffect(() => {
     if (textareaRef.current) {
       const scrollHeight = textareaRef.current.scrollHeight;
       const newHeight = Math.max(scrollHeight, minHeight);
-      
+
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${scrollHeight}px`;
 
@@ -79,6 +81,7 @@ export function TextNode({
         ref={textareaRef}
         value={value}
         onChange={handleChange}
+        onFocus={() => pushHistory()}
         onMouseDown={(e) => e.stopPropagation()}
         rows={1}
         className="border-none outline-none resize-none overflow-hidden w-full text-[20px] text-left text-black font-gothic bg-transparent"
