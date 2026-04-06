@@ -10,7 +10,7 @@ export const Hero = () => {
       <section className="relative font-gothic min-h-screen flex flex-col ">
         <Navbar />
 
-        <div className="relative z-10 flex flex-col items-center text-center text-black flex-1 justify-center px-4 md:px-6 py-24 gap-7 mt-15">
+        <div className="relative z-10 flex flex-col items-center text-center text-black flex-1 justify-center px-4 md:px-6 py-24 gap-7 mt-27">
           <div className="flex flex-col items-center gap-4">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] max-w-5xl -tracking-[1px] sm:-tracking-[2px] md:-tracking-[4px] leading-tight md:leading-18 font-instrument font-medium">
               Design, connect, and organize <br className="hidden sm:block" />{" "}
