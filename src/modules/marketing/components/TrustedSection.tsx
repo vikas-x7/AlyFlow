@@ -36,12 +36,12 @@ export default function TrustedSection() {
   return (
     <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 font-gothic">
       <div className="">
-        <div className="mt-20 sm:mt-32 md:mt-5">
+        <div className="mt-0 sm:mt-32 md:mt-5">
           <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-medium text-black mb-8 sm:mb-12 -tracking-[1px] sm:-tracking-[2px]">Why you should choose Alyflow</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-8 sm:gap-y-10 mt-10 sm:mt-16 md:mt-25">
             {features.map((f) => (
               <div key={f.title}>
-                <div className="flex items-center gap-2 text-black  text-[14px] sm:text-[19px] mb-2 sm:mb-3 ">
+                <div className="flex items-center gap-2 text-black  text-[14px] sm:text-[19px] mb-5 bg-black/5 sm:mb-5 ">
                   {f.icon}
                   {f.title}
                 </div>

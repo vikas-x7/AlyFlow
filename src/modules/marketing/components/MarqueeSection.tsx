@@ -34,7 +34,7 @@ export default function MarqueeSection() {
           {[...mindMapNodes, ...mindMapNodes].map((node, i) => (
             <span
               key={i}
-              className="font-bold text-black mx-5 sm:mx-8 md:mx-10 opacity-80 hover:opacity-100 transition-opacity duration-200 select-none text-[13px] sm:text-[15px] md:text-[13px]"
+              className="font-bold text-black mx-5 sm:mx-8 md:mx-10 opacity-80 hover:opacity-100 transition-opacity duration-200 select-none text-[10px] sm:text-[15px] md:text-[13px]"
             >
               {node.name}
             </span>

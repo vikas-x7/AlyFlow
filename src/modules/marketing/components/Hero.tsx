@@ -10,12 +10,12 @@ export const Hero = () => {
       <section className="relative font-gothic min-h-screen flex flex-col ">
         <Navbar />
 
-        <div className="relative z-10 flex flex-col items-center text-center text-black flex-1 justify-center px-4 sm:px-6 py-16 sm:py-20 md:py-24 gap-5 sm:gap-7 mt-16 sm:mt-20">
+        <div className="relative z-10 flex flex-col items-center text-center text-black flex-1 justify-center px- sm:px-6 py-16 sm:py-20 md:py-24 gap-5 sm:gap-7 mt-16 sm:mt-20">
           <div className="flex flex-col items-center gap-4">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] max-w-5xl -tracking-[1px] sm:-tracking-[2px] md:-tracking-[4px] leading-tight md:leading-13 text-black/90">
+            <h1 className="text-[30px] leading-8 text-center sm:text-4xl md:text-5xl lg:text-[60px] max-w-5xl -tracking-[1px] sm:-tracking-[2px] md:-tracking-[4px] sm:leading-tight md:leading-13 text-black/90">
               Design connect and organize <br className="hidden sm:block" /> every idea in one mind
             </h1>
-            <p className="text-xs sm:text-sm md:text-[16px] leading-6 text-[#171717] max-w-xs sm:max-w-sm md:max-w-lg">
+            <p className="text-[9px] w-[80%]  leading-3 text-center sm:text-sm md:text-[16px] sm:leading-6 text-[#171717] sm:max-w-sm md:max-w-lg">
               Architect your thinking map systems plan projects, and structure complex ideas with professional precision.
             </p>
           </div>
