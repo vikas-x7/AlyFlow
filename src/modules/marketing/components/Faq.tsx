@@ -31,8 +31,8 @@ export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="w-full py-10 sm:py-16 font-gothic mt-10 sm:mt-16 md:mt-20 lg:mt-30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
+    <section id="faq" className="w-full py-10 sm:py-16 font-gothic mt-10 sm:mt-16 md:mt-20 lg:mt-30 px-[35px]">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
         {/* LEFT */}
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] text-black mb-6 sm:mb-10">Frequently Asked Questions</h2>

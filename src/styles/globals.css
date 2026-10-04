@@ -6,6 +6,7 @@
   --color-border: var(--border-color);
   --color-panel: var(--panel-bg);
   --font-gothic: var(--font-vilo-gothic);
+  --font-inter: var(--font-vilo-inter);
   --font-volimono: var(--font-vilo-mono);
   --font-instrument: var(--font-instrument);
 }
